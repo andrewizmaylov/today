@@ -1928,6 +1928,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'air',
   methods: {
@@ -60676,8 +60677,8 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.showDatePicker,
-            expression: "showDatePicker"
+            value: !_vm.showDatePicker,
+            expression: "!showDatePicker"
           }
         ]
       },
@@ -60758,16 +60759,32 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("div", {
-      directives: [
-        {
-          name: "show",
-          rawName: "v-show",
-          value: !_vm.showDatePicker,
-          expression: "!showDatePicker"
-        }
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.showDatePicker,
+            expression: "showDatePicker"
+          }
+        ]
+      },
+      [
+        _c(
+          "p",
+          {
+            on: {
+              click: function($event) {
+                _vm.showDatePicker = false
+              }
+            }
+          },
+          [_vm._v("datepicker")]
+        )
       ]
-    })
+    )
   ])
 }
 var staticRenderFns = []
@@ -79009,13 +79026,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var moment_locale_ru__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment/locale/ru */ "./node_modules/moment/locale/ru.js");
 /* harmony import */ var moment_locale_ru__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment_locale_ru__WEBPACK_IMPORTED_MODULE_4__);
-!(function webpackMissingModule() { var e = new Error("Cannot find module 'v-calendar'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-!(function webpackMissingModule() { var e = new Error("Cannot find module 'v-calendar/lib/v-calendar.min.css'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
-/* harmony import */ var _components_mainapp_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/mainapp.vue */ "./resources/js/components/mainapp.vue");
-/* harmony import */ var _components_menufullscreen_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/menufullscreen.vue */ "./resources/js/components/menufullscreen.vue");
-/* harmony import */ var _components_login_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/login.vue */ "./resources/js/components/login.vue");
-/* harmony import */ var _components_register_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/register.vue */ "./resources/js/components/register.vue");
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
+/* harmony import */ var _components_mainapp_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/mainapp.vue */ "./resources/js/components/mainapp.vue");
+/* harmony import */ var _components_menufullscreen_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/menufullscreen.vue */ "./resources/js/components/menufullscreen.vue");
+/* harmony import */ var _components_login_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/login.vue */ "./resources/js/components/login.vue");
+/* harmony import */ var _components_register_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/register.vue */ "./resources/js/components/register.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -79030,25 +79045,11 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 moment__WEBPACK_IMPORTED_MODULE_3___default.a.locale('ru');
 window.moment = moment__WEBPACK_IMPORTED_MODULE_3___default.a;
-
- // Use v-calendar & v-date-picker components
-
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(!(function webpackMissingModule() { var e = new Error("Cannot find module 'v-calendar'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()), {
-  locales: {
-    'ru': {
-      firstDayOfWeek: 2,
-      masks: {
-        L: 'YYYY-MM-DD' // ...optional `title`, `weekdays`, `navMonths`, etc
-
-      }
-    }
-  }
-});
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
-  routes: _routes__WEBPACK_IMPORTED_MODULE_6__["routes"],
+  routes: _routes__WEBPACK_IMPORTED_MODULE_5__["routes"],
   mode: ''
 });
 /**
@@ -79076,10 +79077,10 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   router: router,
   components: {
-    mainapp: _components_mainapp_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
-    bigMenu: _components_menufullscreen_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
-    login: _components_login_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
-    register: _components_register_vue__WEBPACK_IMPORTED_MODULE_10__["default"]
+    mainapp: _components_mainapp_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    bigMenu: _components_menufullscreen_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+    login: _components_login_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+    register: _components_register_vue__WEBPACK_IMPORTED_MODULE_9__["default"]
   }
 });
 

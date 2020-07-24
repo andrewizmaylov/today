@@ -15,22 +15,7 @@ import 'moment/locale/ru';
 moment.locale('ru');
 window.moment = moment;
 
-import VCalendar from 'v-calendar';
-import 'v-calendar/lib/v-calendar.min.css';
 
-
-// Use v-calendar & v-date-picker components
-Vue.use(VCalendar, {
-    locales: {
-      'ru': {
-        firstDayOfWeek: 2,
-        masks: {
-          L: 'YYYY-MM-DD',
-          // ...optional `title`, `weekdays`, `navMonths`, etc
-        }
-      }
-    }
-});
 
 
 
