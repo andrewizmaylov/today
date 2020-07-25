@@ -622,11 +622,6 @@ video {
 .place {
   height: 100%;
   width: 100%;
-  border-width: 1px;
-  --border-opacity: 1;
-  border-color: #1a202c;
-  border-color: rgba(26, 32, 44, var(--border-opacity));
-  border-radius: 0.25rem;
   -o-object-fit: cover;
      object-fit: cover;
 }

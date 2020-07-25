@@ -2,7 +2,7 @@
 	<div class="container">
 		<div v-show="!showDatePicker">
 			<div class="text-center mt-4">
-				<div class="text-lg font-bold">{{moment()}}</div>
+				<div class="text-lg font-bold">{{moment(date)}}</div>
 				<div class="text-xs text-gray-600">6789 день эфира</div>
 			</div>
 
@@ -14,8 +14,9 @@
 			<iframe class="mx-auto mt-4" src="https://www.youtube.com/embed/Rf4rnII9Erw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			<iframe class="mx-auto mt-4" src="https://www.youtube.com/embed/PTSLaw4OJkI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>	
 		</div>
-		<div v-show="showDatePicker">
-			<p @click="showDatePicker=false">datepicker</p>
+		<div v-show="showDatePicker" class="flex flex-col w-screen h-screen">
+			<v-date-picker is-inline v-model="date" locale="ru" class="mx-auto mt-8" @dayclick="showDatePicker=false"/>
+			<div @click="showDatePicker=false" class="absolute -z-10 h-screen w-screen"></div>
 		</div>
 	</div>
 </template>
@@ -26,10 +27,14 @@
 			moment(date) {
 				return moment(date).format('D MMMM YYYY');
 			},
+			pickNewDate() {
+				showDatePicker=false;
+			}
 		},
 		data() {
 			return {
 				showDatePicker: false,
+				date: new Date(),
 			}
 		}
 	}

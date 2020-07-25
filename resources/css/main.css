@@ -3,7 +3,7 @@
 @tailwind components;
 
 .place {
-	@apply h-full w-full border border-gray-900 rounded object-cover;
+	@apply h-full w-full object-cover;
 }
 .hotMenuItem {
 	@apply inline-block flex items-center justify-center h-6 rounded border border-gray-600 mx-2 text-xxs font-semibold tracking-normal uppercase;

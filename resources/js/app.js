@@ -15,12 +15,14 @@ import 'moment/locale/ru';
 moment.locale('ru');
 window.moment = moment;
 
+import VCalendar from 'v-calendar';
 
 
 
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VCalendar);
 
 import {routes} from './routes';
 
