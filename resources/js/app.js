@@ -1,30 +1,34 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
 require('./bootstrap');
 
 import Vue from 'vue';
+
 import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
 import Vuex from 'vuex';
+Vue.use(Vuex);
+
+import VCalendar from 'v-calendar';
+Vue.use(VCalendar);
+
+import CKEditor from 'ckeditor4-vue';
+Vue.use(CKEditor);
 
 import moment from 'moment';
 import 'moment/locale/ru';
 moment.locale('ru');
+
+import Form from './utilites/form';
+window.Form = Form;
+
 window.moment = moment;
-
-import VCalendar from 'v-calendar';
-
-
-
-
-Vue.use(VueRouter);
-Vue.use(Vuex);
-Vue.use(VCalendar);
+window.Event = new Vue();
 
 import {routes} from './routes';
+
+import storage from './store';
+const store = new Vuex.Store(storage);
+window.Store = store;
 
 const router = new VueRouter({
 	routes,
@@ -43,21 +47,22 @@ const router = new VueRouter({
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 import mainapp from './components/mainapp.vue';
+import auth from './components/auth';
+import loading from './utilites/Loading';
 import bigMenu from './components/menufullscreen.vue';
-import login from './components/login.vue';
-import register from './components/register.vue';
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
- window.Event = new Vue();
 
 const app = new Vue({
     el: '#app',
     router,
+    store,
     components: {
-    	mainapp, bigMenu, login, register
+    	mainapp, auth, loading, bigMenu, 
     }
 });

@@ -1,5 +1,5 @@
 <template>
-	<div class="">
+	<div class="sm:max-w-full md:max-w-lg lg:max-w-4xl mx-auto">
 		<div class="w-full">
 			<img :src="topic.image" alt="" class="w-full h-full object-cover">
 		</div>

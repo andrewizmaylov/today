@@ -1,9 +1,9 @@
 <template>
 
-	<div class="max-w-sm">
-		<div class="flex flex-wrap mx-4">
-			<div class="mt-2 w-full px-2 " v-for="topic in news" @click="$router.push({name: 'newsitem', params: topic})">
-				<div class="flex items-center rounded-lg bg-white shadow-lg overflow-hidden">
+	<div class="flex flex-wrap items-center p-4">
+		<div v-for="topic in news" class="w-full md:w-1/2 lg:w-full">
+			<div class="m-2 border border-gray-300 rounded-lg shadow-lg overflow-hidden" @click="$router.push({name: 'newsitem', params: topic})">
+				<div class="flex items-center">
 					<img :src="topic.image" alt="" class="h-24 w-24 object-cover flex-shrink-0">
 					<div class="px-6 py4">
 						<h3 class="text-sm font-semibold text-gray-700 leading-tight">{{topic.title}}</h3>
@@ -11,6 +11,7 @@
 					</div>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 

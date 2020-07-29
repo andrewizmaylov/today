@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>{{env('APP_NAME')}}</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -12,9 +12,10 @@
         <!-- Styles -->
 
     </head>
-    <body class="bg-gray-100"> 
-        <div id="app">
-            <mainapp></mainapp>
+    <body class="antialiased text-gray-900 font-sans bg-gray-100"> 
+        <div id="app" class="">
+            <mainapp v-if="!isLoggedIn"></mainapp>
+            <auth v-else></auth>
         </div>
         <script src="{{ asset('js/app.js') }}"></script>
 

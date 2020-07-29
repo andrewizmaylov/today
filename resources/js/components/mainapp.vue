@@ -1,7 +1,7 @@
 <template>
-	<div class="antialiased text-gray-900"">
+	<div class="max-w-full">
 		<menutop v-show="menuTop"></menutop>
-		<router-view></router-view>
+		<router-view class=""></router-view>
 	</div>
 </template>
 <script>

@@ -13,6 +13,9 @@ import Schedule from './components/schedule.vue';
 import Docs from './components/docs.vue';
 import Videos from './components/videos.vue';
 import Info from './components/info.vue';
+import Auth from './components/auth.vue';
+import Login from './components/auth/login.vue';
+import Registration from './components/auth/registration.vue';
 
 export const routes = [
 	{path: '/bigMenu', component: bigMenu},
@@ -30,5 +33,8 @@ export const routes = [
 	{path: '/schedule', component: Schedule},
 	{path: '/videos', component: Videos},
 	{path: '/info', component: Info},
+	{path: '/auth', component: Auth},
+	{path: '/login', component: Login},
+	{path: '/registration', component: Registration},
 ]
 

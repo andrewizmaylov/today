@@ -1,8 +1,8 @@
 <template>
-	<div class="flex flex-col justify-between bg-gray w-screen ">
-			<!-- <img src="/img/exit.svg" alt="" class="ml-auto mt-4 mr-4 mb-6" @click="closeScreen"> -->
+	<div class="inline-block max-w-sm mx-auto flex flex-col justify-between bg-gray-100">
 			
-			<div class="w-3/5 mx-auto my-16">
+			
+			<div class="w-36 mx-auto my-16">
 				<img src="/img/user/Mikhail_Gorbachev_1987.jpg" alt="" class="w-full h-full object-cover rounded-full shadow-lg">
 			</div>
 
@@ -41,18 +41,18 @@
 					<span>@m.gorbachev</span>
 				</div>
 
-				<div class="mt-4">
-					<span>Написать через:</span>
-					<div class="flex justify-center mt-4">
-						<img src="/img/whatsapp.svg" alt="" class="mx-4">
-						<img src="/img/viber.svg" alt="" class="mx-4">
-						<img src="/img/telegram.svg" alt="" class="mx-4">
+				<div class="flex flex-col items-center mt-4">
+					<span class="text-xs uppercase">Написать через:</span>
+					<div class="flex justify-between mt-4">
+						<img src="/img/whatsapp.svg" alt="" class="px-4">
+						<img src="/img/viber.svg" alt="" class="px-4">
+						<img src="/img/telegram.svg" alt="" class="px-4">
 					</div>
 				</div>
 
 			</div>
 
-			<div class="w-screen bottom-0 my-6">
+			<div class="mt-6">
 				<img src="/img/x-circle.svg" alt="" class="mx-auto" @click="closeScreen">
 			</div>
 	</div>
