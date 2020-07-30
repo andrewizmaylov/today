@@ -12,7 +12,7 @@
 			<li class="py-2 mt-2 " @click="navigate('/departments')">ОТДЕЛЫ</li>		
 			<li class="py-2 mt-2 " @click="navigate('/staff')">СОТРУДНИКИ</li>		
 			<li class="py-2 mt-2 " @click="navigate('/docs')">ДОКУМЕНТЫ</li>		
-			<li class="py-2 mt-2 " @click="navigate('/videos')">ВИДЕОТЕКА</li>		
+			<li class="py-2 mt-2 " @click="navigate('/meal')">ВИДЕОТЕКА</li>		
 			<li class="py-2 mt-2 " @click="navigate('/auth')">ПОЛЕЗНАЯ ИНФОРМАЦИЯ</li>		
 		</ul>
 		

@@ -8,6 +8,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Delius+Unicase:wght@700&family=Gloria+Hallelujah&family=Neucha&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="/css/main.css">
         <!-- Styles -->
 

@@ -1,5 +1,6 @@
 import bigMenu from './components/menufullscreen.vue';
 import Home from './components/home.vue';
+import Meal from './components/meal.vue';
 import User from './components/user.vue';
 import UserDocs from './components/userdocs.vue';
 import UserTasks from './components/usertasks.vue';
@@ -20,6 +21,7 @@ import Registration from './components/auth/registration.vue';
 export const routes = [
 	{path: '/bigMenu', component: bigMenu},
 	{path: '/home', component: Home},
+	{path: '/meal', component: Meal},
 	{path: '/user', component: User},
 	{path: '/user/docs', component: UserDocs},
 	{path: '/user/tasks', component: UserTasks},
