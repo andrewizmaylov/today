@@ -30,9 +30,7 @@
 	              		<span class="text-danger small" v-if="form.errors.has('password_confirmation')" v-text="form.errors.get('password_confirmation')"></span>
 	            	</div>
 
-					<div class="block bg-blue-500 rounded mt-6 mb-12" :disabled="form.errors.any()">
-						<span class="flex items-center justify-center h-8 text-xs font-bold text-white uppercase">Зарегистрироваться</span>
-					</div>
+					<button class="block bg-blue-500 rounded mt-6 w-full h-8 outline-none text-xs font-bold text-white uppercase" type="submit" :disabled="form.errors.any()">Зарегистрироваться</button>
 	          	</form>     
 
 	        </div>   
@@ -62,10 +60,10 @@
 		        this.$store.dispatch('login');
 				axios.post('/register', this.$data.form)
 				  .then(response => {
-			            if(response.status === 200) 
+			            if(response.status === 201) 
 			            {
 			            	putUserToLocalStorage();
-            				this.$router.push('/account');
+            				this.$router.push('/meal');
 			            }
 				  })
 				  .catch(error => {

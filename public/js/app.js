@@ -2046,7 +2046,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2083,7 +2082,7 @@ __webpack_require__.r(__webpack_exports__);
         if (response.status === 200) {
           Object(_utilites_helpers__WEBPACK_IMPORTED_MODULE_0__["putUserToLocalStorage"])();
 
-          _this.$router.push('/data/statistic');
+          _this.$router.push('/meal');
         }
       })["catch"](function (errors) {
         console.log(errors.response);
@@ -2096,7 +2095,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.count == 10) {
         Event.$emit('showTopMenu');
-        this.$router.push('/home');
+        this.$router.push('/meal');
       }
     }
   }
@@ -2114,8 +2113,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utilites_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utilites/helpers */ "./resources/js/utilites/helpers.js");
-//
-//
 //
 //
 //
@@ -2177,10 +2174,10 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$store.dispatch('login');
       axios.post('/register', this.$data.form).then(function (response) {
-        if (response.status === 200) {
+        if (response.status === 201) {
           Object(_utilites_helpers__WEBPACK_IMPORTED_MODULE_0__["putUserToLocalStorage"])();
 
-          _this.$router.push('/account');
+          _this.$router.push('/meal');
         }
       })["catch"](function (error) {
         console.log(error);
@@ -2471,17 +2468,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _home_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./home.vue */ "./resources/js/components/home.vue");
 /* harmony import */ var _menutop_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menutop.vue */ "./resources/js/components/menutop.vue");
 /* harmony import */ var _menufullscreen_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./menufullscreen.vue */ "./resources/js/components/menufullscreen.vue");
+/* harmony import */ var _meal_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./meal.vue */ "./resources/js/components/meal.vue");
 //
 //
 //
 //
 //
 //
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'main',
+  name: 'mainapp',
   data: function data() {
     return {
       menuTop: true
@@ -2500,7 +2499,12 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     home: _home_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     menutop: _menutop_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    menufullscreen: _menufullscreen_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    menufullscreen: _menufullscreen_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    meal: _meal_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
+  mounted: function mounted() {
+    Event.$emit('hideTopMenu');
+    this.$router.push('/meal');
   }
 });
 
@@ -2606,6 +2610,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'meal',
   data: function data() {
@@ -2619,26 +2650,39 @@ __webpack_require__.r(__webpack_exports__);
         dish: '',
         img: ''
       },
+      showWarning: false,
+      orderCompleted: false,
+      raiting: 0,
+      overallRating: [],
+      totalScore: 0,
+      comment: '',
+      comments: [],
       countIsland: 0,
       countHotel: 0,
       menu: [{
         dish: 'стандартная еда',
-        img: '/img/meal/boxEmpty.png'
+        img: '/img/meal/boxEmpty.png',
+        id: 1
       }, {
         dish: 'говядина',
-        img: '/img/meal/boxCow.png'
+        img: '/img/meal/boxCow.png',
+        id: 2
       }, {
         dish: 'курица',
-        img: '/img/meal/boxChicken.png'
+        img: '/img/meal/boxChicken.png',
+        id: 3
       }, {
         dish: 'рыба',
-        img: '/img/meal/boxFish.png'
+        img: '/img/meal/boxFish.png',
+        id: 4
       }, {
         dish: 'вегетарианская кухня',
-        img: '/img/meal/boxEco.png'
+        img: '/img/meal/boxEco.png',
+        id: 5
       }, {
         dish: 'безлактозная диета',
-        img: '/img/meal/boxNoMilk.png'
+        img: '/img/meal/boxNoMilk.png',
+        id: 6
       }],
       chicken: 0,
       fish: 0,
@@ -2666,17 +2710,24 @@ __webpack_require__.r(__webpack_exports__);
     countPlus: function countPlus() {
       this.count++;
 
-      if (this.count == 3) {
+      if (this.count == 23) {
         Event.$emit('showTopMenu');
         this.$router.push('/home');
       }
     },
+    scrollTop: function scrollTop() {
+      $('html, body').animate({
+        scrollTop: 0
+      }, 'fast');
+    },
     markIsland: function markIsland() {
+      this.showWarning = false;
       this.island = true;
       this.hotel = false;
       this.msg = 'на острове Любви.';
     },
     markHotel: function markHotel() {
+      this.showWarning = false;
       this.hotel = true;
       this.island = false;
       this.msg = 'в отеле.';
@@ -2684,10 +2735,87 @@ __webpack_require__.r(__webpack_exports__);
     selectDish: function selectDish(item) {
       this.selected = item;
       this.selected.status = true;
+    },
+    placeOrder: function placeOrder() {
+      var _this = this;
+
+      if (!this.msg) {
+        this.showWarning = true;
+        return;
+      }
+
+      axios.post('/order', {
+        user_id: this.currentUser.id,
+        meal_id: this.selected.id,
+        date: moment(this.date).format('YYYY-MM-DD')
+      }).then(function (response) {
+        _this.orderCompleted = true;
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    rate: function rate(i) {
+      var _this2 = this;
+
+      this.raiting = i;
+      var date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
+      axios.post('/mealRaitng', {
+        user_id: this.currentUser.id,
+        date: date,
+        rate: i
+      }).then(function (response) {
+        axios.get('/mealRaitng/' + date).then(function (response) {
+          _this2.overallRating = response.data;
+
+          _this2.total();
+
+          console.log(response);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    total: function total() {
+      var sum = this.overallRating.reduce(function (a, b) {
+        return a + b;
+      }, 0);
+      return this.totalScore = sum / this.overallRating.length;
+    },
+    addComment: function addComment() {
+      var _this3 = this;
+
+      var date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
+      axios.post('/comment', {
+        msg: this.comment,
+        date: date
+      }).then(function (response) {
+        _this3.comment = '';
+        axios.get('/comment/' + date).then(function (response) {
+          _this3.comments = response.data;
+          console.log(response);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   },
   mounted: function mounted() {
     Event.$emit('hideTopMenu');
+  },
+  computed: {
+    isLoggedIn: function isLoggedIn() {
+      return Store.getters.isLoggedIn;
+    },
+    currentUser: function currentUser() {
+      return Store.getters.currentUser;
+    }
   }
 });
 
@@ -2723,6 +2851,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'menufullscreen',
   methods: {
@@ -2735,6 +2864,21 @@ __webpack_require__.r(__webpack_exports__);
     closeScreen: function closeScreen() {
       Event.$emit('showTopMenu');
       this.$router.go(-1);
+    },
+    logout: function logout() {
+      var _this = this;
+
+      axios.post('/logout').then(function (response) {
+        console.log(response.data);
+
+        _this.$store.commit('logout');
+      })["catch"](function (error) {
+        console.log(error);
+
+        _this.$store.commit('logout');
+
+        window.location.replace('/');
+      });
     }
   }
 });
@@ -7785,7 +7929,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".meal-txt {\n  color: rgba(113, 128, 150, 1);\n  font-family: 'Amatic SC';\n}\n.bw {\n  padding: 10px;\n  opacity: 80%;\n  -webkit-filter: grayscale(80%);\n          filter: grayscale(80%);\n}\n.active {\n  box-shadow: 0 25px 50px -12px rgba(0,0,0, .25);\n}\n\n\n", ""]);
+exports.push([module.i, ".meal-txt {\n  color: rgba(113, 128, 150, 1);\n  font-family: 'Amatic SC';\n}\n.bw {\n  padding: 14px;\n  opacity: 70%;\n  -webkit-filter: grayscale(90%);\n          filter: grayscale(90%);\n}\n.active {\n  box-shadow: 0 25px 50px -12px rgba(0,0,0, .25);\n}\n.rate {\n  color: #E2C644;\n}\n", ""]);
 
 // exports
 
@@ -61309,21 +61453,13 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c(
-                  "div",
+                  "button",
                   {
-                    staticClass: "block bg-blue-500 rounded mt-6",
-                    attrs: { disabled: _vm.form.errors.any() }
+                    staticClass:
+                      "block bg-blue-500 rounded mt-6 w-full h-8 outline-none text-xs font-bold text-white uppercase",
+                    attrs: { type: "submit", disabled: _vm.form.errors.any() }
                   },
-                  [
-                    _c(
-                      "span",
-                      {
-                        staticClass:
-                          "flex items-center justify-center h-8 text-xs font-bold text-white uppercase"
-                      },
-                      [_vm._v("Войти")]
-                    )
-                  ]
+                  [_vm._v("Войти")]
                 )
               ]
             ),
@@ -61611,21 +61747,13 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c(
-                  "div",
+                  "button",
                   {
-                    staticClass: "block bg-blue-500 rounded mt-6 mb-12",
-                    attrs: { disabled: _vm.form.errors.any() }
+                    staticClass:
+                      "block bg-blue-500 rounded mt-6 w-full h-8 outline-none text-xs font-bold text-white uppercase",
+                    attrs: { type: "submit", disabled: _vm.form.errors.any() }
                   },
-                  [
-                    _c(
-                      "span",
-                      {
-                        staticClass:
-                          "flex items-center justify-center h-8 text-xs font-bold text-white uppercase"
-                      },
-                      [_vm._v("Зарегистрироваться")]
-                    )
-                  ]
+                  [_vm._v("Зарегистрироваться")]
                 )
               ]
             )
@@ -62244,7 +62372,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "w-full h-full bg-gray-800 text-center" }, [
     _c("section", { staticClass: "py-8" }, [
-      1
+      !_vm.isLoggedIn
         ? _c(
             "div",
             {
@@ -62264,7 +62392,9 @@ var render = function() {
               ])
             ]
           )
-        : undefined
+        : _c("div", { staticClass: "meal-txt text-4xl" }, [
+            _vm._v("Привет, " + _vm._s(_vm.currentUser.email))
+          ])
     ]),
     _vm._v(" "),
     _c("section", { staticClass: "pt-16 pb-4" }, [
@@ -62391,7 +62521,7 @@ var render = function() {
               "span",
               { staticClass: "block meal-txt text-3xl leading-none mt-2 px-2" },
               [
-                _vm._v("user.name, "),
+                _vm._v(_vm._s(_vm.currentUser.email) + ", "),
                 _c("br"),
                 _vm._v(
                   "сегодня, " +
@@ -62405,30 +62535,116 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _c("div", { staticClass: "flex justify-center mt-4 px-2" }, [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2"
-                },
-                [_vm._v("Сохранить заказ")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
-                  on: {
-                    click: function($event) {
-                      _vm.selected = {}
-                    }
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.showWarning,
+                    expression: "!showWarning"
                   }
-                },
-                [_vm._v("Изменить заказ")]
-              )
-            ])
+                ],
+                staticClass: "flex justify-center mt-4 px-2"
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.orderCompleted,
+                        expression: "!orderCompleted"
+                      }
+                    ],
+                    staticClass:
+                      "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
+                    on: { click: _vm.placeOrder }
+                  },
+                  [_vm._v("Сохранить заказ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.orderCompleted,
+                        expression: "!orderCompleted"
+                      }
+                    ],
+                    staticClass:
+                      "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
+                    on: {
+                      click: function($event) {
+                        _vm.selected = {}
+                      }
+                    }
+                  },
+                  [_vm._v("Изменить заказ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.orderCompleted,
+                        expression: "orderCompleted"
+                      }
+                    ],
+                    staticClass:
+                      "border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6"
+                  },
+                  [_vm._v("Заказ оформлен")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.showWarning,
+                    expression: "showWarning"
+                  }
+                ],
+                staticClass: "flex justify-center mt-4 px-2"
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.orderCompleted,
+                        expression: "!orderCompleted"
+                      }
+                    ],
+                    staticClass:
+                      "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mx-2",
+                    on: {
+                      click: function($event) {
+                        _vm.selected = {}
+                      }
+                    }
+                  },
+                  [_vm._v("Сначала отметь, где ты будешь сегодня")]
+                )
+              ]
+            )
           ])
     ]),
     _vm._v(" "),
@@ -62439,15 +62655,100 @@ var render = function() {
       _vm._v(" "),
       _c(
         "span",
-        { staticClass: "flex justify-center " },
+        { staticClass: "flex justify-center align-middle" },
         _vm._l(5, function(i) {
-          return _c("img", {
-            key: i,
-            staticClass: "mx-2",
-            attrs: { src: "/img/meal/starGray.svg", alt: "" }
-          })
+          return _c(
+            "svg",
+            {
+              key: i,
+              staticClass: "mx-2 fill-current",
+              class: i > _vm.raiting ? "text-gray-500" : "rate",
+              attrs: {
+                width: "18",
+                height: "18",
+                fill: "none",
+                xmlns: "http://www.w3.org/2000/svg"
+              },
+              on: {
+                click: function($event) {
+                  return _vm.rate(i)
+                }
+              }
+            },
+            [
+              _c("path", {
+                attrs: {
+                  d:
+                    "M17 8.39a1.11 1.11 0 00-.645-2l-4.5-.17a.115.115 0 01-.1-.075l-1.555-4.2a1.11 1.11 0 00-2.085 0L6.565 6.16a.115.115 0 01-.1.075l-4.5.17a1.11 1.11 0 00-.645 2l3.53 2.775a.115.115 0 01.04.12l-1.215 4.305a1.11 1.11 0 001.69 1.225l3.73-2.5a.11.11 0 01.125 0l3.73 2.5a1.1 1.1 0 001.275 0 1.1 1.1 0 00.415-1.2l-1.225-4.32a.11.11 0 01.04-.12L17 8.39z"
+                }
+              })
+            ]
+          )
         }),
         0
+      ),
+      _vm._v(" "),
+      _c(
+        "span",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.totalScore,
+              expression: "totalScore"
+            }
+          ],
+          staticClass: "text-xxs rate"
+        },
+        [
+          _vm._v(
+            "Всего голосов" +
+              _vm._s(this.overallRating.length) +
+              ". Средний балл " +
+              _vm._s(_vm.totalScore) +
+              " "
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "section",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.comments.length > 1,
+              expression: "comments.length>1"
+            }
+          ],
+          staticClass: "flex flex-col w-2/3 max-w-md mx-auto"
+        },
+        [
+          _c("span", { staticClass: "meal-txt text-2xl rate mt-6" }, [
+            _vm._v("Последние комментарии:")
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.comments, function(item) {
+            return _c(
+              "div",
+              {
+                staticClass:
+                  "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
+              },
+              [
+                _vm._v("\n\t\t\t\t" + _vm._s(item.msg)),
+                _c("br"),
+                _vm._v(" "),
+                _c("span", { staticClass: "text-xxs font-mono rate" }, [
+                  _vm._v(_vm._s(item.user.email))
+                ])
+              ]
+            )
+          })
+        ],
+        2
       ),
       _vm._v(" "),
       _c(
@@ -62463,17 +62764,53 @@ var render = function() {
         [_vm._v("Хочешь оставить комментарий?")]
       ),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.showComment,
-            expression: "showComment"
-          }
-        ],
-        attrs: { type: "textarea" }
-      })
+      _c(
+        "section",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showComment,
+              expression: "showComment"
+            }
+          ],
+          staticClass: "flex flex-col w-2/3 max-w-md mx-auto"
+        },
+        [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.comment,
+                expression: "comment"
+              }
+            ],
+            staticClass: "outline-none rounded p-1",
+            attrs: { name: "", id: "", cols: "30", rows: "9" },
+            domProps: { value: _vm.comment },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.comment = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2",
+              on: { click: _vm.addComment }
+            },
+            [_vm._v("Оставить комментарий")]
+          )
+        ]
+      )
     ]),
     _vm._v(" "),
     _c(
@@ -62630,7 +62967,7 @@ var render = function() {
               }
             }
           },
-          [_vm._v("ВИДЕОТЕКА")]
+          [_vm._v("ЗАКАЗ ЕДЫ")]
         ),
         _vm._v(" "),
         _c(
@@ -62644,7 +62981,11 @@ var render = function() {
             }
           },
           [_vm._v("ПОЛЕЗНАЯ ИНФОРМАЦИЯ")]
-        )
+        ),
+        _vm._v(" "),
+        _c("li", { staticClass: "py-2 mt-2 ", on: { click: _vm.logout } }, [
+          _vm._v("ВЫЙТИ ИЗ СИСТЕМЫ")
+        ])
       ]),
       _vm._v(" "),
       _c("img", {
@@ -80023,6 +80364,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_auth__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/auth */ "./resources/js/components/auth.vue");
 /* harmony import */ var _utilites_Loading__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./utilites/Loading */ "./resources/js/utilites/Loading.vue");
 /* harmony import */ var _components_menufullscreen_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/menufullscreen.vue */ "./resources/js/components/menufullscreen.vue");
+/* harmony import */ var _components_meal_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/meal.vue */ "./resources/js/components/meal.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -80063,6 +80405,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 
 
 
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -80077,7 +80420,16 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     mainapp: _components_mainapp_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
     auth: _components_auth__WEBPACK_IMPORTED_MODULE_11__["default"],
     loading: _utilites_Loading__WEBPACK_IMPORTED_MODULE_12__["default"],
-    bigMenu: _components_menufullscreen_vue__WEBPACK_IMPORTED_MODULE_13__["default"]
+    bigMenu: _components_menufullscreen_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+    meal: _components_meal_vue__WEBPACK_IMPORTED_MODULE_14__["default"]
+  },
+  computed: {
+    isLoggedIn: function isLoggedIn() {
+      return store.getters.isLoggedIn;
+    },
+    isLoading: function isLoading() {
+      return this.$store.getters.isLoading;
+    }
   }
 });
 

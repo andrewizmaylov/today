@@ -50,6 +50,7 @@ import mainapp from './components/mainapp.vue';
 import auth from './components/auth';
 import loading from './utilites/Loading';
 import bigMenu from './components/menufullscreen.vue';
+import meal from './components/meal.vue';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -63,6 +64,14 @@ const app = new Vue({
     router,
     store,
     components: {
-    	mainapp, auth, loading, bigMenu, 
+    	mainapp, auth, loading, bigMenu, meal
+    },
+    computed: {
+    	isLoggedIn() {
+    		return store.getters.isLoggedIn;
+    	},
+      isLoading() {
+        return this.$store.getters.isLoading;
+      }
     }
 });

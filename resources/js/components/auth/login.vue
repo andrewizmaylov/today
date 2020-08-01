@@ -23,10 +23,9 @@
 		                <input class="w-full pl-2 outline-none appearance-none bg-gray-100" id="password" placeholder="Пароль" type="password" name="password" v-model="form.password">
 	              		<span class="text-danger small" v-if="form.errors.has('password')" v-text="form.errors.get('password')"></span>
 	            	</div>
-
-					<div class="block bg-blue-500 rounded mt-6" :disabled="form.errors.any()">
-						<span class="flex items-center justify-center h-8 text-xs font-bold text-white uppercase">Войти</span>
-					</div>
+					
+					<button class="block bg-blue-500 rounded mt-6 w-full h-8 outline-none text-xs font-bold text-white uppercase" type="submit" :disabled="form.errors.any()">Войти</button>
+		
 	          	</form>
 
 		        <div class="text-xs mt-8">
@@ -80,7 +79,7 @@
 			            if(response.status === 200) 
 			            {
 			            	putUserToLocalStorage();
-            				this.$router.push('/data/statistic');
+            				this.$router.push('/meal');
 			            }
 		          })
 		          .catch(errors => {
@@ -92,7 +91,7 @@
 				this.count++;
 				if(this.count == 10) {
 					Event.$emit('showTopMenu');
-					this.$router.push('/home');
+					this.$router.push('/meal');
 				}
 			}
 		}

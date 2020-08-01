@@ -8,9 +8,10 @@
 	import home from './home.vue';
 	import menutop from './menutop.vue';
 	import menufullscreen from './menufullscreen.vue';
+	import meal from './meal.vue';
 
 	export default {
-		name: 'main',
+		name: 'mainapp',
 		data() {
 			return {
 				menuTop: true
@@ -22,7 +23,11 @@
 
 		},   
 		components: {
-			home, menutop, menufullscreen
+			home, menutop, menufullscreen, meal
+		},
+		mounted() {
+			Event.$emit('hideTopMenu');
+			this.$router.push('/meal');
 		}
 	}
 </script>

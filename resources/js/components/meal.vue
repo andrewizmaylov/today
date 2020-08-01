@@ -4,28 +4,33 @@
 		font-family: 'Amatic SC';
 	}
 	.bw {
-		padding: 10px;
-		opacity: 80%;
-		filter: grayscale(80%);
+		padding: 14px;
+		opacity: 70%;
+		filter: grayscale(90%);
 
 	}
 	.active {
 		box-shadow: 0 25px 50px -12px rgba(0,0,0, .25);
 	}
-
-	
+	.rate {
+		color: #E2C644;
+	}
 </style>
 <template>
 	<div class="w-full h-full bg-gray-800 text-center">
 
 		<!-- login block -->
 		<section class="py-8">
-			<div  @click="$router.push('/login')" v-if="1">
+			<div  @click="$router.push('/login')" v-if="!isLoggedIn">
 				<span class="meal-txt text-4xl">Войди в систему &nbsp&nbsp-</span>
 				<span class="meal-txt text-4xl -ml-2">></span>
 			</div>
-			<div v-else class="meal-txt text-4xl">Привет, дружок</div>
+			<div v-else class="meal-txt text-4xl">Привет, {{currentUser.email}}</div>
 		</section>
+
+
+		
+		
 		<!-- place block -->
 		<section class="pt-16 pb-4">
 			<span class="meal-txt text-4xl">Отметь, где ты будешь сегодня?</span>
@@ -69,23 +74,45 @@
 			</div>
 			<div v-else class="container mx-auto">
 				<img :src="selected.img" alt="" class="w-2/5 h-full mx-auto">
-				<span class="block meal-txt text-3xl leading-none mt-2 px-2">user.name, </br>сегодня, {{this.moment()}}, твоя {{selected.dish}} будет ждать тебя </br>{{msg}} </span>
-				<div class="flex justify-center mt-4 px-2">
-					<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2">Сохранить заказ</div>
-					<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selected={}">Изменить заказ</div>
-
+				<span class="block meal-txt text-3xl leading-none mt-2 px-2">{{currentUser.email}}, </br>сегодня, {{this.moment()}}, твоя {{selected.dish}} будет ждать тебя </br>{{msg}} </span>
+				<div class="flex justify-center mt-4 px-2" v-show="!showWarning">
+					<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="placeOrder" v-show="!orderCompleted">Сохранить заказ</div>
+					<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selected={}" v-show="!orderCompleted">Изменить заказ</div>
+					<div class="border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6" v-show="orderCompleted">Заказ оформлен</div>
+				</div>
+				<div class="flex justify-center mt-4 px-2" v-show="showWarning">
+					<div class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selected={}" v-show="!orderCompleted">Сначала отметь, где ты будешь сегодня</div>
 				</div>
 			</div>
 		</section>
 		<!-- rate block -->
 		<section class="mt-8">
 			<span class="block meal-txt text-4xl pt-8 pb-4">Оцени, как поел вчера:</span>
-			<span class="flex justify-center ">
-				<img v-for="i in 5" :key=i src="/img/meal/starGray.svg" alt="" class="mx-2">
+			<span class="flex justify-center align-middle">
+				<svg width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg" v-for="i in 5" :key=i :class="i>raiting ? 'text-gray-500' : 'rate'" class="mx-2 fill-current" @click="rate(i)">
+					<path d="M17 8.39a1.11 1.11 0 00-.645-2l-4.5-.17a.115.115 0 01-.1-.075l-1.555-4.2a1.11 1.11 0 00-2.085 0L6.565 6.16a.115.115 0 01-.1.075l-4.5.17a1.11 1.11 0 00-.645 2l3.53 2.775a.115.115 0 01.04.12l-1.215 4.305a1.11 1.11 0 001.69 1.225l3.73-2.5a.11.11 0 01.125 0l3.73 2.5a1.1 1.1 0 001.275 0 1.1 1.1 0 00.415-1.2l-1.225-4.32a.11.11 0 01.04-.12L17 8.39z" />
+				</svg>
 			</span>
+			<span v-show="totalScore" class="text-xxs rate">Всего голосов{{this.overallRating.length}}. Средний балл {{totalScore}} </span>
+
+			<section v-show="comments.length>1" class="flex flex-col w-2/3 max-w-md mx-auto">
+				<span  class="meal-txt text-2xl rate mt-6">Последние комментарии:</span>
+				<div  v-for="item in comments" class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">
+					{{item.msg}}<br>
+					<span class="text-xxs font-mono rate">{{item.user.email}}</span>
+				</div>
+			</section>
 			<span class="block meal-txt text-2xl pt-8 pb-4" @click="showComment=true">Хочешь оставить комментарий?</span>
-			<input type="textarea" v-show="showComment">
+			<section v-show="showComment" class="flex flex-col w-2/3 max-w-md mx-auto">
+				<textarea name="" id="" cols="30" rows="9" v-model='comment' class="outline-none rounded p-1" />
+				<div class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2" @click="addComment">Оставить комментарий</div>
+			</section>
 		</section>
+
+		
+
+
+
 		<span class="block pt-16 pb-16 text-xxs text-gray-500" @click="countPlus">QuadrantBubbles 2020</span> 
 	</div>
 </template>
@@ -103,16 +130,23 @@
 					dish: '',
 					img: '',
 				},
+				showWarning: false,
+				orderCompleted: false,
+				raiting: 0,
+				overallRating: [],
+				totalScore: 0,
+				comment: '',
+				comments: [],
 
 				countIsland: 0,
 				countHotel: 0,
 				menu: [
-					{dish: 'стандартная еда', img: '/img/meal/boxEmpty.png'},
-					{dish: 'говядина', img: '/img/meal/boxCow.png'},
-					{dish: 'курица', img: '/img/meal/boxChicken.png'},
-					{dish: 'рыба', img: '/img/meal/boxFish.png'},
-					{dish: 'вегетарианская кухня', img: '/img/meal/boxEco.png'},
-					{dish: 'безлактозная диета', img: '/img/meal/boxNoMilk.png'},
+					{dish: 'стандартная еда', img: '/img/meal/boxEmpty.png', id: 1},
+					{dish: 'говядина', img: '/img/meal/boxCow.png', id:2},
+					{dish: 'курица', img: '/img/meal/boxChicken.png', id:3},
+					{dish: 'рыба', img: '/img/meal/boxFish.png', id:4},
+					{dish: 'вегетарианская кухня', img: '/img/meal/boxEco.png', id:5},
+					{dish: 'безлактозная диета', img: '/img/meal/boxNoMilk.png', id:6},
 
 				],
 				chicken: 0,
@@ -130,17 +164,22 @@
 			},
 			countPlus() {
 				this.count++;
-				if(this.count == 3) {
+				if(this.count == 23) {
 					Event.$emit('showTopMenu');
 					this.$router.push('/home');
 				}
 			},
+			scrollTop() {
+				$('html, body').animate({ scrollTop: 0 }, 'fast');
+			},
 			markIsland() {
+				this.showWarning = false;
 				this.island = true;
 				this.hotel = false;
 				this.msg = 'на острове Любви.';
 			},
 			markHotel() {
+				this.showWarning = false;
 				this.hotel = true;
 				this.island = false;
 				this.msg = 'в отеле.';
@@ -148,11 +187,96 @@
 			selectDish(item) {
 				this.selected = item;
 				this.selected.status=true;
+			},
+			placeOrder() {
+				if(!this.msg) {
+					this.showWarning=true;
+					return;
+				}
+				axios.post('/order', 
+					{
+						user_id: this.currentUser.id,
+						meal_id: this.selected.id,
+						date: moment(this.date).format('YYYY-MM-DD'),
+					})
+					.then(response => {
+						this.orderCompleted=true;
+						console.log(response);
+					})
+					.catch(error => {
+						console.log(error);
+					});
+								 				
+			},
+			rate(i) {
+				this.raiting = i;
+				let date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
+				axios.post('/mealRaitng', {
+						user_id: this.currentUser.id,
+						date: date,
+						rate: i,
+				  })
+				  .then(response => {
+				  	axios.get('/mealRaitng/'+date)
+				  	  .then(response => {
+				  	  	this.overallRating = response.data;
+				  	  	this.total();
+				  	    console.log(response);
+				  	  })
+				  	  .catch(error => {
+				  	    console.log(error);
+				  	  });
+				    console.log(response);
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });
+				 
+			},
+			total() {
+				let sum = this.overallRating.reduce(function(a, b){
+				        return a + b;
+				    }, 0);
+				return this.totalScore = sum/this.overallRating.length;
+			},
+			addComment() {
+				let date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
+				axios.post('/comment', {
+				    msg: this.comment,
+				    date: date,
+				  })
+				  .then(response => {
+				  	this.comment = '';
+				  	axios.get('/comment/'+date)
+				  	  .then(response => {
+				  	  	this.comments = response.data;
+				  	    console.log(response);
+				  	  })
+				  	  .catch(error => {
+				  	    console.log(error);
+				  	  });
+				    console.log(response);
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });
+				 
+				 
 			}
+
 		},
 		mounted() {
 			Event.$emit('hideTopMenu');
-		}
+		},
+		computed: {
+			isLoggedIn() {
+				return Store.getters.isLoggedIn;
+			},
+			currentUser() {
+				return Store.getters.currentUser;
+			},
+
+		},
 
 	}
 </script>

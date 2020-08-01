@@ -12,8 +12,9 @@
 			<li class="py-2 mt-2 " @click="navigate('/departments')">ОТДЕЛЫ</li>		
 			<li class="py-2 mt-2 " @click="navigate('/staff')">СОТРУДНИКИ</li>		
 			<li class="py-2 mt-2 " @click="navigate('/docs')">ДОКУМЕНТЫ</li>		
-			<li class="py-2 mt-2 " @click="navigate('/meal')">ВИДЕОТЕКА</li>		
+			<li class="py-2 mt-2 " @click="navigate('/meal')">ЗАКАЗ ЕДЫ</li>		
 			<li class="py-2 mt-2 " @click="navigate('/auth')">ПОЛЕЗНАЯ ИНФОРМАЦИЯ</li>		
+			<li class="py-2 mt-2 " @click="logout">ВЫЙТИ ИЗ СИСТЕМЫ</li>		
 		</ul>
 		
 		<img src="/img/x-circle.svg" alt="" class="mx-auto pb-4" @click="closeScreen">
@@ -30,7 +31,19 @@
 			closeScreen() {
 				Event.$emit('showTopMenu');
 				this.$router.go(-1);
-			}
+			},
+			logout() {
+				axios.post('/logout')
+				  .then(response => {
+				  	console.log(response.data);
+		            this.$store.commit('logout');
+				  })
+				  .catch(error => {
+				  	console.log(error);
+				  	this.$store.commit('logout');
+				    window.location.replace('/');
+				  });		 
+			},
 		},
 
 	}
