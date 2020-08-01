@@ -37,6 +37,7 @@
 				  .then(response => {
 				  	console.log(response.data);
 		            this.$store.commit('logout');
+		            this.$router.push('/meal');
 				  })
 				  .catch(error => {
 				  	console.log(error);
