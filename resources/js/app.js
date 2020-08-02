@@ -35,6 +35,22 @@ const router = new VueRouter({
 	mode: ''
 });
 
+let count = 0;
+
+router.beforeEach((to, from, next) => {
+    axios.get('/check')
+        .then(response => {
+            count++;
+            console.log('this is the chekin number '+count);
+            console.log(response);
+            if(!response.data) {
+                store.commit('logout');             
+            }
+            next();
+        }) 
+
+})
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

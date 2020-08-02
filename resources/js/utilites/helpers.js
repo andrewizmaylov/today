@@ -9,7 +9,6 @@ export function getLocalUser() {
 } 
 
 export function login(credentials) {
-
 	return new Promise((res, rej) => {
 		axios.post('api/login', credentials)
 			.then((response) => {
@@ -22,6 +21,20 @@ export function login(credentials) {
 				rej(errors);
 			})
 	})
+}
+
+export function logout() {
+	axios.post('/logout')
+	  .then(response => {
+	  	console.log(response.data);
+        this.$store.commit('logout');
+        this.$router.push('/');
+	  })
+	  .catch(error => {
+	  	console.log(error);
+	  	this.$store.commit('logout');
+	    window.location.replace('/');
+	  });		 
 }
 
 export function putUserToLocalStorage() {

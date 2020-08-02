@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Comment;
+use App\Occupation;
 use App\mealRaiting;
 use App\Account\Info;
 use Illuminate\Notifications\Notifiable;
@@ -53,5 +54,10 @@ class User extends Authenticatable
     public function comment()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function occupation()
+    {
+        return $this->belongsToMany(Occupation::class)->withTimestamps();
     }
 }

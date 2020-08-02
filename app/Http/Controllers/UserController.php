@@ -21,6 +21,7 @@ class UserController extends Controller
 	//
     public function store($model, Request $request)
     {
+        
     	// return $request->all();
 
     	$user = auth()->user();
@@ -74,6 +75,7 @@ class UserController extends Controller
             // if(is_array($result)) {
             //     return $result[0];
             // }
+            // return null;
             return $result;
         }
 

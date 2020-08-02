@@ -15,26 +15,40 @@
 	.rate {
 		color: #E2C644;
 	}
+	.opacity-80 {
+		opacity: 70%;
+	}
 </style>
 <template>
 	<div class="w-full h-full bg-gray-800 text-center">
 
 		<!-- login block -->
-		<section class="py-8">
+		<section class="py-8" v-show="!order.status">
 			<div  @click="$router.push('/login')" v-if="!isLoggedIn" class="flex items-center justify-center w-2/3 max-w-md mx-auto">
 				<div v-if="accent" class="bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Сначала войди в систему</div>
 				<div v-else class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Войди в систему</div>
 			</div>
-			<div v-else class="meal-txt text-4xl">Привет, {{currentUser.email}}</div>
+			<div v-else class="meal-txt text-4xl" @click="showUserMenu=true">Привет, {{findUser()}}</div>
+		</section>
+
+		<section class="py-8"  v-show="order.status">
+			<img src="/img/face.svg" alt="avatar" class="h-24 w-24 mx-auto p-4 hover:border border-gray-300 opacity-80" @click="showUserMenu=true">
 		</section>
 
 		<!-- interactive section inactive if not logged in -->
 		<div class="relative">
 			<div class="absolute z-10 inset-0" :class="!isLoggedIn ? '':'hidden'" @click="scrollTop"></div>
-			
-			
+			<div class="absolute z-10 inset-0 bg-gray-800" :class="showUserMenu ? '':'hidden'">
+				<div class="flex flex-col mt-16">
+					<span class="py-2 mt-4 meal-txt text-4xl " @click="$router.push('/account/info')">ПРОФИЛЬ</span>
+					<span class="py-2 mt-4 meal-txt text-4xl " @click="logout">ВЫЙТИ ИЗ СИСТЕМЫ</span>
+					<svg width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto mt-16" @click="showUserMenu=false">
+						<path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20zM30 18L18 30M18 18l12 12" stroke="#C4C4C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</div>
+			</div>
 			<!-- place block -->
-			<section class="pt-16 pb-4">
+			<section class="pt-16 pb-4" v-show="!order.status">
 				<span class="meal-txt text-4xl">Отметь, где ты будешь сегодня?</span>
 				<div class="container mx-auto max-w-2xl flex justify-around pt-8">
 					<div class="w-2/5 ">
@@ -47,7 +61,7 @@
 			</section>
 			<!-- choose meal block -->
 			<section class="mt-6">
-				<span class="block meal-txt text-4xl pt-4 pb-4">Выбери себе еду:</span>
+				<span class="block meal-txt text-4xl pt-4 pb-4" v-show="!order.status">Выбери себе еду:</span>
 				<div class="container mx-auto md:max-w-2xl pt-8 flex justify-center flex-wrap lg:flex-no-wrap" v-if="!selected.status">
 					<!-- large screenand more -->
 					<div v-for="item in menu" class="hidden lg:block " @click="selectDish(item)">
@@ -76,7 +90,7 @@
 				</div>
 				<div v-else class="container mx-auto">
 					<img :src="selected.img" alt="" class="w-2/5 h-full mx-auto">
-					<span class="block meal-txt text-3xl leading-none mt-2 px-2">{{currentUser.email}}, </br>сегодня, {{this.moment()}}, твоя {{selected.dish}} будет ждать тебя </br>{{msg}} </span>
+					<span class="block meal-txt text-3xl leading-none mt-2 px-2">{{findUser()}}, </br>сегодня, {{this.moment()}}, твоя {{selected.dish}} будет ждать тебя </br>{{msg}} </span>
 					<div class="flex justify-center mt-4 px-2" v-show="!showWarning">
 						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="placeOrder" v-show="!orderCompleted">Сохранить заказ</div>
 						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selected={}" v-show="!orderCompleted">Изменить заказ</div>
@@ -91,13 +105,13 @@
 			<section class="mt-8">
 				<span class="block meal-txt text-4xl pt-8 pb-4">Оцени, как поел вчера:</span>
 				<span class="flex justify-center align-middle">
-					<svg width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg" v-for="i in 5" :key=i :class="i>raiting ? 'text-gray-500' : 'rate'" class="mx-2 fill-current" @click="rate(i)">
+					<svg width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg" v-for="i in 5" :key=i :class="i>raiting ? 'text-gray-500' : 'rate'" class="m-3 fill-current" @click="rate(i)">
 						<path d="M17 8.39a1.11 1.11 0 00-.645-2l-4.5-.17a.115.115 0 01-.1-.075l-1.555-4.2a1.11 1.11 0 00-2.085 0L6.565 6.16a.115.115 0 01-.1.075l-4.5.17a1.11 1.11 0 00-.645 2l3.53 2.775a.115.115 0 01.04.12l-1.215 4.305a1.11 1.11 0 001.69 1.225l3.73-2.5a.11.11 0 01.125 0l3.73 2.5a1.1 1.1 0 001.275 0 1.1 1.1 0 00.415-1.2l-1.225-4.32a.11.11 0 01.04-.12L17 8.39z" />
 					</svg>
 				</span>
 				<span v-show="totalScore" class="text-xxs rate">Всего голосов{{this.overallRating.length}}. Средний балл {{totalScore}} </span>
 
-				<section v-show="comments.length>1" class="flex flex-col w-2/3 max-w-md mx-auto">
+				<section v-show="comments.length>=1" class="flex flex-col w-2/3 max-w-md mx-auto">
 					<span  class="meal-txt text-2xl rate mt-6">Последние комментарии:</span>
 					<div  v-for="item in comments" class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">
 						{{item.msg}}<br>
@@ -111,7 +125,6 @@
 				</section>
 			</section>
 
-
 		</div> <!-- end of masking div -->
 
 
@@ -119,6 +132,8 @@
 	</div>
 </template>
 <script>
+	import {logout} from '../utilites/helpers';
+
 	export default {
 		name: 'meal',
 		data() {
@@ -132,6 +147,9 @@
 					dish: '',
 					img: '',
 				},
+				order: {
+					status: false,
+				},
 				showWarning: false,
 				orderCompleted: false,
 				raiting: 0,
@@ -140,6 +158,7 @@
 				comment: '',
 				comments: [],
 				accent: false,
+				showUserMenu: false,
 
 				countIsland: 0,
 				countHotel: 0,
@@ -164,6 +183,19 @@
 		methods: {
 			moment() {
 				return moment(this.date).format("DD MMMM");
+			},
+			logout() {
+				axios.post('/logout')
+				  .then(response => {
+				  	console.log(response.data);
+		            this.$store.commit('logout');
+		            this.$router.push('/login');
+				  })
+				  .catch(error => {
+				  	console.log(error);
+				  	this.$store.commit('logout');
+				    window.location.replace('/');
+				  });		 
 			},
 			countPlus() {
 				this.count++;
@@ -197,6 +229,7 @@
 					this.showWarning=true;
 					return;
 				}
+				this.order.status = true;
 				axios.post('/order', 
 					{
 						user_id: this.currentUser.id,
@@ -263,10 +296,11 @@
 				  })
 				  .catch(error => {
 				    console.log(error);
-				  });
-				 
-				 
-			}
+				  });		 
+			},
+			findUser() {
+				return this.currentUser.email;
+			},
 
 		},
 		mounted() {
@@ -279,7 +313,19 @@
 			currentUser() {
 				return Store.getters.currentUser;
 			},
-
+			appeal() {
+				axios.get('/app/web/sort/of/how/i/will/mess/you/up/account/info')
+				  .then(response => {
+				    if(response.data === "") {
+					    // console.log(response.data.first_name);
+					    return null;
+				    } 
+			    	return response.data.first_name;
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });
+			}
 		},
 
 	}
