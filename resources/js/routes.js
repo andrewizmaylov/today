@@ -1,6 +1,9 @@
 import bigMenu from './components/menufullscreen.vue';
 import Home from './components/home.vue';
 import Meal from './components/meal.vue';
+import Cook from './components/meal/cook.vue';
+import Cooks from './components/meal/cooks.vue';
+
 import User from './components/user.vue';
 import accountInfo from './components/account/info.vue';
 
@@ -24,6 +27,8 @@ export const routes = [
 	{path: '/bigMenu', component: bigMenu},
 	{path: '/home', component: Home},
 	{path: '/meal', component: Meal},
+	{path: '/cook', component: Cook},
+	{path: '/cooks', component: Cooks},
 	{path: '/user', component: User},
 	{path: '/account/info', component: accountInfo},
 

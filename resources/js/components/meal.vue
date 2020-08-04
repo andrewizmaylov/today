@@ -28,7 +28,7 @@
 				<div v-if="accent" class="bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Сначала войди в систему</div>
 				<div v-else class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Войди в систему</div>
 			</div>
-			<div v-else class="meal-txt text-4xl" @click="showUserMenu=true">Привет, {{findUser()}}</div>
+			<div v-else class="meal-txt text-4xl" @click="showUserMenu=true">Привет, {{appeal()}}</div>
 		</section>
 
 		<section class="py-8"  v-show="order.status">
@@ -41,6 +41,8 @@
 			<div class="absolute z-10 inset-0 bg-gray-800" :class="showUserMenu ? '':'hidden'">
 				<div class="flex flex-col mt-16">
 					<span class="py-2 mt-4 meal-txt text-4xl " @click="$router.push('/account/info')">ПРОФИЛЬ</span>
+					<span class="py-2 mt-4 meal-txt text-4xl " @click="$router.push('/cooks')">Наши повора</span>
+					<span class="py-2 mt-4 meal-txt text-4xl " @click="$router.push('/cook')">Кухня</span>
 					<span class="py-2 mt-4 meal-txt text-4xl " @click="logout">ВЫЙТИ ИЗ СИСТЕМЫ</span>
 					<svg width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto mt-16" @click="showUserMenu=false">
 						<path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20zM30 18L18 30M18 18l12 12" stroke="#C4C4C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -62,45 +64,28 @@
 			<!-- choose meal block -->
 			<section class="mt-6">
 				<span class="block meal-txt text-4xl pt-4 pb-4" v-show="!order.status">Выбери себе еду:</span>
-				<div class="container mx-auto md:max-w-2xl pt-8 flex justify-center flex-wrap lg:flex-no-wrap" v-if="!selected.status">
-					<!-- large screenand more -->
-					<div v-for="item in menu" class="hidden lg:block " @click="selectDish(item)">
-			<!-- 		<div class="bg-gray-300 h-16 border border-2 border-gray-600 rounded-lg text-center mx-2">
-							<span class="meal-txt text-4xl">13</span>
-						</div> -->
-						<img :src="item.img" alt="">
-						<span class="meal-txt text-2xl leading-none ">{{item.dish}}</span>
-					</div>
-					<!-- md screen to large -->
-					<div v-for="item in menu" class="hidden md:block lg:hidden w-1/3" @click="selectDish(item)">
-			<!-- 		<div class="bg-gray-300 h-16 border border-2 border-gray-600 rounded-lg text-center mx-2">
-							<span class="meal-txt text-4xl">13</span>
-						</div> -->
-						<img :src="item.img" alt="">
-						<span class="meal-txt text-2xl leading-none ">{{item.dish}}</span>
-					</div>
-					<!-- small screen -->
-					<div v-for="item in menu" class="md:hidden w-2/5 " @click="selectDish(item)">
-			<!-- 		<div class="bg-gray-300 h-16 border border-2 border-gray-600 rounded-lg text-center mx-2">
-							<span class="meal-txt text-4xl">13</span>
-						</div> -->
-						<img :src="item.img" alt="">
-						<span class="meal-txt text-2xl leading-none ">{{item.dish}}</span>
-					</div>
+				<!-- full menu for choose from -->
+				<div class="container mx-auto md:max-w-2xl pt-8 flex justify-center flex-wrap " v-if="!selected.status">
+					<foodmenu :menu="menu" @select="selectDish"></foodmenu>
 				</div>
+				<!-- one item has been choosen -->
 				<div v-else class="container mx-auto">
-					<img :src="selected.img" alt="" class="w-2/5 h-full mx-auto">
-					<span class="block meal-txt text-3xl leading-none mt-2 px-2">{{findUser()}}, </br>сегодня, {{this.moment()}}, твоя {{selected.dish}} будет ждать тебя </br>{{msg}} </span>
+					<foodbox :img="selected.img" alt="" class="w-2/5 h-full mx-auto"/>
+					<span class="block meal-txt text-3xl leading-none mt-2 px-2">{{appeal()}}, </br>сегодня, {{this.moment()}}, твоя {{selected.rus}} будет ждать тебя </br>{{msg}} </span>
+					<!-- buttons for compete or change order -->
 					<div class="flex justify-center mt-4 px-2" v-show="!showWarning">
 						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="placeOrder" v-show="!orderCompleted">Сохранить заказ</div>
 						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selected={}" v-show="!orderCompleted">Изменить заказ</div>
+						<!-- order completed stamp -->
 						<div class="border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6" v-show="orderCompleted">Заказ оформлен</div>
 					</div>
+					<!-- worning about no place selected -->
 					<div class="flex justify-center mt-4 px-2" v-show="showWarning">
 						<div class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selected={}" v-show="!orderCompleted">Сначала отметь, где ты будешь сегодня</div>
 					</div>
 				</div>
 			</section>
+
 			<!-- rate block -->
 			<section class="mt-8">
 				<span class="block meal-txt text-4xl pt-8 pb-4">Оцени, как поел вчера:</span>
@@ -133,12 +118,16 @@
 </template>
 <script>
 	import {logout} from '../utilites/helpers';
+	import foodmenu from './meal/foodmenu.vue';
+	import foodbox from './meal/foodbox.vue';
 
 	export default {
 		name: 'meal',
+		components: {foodmenu, foodbox},
 		data() {
 			return {
 				date: new Date(),
+				user: {},
 				island: false,
 				hotel: false,
 				msg: '',
@@ -162,15 +151,7 @@
 
 				countIsland: 0,
 				countHotel: 0,
-				menu: [
-					{dish: 'стандартная еда', img: '/img/meal/boxEmpty.png', id: 1},
-					{dish: 'говядина', img: '/img/meal/boxCow.png', id:2},
-					{dish: 'курица', img: '/img/meal/boxChicken.png', id:3},
-					{dish: 'рыба', img: '/img/meal/boxFish.png', id:4},
-					{dish: 'вегетарианская кухня', img: '/img/meal/boxEco.png', id:5},
-					{dish: 'безлактозная диета', img: '/img/meal/boxNoMilk.png', id:6},
-
-				],
+				menu: [],
 				chicken: 0,
 				fish: 0,
 				standart: 0,
@@ -179,6 +160,28 @@
 				count: 0,
 				showComment: false,
 			}
+		},
+		created() {
+			axios.get('/mealAviable')
+			  .then(response => {
+			    console.log(response);
+			    this.menu = response.data;
+			  })
+			  .catch(error => {
+			    console.log(error);
+			  });
+			//get all user details  
+			axios.get('/app/web/sort/of/how/i/will/mess/you/up/account/info')
+			  .then(response => {
+			    if(response.data === "") {
+				    // console.log(response.data.first_name);
+				    this.user = {};
+			    } 
+		    	this.user = response.data;
+			  })
+			  .catch(error => {
+			    console.log(error);
+			  });
 		},
 		methods: {
 			moment() {
@@ -221,6 +224,7 @@
 				this.msg = 'в отеле.';
 			},
 			selectDish(item) {
+				console.log(item);
 				this.selected = item;
 				this.selected.status=true;
 			},
@@ -274,7 +278,7 @@
 				let sum = this.overallRating.reduce(function(a, b){
 				        return a + b;
 				    }, 0);
-				return this.totalScore = sum/this.overallRating.length;
+				return this.totalScore = (sum/this.overallRating.length).float_num.toFixed(2);
 			},
 			addComment() {
 				let date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
@@ -298,7 +302,11 @@
 				    console.log(error);
 				  });		 
 			},
-			findUser() {
+			appeal() {
+				if(this.user.first_name) {
+					return this.user.first_name;
+				}
+
 				return this.currentUser.email;
 			},
 
@@ -313,19 +321,6 @@
 			currentUser() {
 				return Store.getters.currentUser;
 			},
-			appeal() {
-				axios.get('/app/web/sort/of/how/i/will/mess/you/up/account/info')
-				  .then(response => {
-				    if(response.data === "") {
-					    // console.log(response.data.first_name);
-					    return null;
-				    } 
-			    	return response.data.first_name;
-				  })
-				  .catch(error => {
-				    console.log(error);
-				  });
-			}
 		},
 
 	}

@@ -42,7 +42,7 @@
 </template>
 
 <script>
- 	import {login} from '../../utilites/helpers';
+ 	// import {login} from '../../utilites/helpers';
  	import {putUserToLocalStorage} from '../../utilites/helpers';
 
 	export default {
@@ -76,10 +76,28 @@
 			login(user) {
 		        axios.post('/login', user)
 		          .then(response => {
+		          	console.log('login user proceded here response');
+		          	console.log(response);
+
 			            if(response.status === 200) 
 			            {
 			            	putUserToLocalStorage();
-            				this.$router.push('/meal');
+			            	let path = '';
+			            	axios.get('/cookdetector')
+			            	  .then(response => {
+			            	  	console.log('cookdetector');
+			            	  	console.log(response.data);
+			            	  	if(response.data === 1) {
+			            	  		path = '/cook';
+			            	  	} else {
+			            	  		path = '/meal';
+			            	  	}
+			            	  	this.$router.push(path);
+			            	  })
+			            	  .catch(error => {
+			            	    console.log(error);
+			            	  });
+            				
 			            }
 		          })
 		          .catch(errors => {

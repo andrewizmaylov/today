@@ -42,6 +42,7 @@ router.beforeEach((to, from, next) => {
         .then(response => {
             count++;
             console.log('this is the chekin number '+count);
+            console.log('router before each ');
             console.log(response);
             if(!response.data) {
                 store.commit('logout');             

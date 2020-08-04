@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Meal;
 use App\mealRaiting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,7 @@ class MealRaitingController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['getAviable', 'getAll']);
     }
 
 
@@ -70,6 +71,36 @@ class MealRaitingController extends Controller
         return mealRaiting::where('date', $date)->pluck('rate');
     }
 
+    public function getAviable()
+    {
+         return Meal::where('status', 'false')->get();
+    }
+
+    public function getAll()
+    {
+         return Meal::all();
+    }
+    public function cookdetector()
+    {
+        if(count(auth()->user()->occupation) >0) {
+            return auth()->user()->occupation[0]->id === 7;
+        }
+        return false;
+
+        // return (\App\OccupationUser::where('user_id', auth()->user()->id)->firstOrFail())->occupation_id === 7;
+    }
+    public function cooks()
+    {
+        $keys = \App\OccupationUser::where('occupation_id', 7)->get()->pluck('user_id');
+        $users = \App\User::with('Info')->get();
+        return $users->intersect(\App\User::whereIn('id', $keys)->get());
+        
+        // $table = collect(\App\User::with('Occupation')->with('Info')->get());
+        // $filtered=$table->filter(function ($table, $key) {
+        //     return $table['occupation'][0]->id === 7;
+        // });
+        // return $filtered->all();
+    }
     /**
      * Display the specified resource.
      *
