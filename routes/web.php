@@ -15,9 +15,9 @@ Route::get('/test', function () {
 	// $user = auth()->user();
 	// return $user->occupation[0]->id ?? null;
 	// return \App\User::with('Occupation')->with('Info')->get();
-	$keys = \App\OccupationUser::where('occupation_id', 7)->get()->pluck('user_id');
-	$users = \App\User::with('Info')->get();
-	return $users->intersect(\App\User::whereIn('id', $keys)->get());
+	// $keys = \App\OccupationUser::where('occupation_id', 7)->get()->pluck('user_id');
+	// $users = \App\User::with('Info')->get();
+	// return $users->intersect(\App\User::whereIn('id', $keys)->get());
 
 });
 
@@ -42,7 +42,8 @@ Route::post('/order', 'OrderController@store');
 Route::post('/mealRaitng', 'MealRaitingController@store');
 Route::get('/mealRaitng/{date}', 'MealRaitingController@get');
 // возможные блюда на след день
-Route::get('/mealAviable', 'MealRaitingController@getAviable');
+// Route::post('/meal', 'MealController@store');
+Route::get('/meal/{date}', 'MealRaitingController@getAviable');
 Route::get('/mealAll', 'MealRaitingController@getAll');
 // проверка пользователь повар или нет для заказа еды
 Route::get('/cookdetector', 'MealRaitingController@cookdetector');

@@ -154,7 +154,7 @@
 			}
 		},
 		created() {
-			axios.get('/mealAviable')
+			axios.get('/meal/'+this.menuDate())
 			  .then(response => {
 			    console.log(response);
 			    this.menu = response.data;
@@ -178,6 +178,9 @@
 		methods: {
 			moment() {
 				return moment(this.date).format("DD MMMM");
+			},
+			menuDate() {
+				return moment(this.date).format("YYYY-MM-DD");
 			},
 			logout() {
 				axios.post('/logout')

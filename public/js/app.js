@@ -2996,7 +2996,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    axios.get('/mealAviable').then(function (response) {
+    axios.get('/meal/' + this.menuDate()).then(function (response) {
       console.log(response);
       _this.menu = response.data;
     })["catch"](function (error) {
@@ -3028,6 +3028,9 @@ __webpack_require__.r(__webpack_exports__);
     }(function () {
       return moment(this.date).format("DD MMMM");
     }),
+    menuDate: function menuDate() {
+      return moment(this.date).format("YYYY-MM-DD");
+    },
     logout: function logout() {
       var _this2 = this;
 
@@ -3213,6 +3216,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3227,29 +3237,21 @@ __webpack_require__.r(__webpack_exports__);
     return {
       date: new Date(),
       menu: [],
-      changeMenu: true,
+      selectMenu: true,
       //show change menu section
-      aviable: []
+      aviable: [],
+      today: [],
+      showUserMenu: false,
+      showComments: false
     };
   },
   methods: {
-    setAviable: function setAviable(item) {
-      console.log('set Av/ before ' + item.status);
+    selectDish: function selectDish(item) {
       var index = item.id - 1;
-      this.menu[index].status = 'true';
+      this.menu[index].status = !this.menu[index].status;
       this.aviable = this.menu.filter(function (item) {
-        return item.status == 'true';
+        return item.status == true;
       });
-      console.log('after ' + item.status);
-    },
-    setUnAviable: function setUnAviable(item) {
-      console.log('set Un/ before ' + item.status);
-      var index = item.id - 1;
-      this.menu[index].status = 'false';
-      this.aviable = this.menu.filter(function (item) {
-        return item.status == 'true';
-      });
-      console.log('after ' + item.status);
     },
     moment: function (_moment) {
       function moment(_x) {
@@ -3263,23 +3265,34 @@ __webpack_require__.r(__webpack_exports__);
       return moment;
     }(function (date) {
       return moment(date).locale('en');
-    })
+    }),
+    setMenu: function setMenu() {
+      this.selectMenu = false;
+      this.showComments = true; // post the menu for the date
+    }
   },
   created: function created() {
     var _this = this;
 
     axios.get('/mealAll').then(function (response) {
+      response.data.filter(function (item) {
+        return item.status = false;
+      });
       _this.menu = response.data;
-      _this.aviable = _this.menu.filter(function (item) {
-        return item.status == 'true';
-      }); // console.log(response);
     })["catch"](function (error) {
       console.log(error);
-    });
+    }); // axios.get('/meal/'+this.date)
+    //   .then(response => {
+    //   	today = response.data;
+    //     console.log(response);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   },
   computed: {
     tomorrow: function tomorrow() {
-      return this.moment(this.date).add(1, 'days').format('DD MMMM');
+      return this.moment(this.date).add(1, 'days').format('MMMM, DD');
     }
   }
 });
@@ -64178,9 +64191,19 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "w-full h-full bg-gray-800 text-center" },
+    { staticClass: "w-full h-full bg-gray-800 text-center relative" },
     [
-      _c("appeal"),
+      _c("appeal", {
+        class: _vm.showUserMenu ? "absolute z-10 inset-0 bg-gray-800" : "",
+        on: {
+          expand: function($event) {
+            _vm.showUserMenu = true
+          },
+          collapse: function($event) {
+            _vm.showUserMenu = false
+          }
+        }
+      }),
       _vm._v(" "),
       _c(
         "section",
@@ -64189,101 +64212,102 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value: _vm.changeMenu,
-              expression: "changeMenu"
+              value: _vm.selectMenu,
+              expression: "selectMenu"
             }
           ]
         },
         [
-          _c("div", { staticClass: "mx-auto  pt-8 flex flex-col" }, [
-            _c("span", { staticClass: "text-4xl meal-txt my-4" }, [
-              _vm._v(
-                "select what you will prepare tomorrow " + _vm._s(_vm.tomorrow)
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "w-full flex flex-no-wrap overflow-auto" },
-              _vm._l(_vm.menu, function(item) {
-                return _c("foodbox", {
-                  key: item.id,
-                  staticClass: "flex-none sm:w-1/6 w-1/5",
-                  attrs: { item: item, language: false },
-                  nativeOn: {
-                    click: function($event) {
-                      return _vm.setAviable(item)
-                    }
-                  }
-                })
-              }),
-              1
-            )
-          ]),
-          _vm._v(" "),
           _c(
             "div",
-            { staticClass: "mx-auto md:max-w-2xl pt-8 flex flex-col" },
+            { staticClass: "mx-auto  pt-8 flex flex-col" },
             [
               _c("span", { staticClass: "text-4xl meal-txt my-4" }, [
-                _vm._v("menu for " + _vm._s(_vm.tomorrow))
+                _vm._v(
+                  "select what you're gonna cook tomorrow " +
+                    _vm._s(_vm.tomorrow)
+                )
               ]),
               _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "flex flex-wrap justify-center px-8" },
-                _vm._l(_vm.aviable, function(item) {
-                  return _c("foodbox", {
-                    key: item.id,
-                    staticClass: "w-1/3",
-                    attrs: { item: item, language: false },
-                    nativeOn: {
-                      click: function($event) {
-                        return _vm.setUnAviable(item)
-                      }
-                    }
-                  })
-                }),
-                1
-              )
-            ]
+              _c("foodmenu", {
+                attrs: { menu: _vm.menu, title: "eng" },
+                on: { select: _vm.selectDish }
+              })
+            ],
+            1
           ),
+          _vm._v(" "),
+          _vm.aviable.length > 0
+            ? _c("section", [
+                _c(
+                  "div",
+                  { staticClass: "mx-auto md:max-w-2xl pt-8 flex flex-col" },
+                  [
+                    _c("span", { staticClass: "text-4xl meal-txt my-4" }, [
+                      _vm._v("menu for " + _vm._s(_vm.tomorrow))
+                    ]),
+                    _vm._v(" "),
+                    _c("foodmenu", {
+                      attrs: { menu: _vm.aviable, title: "eng" },
+                      on: { select: _vm.selectDish }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex justify-center mt-4 px-2" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2",
+                      on: { click: _vm.setMenu }
+                    },
+                    [_vm._v("Set menu for " + _vm._s(_vm.tomorrow))]
+                  )
+                ])
+              ])
+            : _vm._e()
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "section",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.selectMenu,
+              expression: "!selectMenu"
+            }
+          ]
+        },
+        [
+          _c("span", { staticClass: "text-4xl meal-txt my-4" }, [
+            _vm._v("today menu")
+          ]),
+          _vm._v(" "),
+          _c("foodmenu", { attrs: { menu: _vm.today, title: _vm.eng } }),
           _vm._v(" "),
           _c("div", { staticClass: "flex justify-center mt-4 px-2" }, [
             _c(
               "div",
               {
-                directives: [{ name: "show", rawName: "v-show" }],
                 staticClass:
                   "border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2",
                 on: {
                   click: function($event) {
-                    _vm.changeMenu = true
+                    _vm.selectMenu = true
                   }
                 }
               },
-              [_vm._v("Set menu for " + _vm._s(_vm.tomorrow))]
+              [_vm._v("Change menu for " + _vm._s(_vm.tomorrow) + " ?")]
             )
           ])
-        ]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex justify-center mt-4 px-2" }, [
-        _c(
-          "div",
-          {
-            directives: [{ name: "show", rawName: "v-show" }],
-            staticClass:
-              "border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2",
-            on: {
-              click: function($event) {
-                _vm.changeMenu = true
-              }
-            }
-          },
-          [_vm._v("Choose menu for " + _vm._s(_vm.tomorrow))]
-        )
-      ])
+        ],
+        1
+      )
     ],
     1
   )

@@ -1,31 +1,38 @@
 <template>
-	<div class="w-full h-full bg-gray-800 text-center">
+	<div class="w-full h-full bg-gray-800 text-center relative">
+		<!-- top appeal for user with user menu from appeal component -->
+		<appeal v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800' : ''"></appeal>
 
-		<appeal></appeal>
-
-
-		<section class="" v-show="changeMenu">
+		<!-- set tomorrow menu -->
+		<section class="" v-show="selectMenu">
 			<div class="mx-auto  pt-8 flex flex-col" >
-				<span class="text-4xl meal-txt my-4">select what you will prepare tomorrow {{tomorrow}}</span>
-				<div class="w-full flex flex-no-wrap overflow-auto">
-					<foodbox  @click.native="setAviable(item)" v-for="item in menu" :key="item.id" :item="item" :language="false" class="flex-none sm:w-1/6 w-1/5"></foodbox>
-				</div>
+				<span class="text-4xl meal-txt my-4">select what you're gonna cook tomorrow {{tomorrow}}</span>
+				<foodmenu :menu="menu" :title="'eng'" @select="selectDish"></foodmenu>
 			</div>	
-
-			<div class="mx-auto md:max-w-2xl pt-8 flex flex-col">
-				<span class="text-4xl meal-txt my-4">menu for {{tomorrow}}</span>
-				<div class="flex flex-wrap justify-center px-8">
-					<foodbox @click.native="setUnAviable(item)" v-for="item in aviable" :key="item.id" :item="item" :language="false" class="w-1/3"></foodbox>
+			
+			<!-- menu for the next day appear then more then one item is in list -->
+			<section v-if="aviable.length >0">
+				<div class="mx-auto md:max-w-2xl pt-8 flex flex-col">
+					<span class="text-4xl meal-txt my-4">menu for {{tomorrow}}</span>
+					<foodmenu :menu="aviable" :title="'eng'" @select="selectDish"></foodmenu>
 				</div>
-			</div>
-			<div class="flex justify-center mt-4 px-2">
-				<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2" @click="changeMenu=true" v-show="">Set menu for {{tomorrow}}</div>
-			</div>
+
+				<div class="flex justify-center mt-4 px-2">
+					<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2" @click="setMenu">Set menu for {{tomorrow}}</div>
+				</div>
+			</section>
 		</section>
 
-		<div class="flex justify-center mt-4 px-2">
-			<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2" @click="changeMenu=true" v-show="">Choose menu for {{tomorrow}}</div>
-		</div>
+		<!-- cooking today and order list -->
+		<section v-show="!selectMenu">
+			<span class="text-4xl meal-txt my-4">today menu</span>
+			<foodmenu :menu="today" :title="eng"></foodmenu>
+			<div class="flex justify-center mt-4 px-2">
+				<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selectMenu=true">Change menu for {{tomorrow}} ?</div>
+			</div>
+			
+		</section>
+
 
 	</div>
 	
@@ -42,44 +49,53 @@
 			return {
 				date: new Date(),
 				menu: [],
-				changeMenu: true, //show change menu section
+				selectMenu: true, //show change menu section
 				aviable: [],
+				today: [],
+				showUserMenu: false,
+				showComments: false
 			}
 		},
 		methods: {
-			setAviable(item) {
-				console.log('set Av/ before '+item.status);
+			selectDish(item) {
 				let index = item.id-1;
-				this.menu[index].status = 'true';
-				this.aviable = this.menu.filter(item => item.status == 'true');
-				console.log('after '+item.status);
-			},
-			setUnAviable(item) {
-				console.log('set Un/ before '+item.status);
-				let index = item.id-1;
-				this.menu[index].status = 'false';
-				this.aviable = this.menu.filter(item => item.status == 'true');
-				console.log('after '+item.status);
+				this.menu[index].status = !this.menu[index].status;
+				this.aviable = this.menu.filter(item => item.status == true);
 			},
 			moment(date) {
 				return moment(date).locale('en');
 			},
 
+			setMenu() {
+				this.selectMenu = false;
+				this.showComments = true;
+				// post the menu for the date
+
+				 
+			}
+
 		},
 		created() {
 			axios.get('/mealAll')
 			  .then(response => {
-			  	this.menu = response.data;
-			  	this.aviable = this.menu.filter(item => item.status == 'true');
-			    // console.log(response);
+				    response.data.filter(item => item.status = false);
+				  	this.menu = response.data;
 			  })
 			  .catch(error => {
 			    console.log(error);
 			  });
+			// axios.get('/meal/'+this.date)
+			//   .then(response => {
+			//   	today = response.data;
+			//     console.log(response);
+			//   })
+			//   .catch(error => {
+			//     console.log(error);
+			//   });
 		},
 		computed: {
 			tomorrow() {
-				return this.moment(this.date).add(1, 'days').format('DD MMMM');			
+				return this.moment(this.date).add(1, 'days').format('MMMM, DD');			
 			},
 		},
 	}
