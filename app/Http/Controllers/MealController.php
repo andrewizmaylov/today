@@ -13,7 +13,7 @@ class MealController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['getAviable', 'getAll']);
+        $this->middleware('auth')->except(['getMenu', 'getMeal']);
     }
 
 

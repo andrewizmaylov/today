@@ -57,7 +57,7 @@
 				<span class="block meal-txt text-4xl pt-4 pb-4" v-show="!order.status">Выбери себе еду:</span>
 				<!-- full menu for choose from -->
 				<div class="container mx-auto md:max-w-2xl pt-8 flex justify-center flex-wrap " v-if="!selected.status">
-					<foodmenu :menu="menu" :title="'rus'" @select="selectDish"></foodmenu>
+					<foodmenu :menu="today.data" :title="today.title" @select="selectDish"></foodmenu>
 				</div>
 				<!-- one item has been choosen -->
 				<div v-else class="container mx-auto">
@@ -119,6 +119,7 @@
 		data() {
 			return {
 				date: new Date(),
+				accent: false,
 				user: {},
 				island: false,
 				hotel: false,
@@ -133,32 +134,40 @@
 				},
 				showWarning: false,
 				orderCompleted: false,
+
+				// full set of meal and for today choose
+				menu: [],
+				today: {
+					data: [],
+					title: 'rus'
+				},
+				//iaster eggs count
+				count: 0,
+
+
 				raiting: 0,
 				overallRating: [],
 				totalScore: 0,
 				comment: '',
 				comments: [],
-				accent: false,
 				showUserMenu: false,
 
 				countIsland: 0,
 				countHotel: 0,
-				menu: [],
 				chicken: 0,
 				fish: 0,
 				standart: 0,
 				vegan: 0,
 				noLactoze: 0,
-				count: 0,
 				showComment: false,
 			}
 		},
 		created() {
-			// axios.get('/meal/'+this.menuDate())
 			axios.get('/meal')
 			  .then(response => {
 			    console.log(response);
 			    this.menu = response.data;
+			    this.setToday(this.menuDate());
 			  })
 			  .catch(error => {
 			    console.log(error);
@@ -183,6 +192,21 @@
 			menuDate() {
 				return moment(this.date).format("YYYY-MM-DD");
 			},
+			setToday(date) {
+				axios.get('/menu/'+date)
+				  .then(response => {
+					    let keys = response.data;
+					    var index;
+					    var td = [];
+					    for(index=0; index<keys.length; index++) {
+					    	td.push(this.menu.filter(item => item.id === keys[index]).shift());
+					    }
+					    this.today.data = td;
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });
+				},
 			logout() {
 				axios.post('/logout')
 				  .then(response => {
@@ -274,7 +298,7 @@
 				let sum = this.overallRating.reduce(function(a, b){
 				        return a + b;
 				    }, 0);
-				return this.totalScore = (sum/this.overallRating.length).float_num.toFixed(2);
+				return this.totalScore = Math.floor(sum/this.overallRating.length*100)/100;
 			},
 			addComment() {
 				let date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');

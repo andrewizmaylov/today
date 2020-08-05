@@ -96,10 +96,8 @@
 					    var index;
 					    var td = [];
 					    for(index=0; index<keys.length; index++) {
-					    	console.log(this.menu.filter(item => item.id === keys[index]).shift());
 					    	td.push(this.menu.filter(item => item.id === keys[index]).shift());
 					    }
-					    console.log(td);
 					    this.today.data = td;
 				  })
 				  .catch(error => {

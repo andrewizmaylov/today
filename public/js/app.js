@@ -2960,6 +2960,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       date: new Date(),
+      accent: false,
       user: {},
       island: false,
       hotel: false,
@@ -2974,32 +2975,38 @@ __webpack_require__.r(__webpack_exports__);
       },
       showWarning: false,
       orderCompleted: false,
+      // full set of meal and for today choose
+      menu: [],
+      today: {
+        data: [],
+        title: 'rus'
+      },
+      //iaster eggs count
+      count: 0,
       raiting: 0,
       overallRating: [],
       totalScore: 0,
       comment: '',
       comments: [],
-      accent: false,
       showUserMenu: false,
       countIsland: 0,
       countHotel: 0,
-      menu: [],
       chicken: 0,
       fish: 0,
       standart: 0,
       vegan: 0,
       noLactoze: 0,
-      count: 0,
       showComment: false
     };
   },
   created: function created() {
     var _this = this;
 
-    // axios.get('/meal/'+this.menuDate())
     axios.get('/meal').then(function (response) {
       console.log(response);
       _this.menu = response.data;
+
+      _this.setToday(_this.menuDate());
     })["catch"](function (error) {
       console.log(error);
     }); //get all user details  
@@ -3032,19 +3039,38 @@ __webpack_require__.r(__webpack_exports__);
     menuDate: function menuDate() {
       return moment(this.date).format("YYYY-MM-DD");
     },
-    logout: function logout() {
+    setToday: function setToday(date) {
       var _this2 = this;
+
+      axios.get('/menu/' + date).then(function (response) {
+        var keys = response.data;
+        var index;
+        var td = [];
+
+        for (index = 0; index < keys.length; index++) {
+          td.push(_this2.menu.filter(function (item) {
+            return item.id === keys[index];
+          }).shift());
+        }
+
+        _this2.today.data = td;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    logout: function logout() {
+      var _this3 = this;
 
       axios.post('/logout').then(function (response) {
         console.log(response.data);
 
-        _this2.$store.commit('logout');
+        _this3.$store.commit('logout');
 
-        _this2.$router.push('/login');
+        _this3.$router.push('/login');
       })["catch"](function (error) {
         console.log(error);
 
-        _this2.$store.commit('logout');
+        _this3.$store.commit('logout');
 
         window.location.replace('/');
       });
@@ -3081,7 +3107,7 @@ __webpack_require__.r(__webpack_exports__);
       this.selected.status = true;
     },
     placeOrder: function placeOrder() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this.msg) {
         this.showWarning = true;
@@ -3094,14 +3120,14 @@ __webpack_require__.r(__webpack_exports__);
         meal_id: this.selected.id,
         date: moment(this.date).format('YYYY-MM-DD')
       }).then(function (response) {
-        _this3.orderCompleted = true;
+        _this4.orderCompleted = true;
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
     },
     rate: function rate(i) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.raiting = i;
       var date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
@@ -3111,9 +3137,9 @@ __webpack_require__.r(__webpack_exports__);
         rate: i
       }).then(function (response) {
         axios.get('/mealRaitng/' + date).then(function (response) {
-          _this4.overallRating = response.data;
+          _this5.overallRating = response.data;
 
-          _this4.total();
+          _this5.total();
 
           console.log(response);
         })["catch"](function (error) {
@@ -3128,19 +3154,19 @@ __webpack_require__.r(__webpack_exports__);
       var sum = this.overallRating.reduce(function (a, b) {
         return a + b;
       }, 0);
-      return this.totalScore = (sum / this.overallRating.length).float_num.toFixed(2);
+      return this.totalScore = Math.floor(sum / this.overallRating.length * 100) / 100;
     },
     addComment: function addComment() {
-      var _this5 = this;
+      var _this6 = this;
 
       var date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
       axios.post('/comment', {
         msg: this.comment,
         date: date
       }).then(function (response) {
-        _this5.comment = '';
+        _this6.comment = '';
         axios.get('/comment/' + date).then(function (response) {
-          _this5.comments = response.data;
+          _this6.comments = response.data;
           console.log(response);
         })["catch"](function (error) {
           console.log(error);
@@ -3303,15 +3329,11 @@ __webpack_require__.r(__webpack_exports__);
         var td = [];
 
         for (index = 0; index < keys.length; index++) {
-          console.log(_this2.menu.filter(function (item) {
-            return item.id === keys[index];
-          }).shift());
           td.push(_this2.menu.filter(function (item) {
             return item.id === keys[index];
           }).shift());
         }
 
-        console.log(td);
         _this2.today.data = td;
       })["catch"](function (error) {
         console.log(error);
@@ -63889,7 +63911,7 @@ var render = function() {
                 },
                 [
                   _c("foodmenu", {
-                    attrs: { menu: _vm.menu, title: "rus" },
+                    attrs: { menu: _vm.today.data, title: _vm.today.title },
                     on: { select: _vm.selectDish }
                   })
                 ],
