@@ -24,13 +24,22 @@
 		</section>
 
 		<!-- cooking today and order list -->
-		<section v-show="!selectMenu">
+		<section v-show="!selectMenu" class="h-full">
 			<span class="text-4xl meal-txt my-4">today menu</span>
-			<foodmenu :menu="today.data" :title="today.title"></foodmenu>
+			<foodmenu :menu="today.data" :title="today.title" :wide="'w-1/5'"></foodmenu>
 			<div class="flex justify-center mt-4 px-2">
-				<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selectMenu=true">Change menu for {{tomorrow}} ?</div>
+				<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2 mb-16" @click="selectMenu=true">Change menu for {{tomorrow}} ?</div>
 			</div>
-			
+
+			<span v-show="totalScore" class="meal-txt text-4xl rate">Voices total {{this.overallRating.length}}. Average {{totalScore}} </span>	
+
+			<section v-show="comments.length>=1" class="flex flex-col w-2/3 max-w-md mx-auto pb-6">
+				<span  class="meal-txt text-2xl rate mt-6">Most recent comments:</span>
+				<div  v-for="item in comments" class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">
+					{{item.msg}}<br>
+					<span class="text-xxs font-mono rate">{{item.user.email}}</span>
+				</div>
+			</section>		
 		</section>
 
 
@@ -56,7 +65,11 @@
 					title: 'eng'
 				},
 				showUserMenu: false,
-				showComments: false
+				showComments: false,
+
+				overallRating: '',
+				totalScore: '',
+				comments: []
 			}
 		},
 		methods: {
@@ -92,6 +105,8 @@
 			setToday(date) {
 				axios.get('/menu/'+date)
 				  .then(response => {
+					  	this.selectMenu = false;
+					  	this.showComments = true;
 					    let keys = response.data;
 					    var index;
 					    var td = [];
@@ -99,12 +114,45 @@
 					    	td.push(this.menu.filter(item => item.id === keys[index]).shift());
 					    }
 					    this.today.data = td;
+
+					    this.getRaiting();
+					    this.getComments();
 				  })
 				  .catch(error => {
 				    console.log(error);
 				  });
 			},
 
+			// to be refactored to component
+			getRaiting() {
+				let date = moment(this.date).format('YYYY-MM-DD');
+
+				axios.get('/mealRaitng/'+date)
+				  .then(response => {
+				  	this.overallRating = response.data;
+				  	this.total();
+				    console.log(response);
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });
+			},
+			total() {
+				let sum = this.overallRating.reduce(function(a, b){
+				        return a + b;
+				    }, 0);
+				return this.totalScore = Math.floor(sum/this.overallRating.length*100)/100;
+			},
+			getComments() {
+				axios.get('/comment')
+				  .then(response => {
+				  	this.comments = response.data;
+				    console.log(response);
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });
+			}
 		},
 		created() {
 			axios.get('/meal')
@@ -112,18 +160,13 @@
 			  		//fix 'false' false issue
 				    response.data.filter(item => item.status = false);
 				  	this.menu = response.data;
+
+				  	this.setToday(this.moment(this.date).add(1, 'days').format('YYYY-MM-DD'));
 			  })
 			  .catch(error => {
 			    console.log(error);
 			  });
-			// axios.get('/meal/'+this.date)
-			//   .then(response => {
-			//   	today = response.data;
-			//     console.log(response);
-			//   })
-			//   .catch(error => {
-			//     console.log(error);
-			//   });
+	
 		},
 		computed: {
 			tomorrow() {

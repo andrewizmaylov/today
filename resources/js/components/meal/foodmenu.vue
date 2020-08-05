@@ -9,7 +9,7 @@
 			<foodbox :item="item" :title="title"></foodbox>
 		</div>
 		<!-- small screen -->
-		<div v-for="item in menu" class="md:hidden w-2/5 " @click="selectDish(item)">
+		<div v-for="item in menu" class="md:hidden w-2/5" @click="selectDish(item)">
 			<foodbox :item="item" :title="title"></foodbox>
 		</div>
 	</div>
@@ -20,11 +20,13 @@
 	export default {
 		name: 'foodmenu',
 		components: {foodbox},
-		props: ['menu', 'title'],
+		props: ['menu', 'title', 'wide'], // wide is here fore future class refactoring
 		methods: {
 			selectDish(item) {
 				this.$emit('select', item);
 			},
-		}
+		},
+
+		
 	}
 </script>

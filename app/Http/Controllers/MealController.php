@@ -72,6 +72,12 @@ class MealController extends Controller
         return mealRaiting::where('date', $date)->pluck('rate');
     }
     
+
+    public function getMeal()
+    {
+         return Meal::all();
+    }
+
     public function getMenu($date)
     {
          $result = Mealmenu::where('date', $date)->firstOrFail();
@@ -96,10 +102,7 @@ class MealController extends Controller
         }    
     }
 
-    public function getMeal()
-    {
-         return Meal::all();
-    }
+
 
     public function cookdetector()
     {
@@ -115,12 +118,6 @@ class MealController extends Controller
         $keys = \App\OccupationUser::where('occupation_id', 7)->get()->pluck('user_id');
         $users = \App\User::with('Info')->get();
         return $users->intersect(\App\User::whereIn('id', $keys)->get());
-
-        // $table = collect(\App\User::with('Occupation')->with('Info')->get());
-        // $filtered=$table->filter(function ($table, $key) {
-        //     return $table['occupation'][0]->id === 7;
-        // });
-        // return $filtered->all();
     }
     /**
      * Display the specified resource.

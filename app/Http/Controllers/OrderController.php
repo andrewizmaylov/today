@@ -26,7 +26,19 @@ class OrderController extends Controller
     {
         //
     }
+    public function getforUserByDate($date)
+    {
+        return Order::where('user_id', auth()->user()->id)->where('date', $date)->first();
+        // if(!$row) {
+        //     return null;
+        // }
+        // return $row;
+    }
 
+    public function getByDate($date)
+    {
+        Order::where('date', $date)->get();
+    }
     /**
      * Store a newly created resource in storage.
      *

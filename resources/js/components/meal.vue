@@ -23,7 +23,7 @@
 	<div class="w-full h-full bg-gray-800 text-center relative">
 
 		<!-- login block -->
-		<section class="" v-show="!order.status">
+		<section class="">
 			<div  @click="$router.push('/login')" v-if="!isLoggedIn" class="py-8 flex items-center justify-center w-2/3 max-w-md mx-auto">
 				<div v-if="accent" class="bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Сначала войди в систему</div>
 				<div v-else class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Войди в систему</div>
@@ -32,9 +32,7 @@
 			<!-- <div v-else class="meal-txt text-4xl" @click="showUserMenu=true">Привет, {{appeal()}}</div> -->
 		</section>
 
-		<section class="py-8"  v-show="order.status">
-			<img src="/img/face.svg" alt="avatar" class="h-24 w-24 mx-auto p-4 hover:border border-gray-300 opacity-80" @click="showUserMenu=true">
-		</section>
+
 
 		<!-- interactive section inactive if not logged in -->
 		<div class="relative">
@@ -68,7 +66,11 @@
 						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="placeOrder" v-show="!orderCompleted">Сохранить заказ</div>
 						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selected={}" v-show="!orderCompleted">Изменить заказ</div>
 						<!-- order completed stamp -->
-						<div class="border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6" v-show="orderCompleted">Заказ оформлен</div>
+						<section class="py-8 flex flex-col"  v-show="order.status">
+							<!-- <img src="/img/face.svg" alt="avatar" class="h-48 w-48 mx-auto p-4 hover:border border-gray-300 opacity-80"> -->
+							<!-- <div class="meal-txt text-2xl mt-6">Заказ оформлен</div> -->
+							<div class="border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6" v-show="orderCompleted">Заказ оформлен</div>
+						</section>
 					</div>
 					<!-- worning about no place selected -->
 					<div class="flex justify-center mt-4 px-2" v-show="showWarning">
@@ -85,7 +87,7 @@
 						<path d="M17 8.39a1.11 1.11 0 00-.645-2l-4.5-.17a.115.115 0 01-.1-.075l-1.555-4.2a1.11 1.11 0 00-2.085 0L6.565 6.16a.115.115 0 01-.1.075l-4.5.17a1.11 1.11 0 00-.645 2l3.53 2.775a.115.115 0 01.04.12l-1.215 4.305a1.11 1.11 0 001.69 1.225l3.73-2.5a.11.11 0 01.125 0l3.73 2.5a1.1 1.1 0 001.275 0 1.1 1.1 0 00.415-1.2l-1.225-4.32a.11.11 0 01.04-.12L17 8.39z" />
 					</svg>
 				</span>
-				<span v-show="totalScore" class="text-xxs rate">Всего голосов{{this.overallRating.length}}. Средний балл {{totalScore}} </span>
+				<span v-show="totalScore" class="text-xxs rate">Всего голосов {{this.overallRating.length}}. Средний балл {{totalScore}} </span>
 
 				<section v-show="comments.length>=1" class="flex flex-col w-2/3 max-w-md mx-auto">
 					<span  class="meal-txt text-2xl rate mt-6">Последние комментарии:</span>
@@ -184,6 +186,23 @@
 			  .catch(error => {
 			    console.log(error);
 			  });
+
+			axios.get('/orderUserDate/'+moment(this.date).format('YYYY-MM-DD'))
+			  .then(response => {
+			  	console.log('/orderUserDate/{date}');
+			    if(response.data.meal_id) {
+				    var index = response.data.meal_id - 1;
+				    console.log(index);
+				    this.selected = this.menu[index];
+				    this.selected.status = true;
+				    this.orderCompleted=true;
+				    this.order.status = true;
+
+			    }
+			  })
+			  .catch(error => {
+			    console.log(error);
+			  });
 		},
 		methods: {
 			moment() {
@@ -207,19 +226,7 @@
 				    console.log(error);
 				  });
 				},
-			logout() {
-				axios.post('/logout')
-				  .then(response => {
-				  	console.log(response.data);
-		            this.$store.commit('logout');
-		            this.$router.push('/login');
-				  })
-				  .catch(error => {
-				  	console.log(error);
-				  	this.$store.commit('logout');
-				    window.location.replace('/');
-				  });		 
-			},
+
 			countPlus() {
 				this.count++;
 				if(this.count == 3) {

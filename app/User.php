@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Order;
 use App\Comment;
 use App\Occupation;
 use App\mealRaiting;
@@ -59,5 +60,10 @@ class User extends Authenticatable
     public function occupation()
     {
         return $this->belongsToMany(Occupation::class)->withTimestamps();
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class);
     }
 }

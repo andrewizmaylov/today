@@ -18,13 +18,7 @@ Route::get('/test', function () {
 	// $keys = \App\OccupationUser::where('occupation_id', 7)->get()->pluck('user_id');
 	// $users = \App\User::with('Info')->get();
 	// return $users->intersect(\App\User::whereIn('id', $keys)->get());
-	$keys = [
-        0 => 2,
-        1 => 3,
-        2 => 10,
-      ];
-     $row = serialize($keys);
-     return unserialize($row);
+	return auth()->user()->order->where('date', '2020-08-05');
 
 });
 
@@ -45,6 +39,8 @@ Route::get('/check', function () {
 });
 
 Route::post('/order', 'OrderController@store');
+Route::get('/orderUserDate/{date}', 'OrderController@getforUserByDate');
+Route::get('/orderDate/{date}', 'OrderController@getByDate');
 
 Route::post('/mealRaitng', 'MealController@storeRating');
 Route::get('/mealRaitng/{date}', 'MealController@getRating');

@@ -2946,6 +2946,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -3021,6 +3023,20 @@ __webpack_require__.r(__webpack_exports__);
     })["catch"](function (error) {
       console.log(error);
     });
+    axios.get('/orderUserDate/' + moment(this.date).format('YYYY-MM-DD')).then(function (response) {
+      console.log('/orderUserDate/{date}');
+
+      if (response.data.meal_id) {
+        var index = response.data.meal_id - 1;
+        console.log(index);
+        _this.selected = _this.menu[index];
+        _this.selected.status = true;
+        _this.orderCompleted = true;
+        _this.order.status = true;
+      }
+    })["catch"](function (error) {
+      console.log(error);
+    });
   },
   methods: {
     moment: function (_moment) {
@@ -3058,23 +3074,6 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    logout: function logout() {
-      var _this3 = this;
-
-      axios.post('/logout').then(function (response) {
-        console.log(response.data);
-
-        _this3.$store.commit('logout');
-
-        _this3.$router.push('/login');
-      })["catch"](function (error) {
-        console.log(error);
-
-        _this3.$store.commit('logout');
-
-        window.location.replace('/');
-      });
-    },
     countPlus: function countPlus() {
       this.count++;
 
@@ -3107,7 +3106,7 @@ __webpack_require__.r(__webpack_exports__);
       this.selected.status = true;
     },
     placeOrder: function placeOrder() {
-      var _this4 = this;
+      var _this3 = this;
 
       if (!this.msg) {
         this.showWarning = true;
@@ -3120,14 +3119,14 @@ __webpack_require__.r(__webpack_exports__);
         meal_id: this.selected.id,
         date: moment(this.date).format('YYYY-MM-DD')
       }).then(function (response) {
-        _this4.orderCompleted = true;
+        _this3.orderCompleted = true;
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
     },
     rate: function rate(i) {
-      var _this5 = this;
+      var _this4 = this;
 
       this.raiting = i;
       var date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
@@ -3137,9 +3136,9 @@ __webpack_require__.r(__webpack_exports__);
         rate: i
       }).then(function (response) {
         axios.get('/mealRaitng/' + date).then(function (response) {
-          _this5.overallRating = response.data;
+          _this4.overallRating = response.data;
 
-          _this5.total();
+          _this4.total();
 
           console.log(response);
         })["catch"](function (error) {
@@ -3157,16 +3156,16 @@ __webpack_require__.r(__webpack_exports__);
       return this.totalScore = Math.floor(sum / this.overallRating.length * 100) / 100;
     },
     addComment: function addComment() {
-      var _this6 = this;
+      var _this5 = this;
 
       var date = moment(this.date).subtract(1, 'days').format('YYYY-MM-DD');
       axios.post('/comment', {
         msg: this.comment,
         date: date
       }).then(function (response) {
-        _this6.comment = '';
+        _this5.comment = '';
         axios.get('/comment/' + date).then(function (response) {
-          _this6.comments = response.data;
+          _this5.comments = response.data;
           console.log(response);
         })["catch"](function (error) {
           console.log(error);
@@ -3250,6 +3249,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3272,7 +3280,10 @@ __webpack_require__.r(__webpack_exports__);
         title: 'eng'
       },
       showUserMenu: false,
-      showComments: false
+      showComments: false,
+      overallRating: '',
+      totalScore: '',
+      comments: []
     };
   },
   methods: {
@@ -3324,6 +3335,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.get('/menu/' + date).then(function (response) {
+        _this2.selectMenu = false;
+        _this2.showComments = true;
         var keys = response.data;
         var index;
         var td = [];
@@ -3335,30 +3348,60 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         _this2.today.data = td;
+
+        _this2.getRaiting();
+
+        _this2.getComments();
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    // to be refactored to component
+    getRaiting: function getRaiting() {
+      var _this3 = this;
+
+      var date = moment(this.date).format('YYYY-MM-DD');
+      axios.get('/mealRaitng/' + date).then(function (response) {
+        _this3.overallRating = response.data;
+
+        _this3.total();
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    total: function total() {
+      var sum = this.overallRating.reduce(function (a, b) {
+        return a + b;
+      }, 0);
+      return this.totalScore = Math.floor(sum / this.overallRating.length * 100) / 100;
+    },
+    getComments: function getComments() {
+      var _this4 = this;
+
+      axios.get('/comment').then(function (response) {
+        _this4.comments = response.data;
+        console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this5 = this;
 
     axios.get('/meal').then(function (response) {
       //fix 'false' false issue
       response.data.filter(function (item) {
         return item.status = false;
       });
-      _this3.menu = response.data;
+      _this5.menu = response.data;
+
+      _this5.setToday(_this5.moment(_this5.date).add(1, 'days').format('YYYY-MM-DD'));
     })["catch"](function (error) {
       console.log(error);
-    }); // axios.get('/meal/'+this.date)
-    //   .then(response => {
-    //   	today = response.data;
-    //     console.log(response);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+    });
   },
   computed: {
     tomorrow: function tomorrow() {
@@ -3476,7 +3519,8 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     foodbox: _foodbox_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['menu', 'title'],
+  props: ['menu', 'title', 'wide'],
+  // wide is here fore future class refactoring
   methods: {
     selectDish: function selectDish(item) {
       this.$emit('select', item);
@@ -63744,16 +63788,7 @@ var render = function() {
     [
       _c(
         "section",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: !_vm.order.status,
-              expression: "!order.status"
-            }
-          ]
-        },
+        {},
         [
           !_vm.isLoggedIn
             ? _c(
@@ -63802,33 +63837,6 @@ var render = function() {
               })
         ],
         1
-      ),
-      _vm._v(" "),
-      _c(
-        "section",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.order.status,
-              expression: "order.status"
-            }
-          ],
-          staticClass: "py-8"
-        },
-        [
-          _c("img", {
-            staticClass:
-              "h-24 w-24 mx-auto p-4 hover:border border-gray-300 opacity-80",
-            attrs: { src: "/img/face.svg", alt: "avatar" },
-            on: {
-              click: function($event) {
-                _vm.showUserMenu = true
-              }
-            }
-          })
-        ]
       ),
       _vm._v(" "),
       _c("div", { staticClass: "relative" }, [
@@ -64000,20 +64008,36 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c(
-                        "div",
+                        "section",
                         {
                           directives: [
                             {
                               name: "show",
                               rawName: "v-show",
-                              value: _vm.orderCompleted,
-                              expression: "orderCompleted"
+                              value: _vm.order.status,
+                              expression: "order.status"
                             }
                           ],
-                          staticClass:
-                            "border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6"
+                          staticClass: "py-8 flex flex-col"
                         },
-                        [_vm._v("Заказ оформлен")]
+                        [
+                          _c(
+                            "div",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.orderCompleted,
+                                  expression: "orderCompleted"
+                                }
+                              ],
+                              staticClass:
+                                "border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6"
+                            },
+                            [_vm._v("Заказ оформлен")]
+                          )
+                        ]
                       )
                     ]
                   ),
@@ -64115,7 +64139,7 @@ var render = function() {
             },
             [
               _vm._v(
-                "Всего голосов" +
+                "Всего голосов " +
                   _vm._s(this.overallRating.length) +
                   ". Средний балл " +
                   _vm._s(_vm.totalScore) +
@@ -64351,7 +64375,8 @@ var render = function() {
               value: !_vm.selectMenu,
               expression: "!selectMenu"
             }
-          ]
+          ],
+          staticClass: "h-full"
         },
         [
           _c("span", { staticClass: "text-4xl meal-txt my-4" }, [
@@ -64359,7 +64384,11 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("foodmenu", {
-            attrs: { menu: _vm.today.data, title: _vm.today.title }
+            attrs: {
+              menu: _vm.today.data,
+              title: _vm.today.title,
+              wide: "w-1/5"
+            }
           }),
           _vm._v(" "),
           _c("div", { staticClass: "flex justify-center mt-4 px-2" }, [
@@ -64367,7 +64396,7 @@ var render = function() {
               "div",
               {
                 staticClass:
-                  "border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2",
+                  "border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2 mb-16",
                 on: {
                   click: function($event) {
                     _vm.selectMenu = true
@@ -64376,7 +64405,70 @@ var render = function() {
               },
               [_vm._v("Change menu for " + _vm._s(_vm.tomorrow) + " ?")]
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.totalScore,
+                  expression: "totalScore"
+                }
+              ],
+              staticClass: "meal-txt text-4xl rate"
+            },
+            [
+              _vm._v(
+                "Voices total " +
+                  _vm._s(this.overallRating.length) +
+                  ". Average " +
+                  _vm._s(_vm.totalScore) +
+                  " "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "section",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.comments.length >= 1,
+                  expression: "comments.length>=1"
+                }
+              ],
+              staticClass: "flex flex-col w-2/3 max-w-md mx-auto pb-6"
+            },
+            [
+              _c("span", { staticClass: "meal-txt text-2xl rate mt-6" }, [
+                _vm._v("Most recent comments:")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.comments, function(item) {
+                return _c(
+                  "div",
+                  {
+                    staticClass:
+                      "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
+                  },
+                  [
+                    _vm._v("\n\t\t\t\t" + _vm._s(item.msg)),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "text-xxs font-mono rate" }, [
+                      _vm._v(_vm._s(item.user.email))
+                    ])
+                  ]
+                )
+              })
+            ],
+            2
+          )
         ],
         1
       )
@@ -64516,7 +64608,7 @@ var render = function() {
         return _c(
           "div",
           {
-            staticClass: "md:hidden w-2/5 ",
+            staticClass: "md:hidden w-2/5",
             on: {
               click: function($event) {
                 return _vm.selectDish(item)
@@ -65348,7 +65440,7 @@ var render = function() {
         _c(
           "span",
           {
-            staticClass: "py-2 mt-4 meal-txt text-4xl ",
+            staticClass: "py-2 mt-4 meal-txt text-4xl hidden",
             on: {
               click: function($event) {
                 return _vm.$router.push("/cooks")
@@ -65361,7 +65453,7 @@ var render = function() {
         _c(
           "span",
           {
-            staticClass: "py-2 mt-4 meal-txt text-4xl ",
+            staticClass: "py-2 mt-4 meal-txt text-4xl hidden",
             on: {
               click: function($event) {
                 return _vm.$router.push("/cook")
