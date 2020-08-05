@@ -39,16 +39,19 @@ Route::get('/check', function () {
 
 Route::post('/order', 'OrderController@store');
 
-Route::post('/mealRaitng', 'MealRaitingController@store');
-Route::get('/mealRaitng/{date}', 'MealRaitingController@get');
+Route::post('/mealRaitng', 'MealController@storeRating');
+Route::get('/mealRaitng/{date}', 'MealController@getRating');
+
+//all meals aviable ever
+Route::get('/meal', 'MealController@getMeal');
 // возможные блюда на след день
-// Route::post('/meal', 'MealController@store');
-Route::get('/meal/{date}', 'MealRaitingController@getAviable');
-Route::get('/mealAll', 'MealRaitingController@getAll');
+Route::post('/menu', 'MealController@storeMenu');
+Route::get('/menu/{date}', 'MealController@getMenu');
+
 // проверка пользователь повар или нет для заказа еды
-Route::get('/cookdetector', 'MealRaitingController@cookdetector');
+Route::get('/cookdetector', 'MealController@cookdetector');
 // list of all cooks
-Route::get('/cooks', 'MealRaitingController@cooks');
+Route::get('/cooks', 'MealController@cooks');
 
 
 

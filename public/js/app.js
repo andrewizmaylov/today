@@ -2996,7 +2996,8 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    axios.get('/meal/' + this.menuDate()).then(function (response) {
+    // axios.get('/meal/'+this.menuDate())
+    axios.get('/meal').then(function (response) {
       console.log(response);
       _this.menu = response.data;
     })["catch"](function (error) {
@@ -3269,12 +3270,21 @@ __webpack_require__.r(__webpack_exports__);
     setMenu: function setMenu() {
       this.selectMenu = false;
       this.showComments = true; // post the menu for the date
+
+      axios.post('/meal', {
+        firstName: 'Fred',
+        lastName: 'Flintstone'
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   },
   created: function created() {
     var _this = this;
 
-    axios.get('/mealAll').then(function (response) {
+    axios.get('/meal').then(function (response) {
       response.data.filter(function (item) {
         return item.status = false;
       });

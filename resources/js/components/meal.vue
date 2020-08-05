@@ -154,7 +154,8 @@
 			}
 		},
 		created() {
-			axios.get('/meal/'+this.menuDate())
+			// axios.get('/meal/'+this.menuDate())
+			axios.get('/meal')
 			  .then(response => {
 			    console.log(response);
 			    this.menu = response.data;

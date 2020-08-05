@@ -70,13 +70,24 @@
 				this.selectMenu = false;
 				this.showComments = true;
 				// post the menu for the date
+				axios.post('/meal', {
+				    firstName: 'Fred',
+				    lastName: 'Flintstone'
+				  })
+				  .then(response => {
+				    console.log(response);
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });
+				 
 
 				 
 			}
 
 		},
 		created() {
-			axios.get('/mealAll')
+			axios.get('/meal')
 			  .then(response => {
 				    response.data.filter(item => item.status = false);
 				  	this.menu = response.data;

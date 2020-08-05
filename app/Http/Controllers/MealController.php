@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Meal;
+use App\mealRaiting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MealController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['getAviable', 'getAll']);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -33,18 +42,77 @@ class MealController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeRating(Request $request)
     {
-        //
+        // dd($request);
+        $data = $request->validate([
+            'user_id' => 'required|unique:meal_raitings,date',
+            'date' => 'required|unique:meal_raitings,user_id',
+            'rate' => 'required',
+        ]);
+
+        if($data) { 
+            // check record exists
+            // $row = DB::table('meal_raitings')->where([['user_id', $data['user_id']], ['date', $data['date']]] )->first();
+            $row = mealRaiting::where('user_id', $data['user_id'])->where('date', $data['date'])->first();
+            // dd($row);
+            if($row) {
+                $row->update(['rate'=>$data['rate']]);
+                return response(['message' => "Entry was updated. New Rate {$data['rate']} was assigned for the meal"], 200);
+            }
+            mealRaiting::create($data);
+            return response(['message' => 'Entry was created'], 201);
+        }       
+
     }
 
+    public function getRating($date)
+    {
+        return mealRaiting::where('date', $date)->pluck('rate');
+    }
+    
+    public function getMenu($date)
+    {
+         return Mealmenu::where('date', $date)->first();
+    }
+    public function storeMenu(Request $request)
+    {
+        dd($request);
+    }
+
+    public function getMeal()
+    {
+         return Meal::all();
+    }
+
+    public function cookdetector()
+    {
+        if(count(auth()->user()->occupation) >0) {
+            return auth()->user()->occupation[0]->id === 7;
+        }
+        return false;
+
+        // return (\App\OccupationUser::where('user_id', auth()->user()->id)->firstOrFail())->occupation_id === 7;
+    }
+    public function cooks()
+    {
+        $keys = \App\OccupationUser::where('occupation_id', 7)->get()->pluck('user_id');
+        $users = \App\User::with('Info')->get();
+        return $users->intersect(\App\User::whereIn('id', $keys)->get());
+
+        // $table = collect(\App\User::with('Occupation')->with('Info')->get());
+        // $filtered=$table->filter(function ($table, $key) {
+        //     return $table['occupation'][0]->id === 7;
+        // });
+        // return $filtered->all();
+    }
     /**
      * Display the specified resource.
      *
-     * @param  \App\Meal  $meal
+     * @param  \App\mealRaiting  $mealRaiting
      * @return \Illuminate\Http\Response
      */
-    public function show(Meal $meal)
+    public function show(mealRaiting $mealRaiting)
     {
         //
     }
@@ -52,10 +120,10 @@ class MealController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Meal  $meal
+     * @param  \App\mealRaiting  $mealRaiting
      * @return \Illuminate\Http\Response
      */
-    public function edit(Meal $meal)
+    public function edit(mealRaiting $mealRaiting)
     {
         //
     }
@@ -64,10 +132,10 @@ class MealController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Meal  $meal
+     * @param  \App\mealRaiting  $mealRaiting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Meal $meal)
+    public function update(Request $request, mealRaiting $mealRaiting)
     {
         //
     }
@@ -75,10 +143,10 @@ class MealController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Meal  $meal
+     * @param  \App\mealRaiting  $mealRaiting
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Meal $meal)
+    public function destroy(mealRaiting $mealRaiting)
     {
         //
     }
