@@ -18,6 +18,13 @@ Route::get('/test', function () {
 	// $keys = \App\OccupationUser::where('occupation_id', 7)->get()->pluck('user_id');
 	// $users = \App\User::with('Info')->get();
 	// return $users->intersect(\App\User::whereIn('id', $keys)->get());
+	$keys = [
+        0 => 2,
+        1 => 3,
+        2 => 10,
+      ];
+     $row = serialize($keys);
+     return unserialize($row);
 
 });
 

@@ -26,7 +26,7 @@
 		<!-- cooking today and order list -->
 		<section v-show="!selectMenu">
 			<span class="text-4xl meal-txt my-4">today menu</span>
-			<foodmenu :menu="today" :title="eng"></foodmenu>
+			<foodmenu :menu="today.data" :title="today.title"></foodmenu>
 			<div class="flex justify-center mt-4 px-2">
 				<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selectMenu=true">Change menu for {{tomorrow}} ?</div>
 			</div>
@@ -51,7 +51,10 @@
 				menu: [],
 				selectMenu: true, //show change menu section
 				aviable: [],
-				today: [],
+				today: {
+					data: [],
+					title: 'eng'
+				},
 				showUserMenu: false,
 				showComments: false
 			}
@@ -69,26 +72,46 @@
 			setMenu() {
 				this.selectMenu = false;
 				this.showComments = true;
+
+				let date = this.moment(this.date).add(1, 'days').format('YYYY-MM-DD');
 				// post the menu for the date
-				axios.post('/meal', {
-				    firstName: 'Fred',
-				    lastName: 'Flintstone'
+			    console.log(this.aviable.map(item => item.id));
+				axios.post('/menu', {
+					date: date,
+					keys: this.aviable.map(item => item.id),
 				  })
 				  .then(response => {
-				    console.log(response);
+				  	this.setToday(date);
+				    console.log('set menu ');
+				    console.log(response.data);
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });	 
+			},
+			setToday(date) {
+				axios.get('/menu/'+date)
+				  .then(response => {
+					    let keys = response.data;
+					    var index;
+					    var td = [];
+					    for(index=0; index<keys.length; index++) {
+					    	console.log(this.menu.filter(item => item.id === keys[index]).shift());
+					    	td.push(this.menu.filter(item => item.id === keys[index]).shift());
+					    }
+					    console.log(td);
+					    this.today.data = td;
 				  })
 				  .catch(error => {
 				    console.log(error);
 				  });
-				 
-
-				 
-			}
+			},
 
 		},
 		created() {
 			axios.get('/meal')
 			  .then(response => {
+			  		//fix 'false' false issue
 				    response.data.filter(item => item.status = false);
 				  	this.menu = response.data;
 			  })

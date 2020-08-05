@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Meal;
+use App\Mealmenu;
 use App\mealRaiting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -73,11 +74,26 @@ class MealController extends Controller
     
     public function getMenu($date)
     {
-         return Mealmenu::where('date', $date)->first();
+         $result = Mealmenu::where('date', $date)->firstOrFail();
+         return unserialize($result['keys']);
     }
+
     public function storeMenu(Request $request)
     {
-        dd($request);
+        $data = $request->validate([
+            'date' => 'required',
+            'keys' => 'required'
+        ]);
+        $data['keys'] = serialize($request->keys);
+        if($data) { 
+            $row = Mealmenu::where('date', $data['date'])->first();
+            if($row) {
+                $row->update(['keys'=>$data['keys']]);
+                return response(['message' => "Entry was updated. New array of keys {$data['keys']} was assigned for the mealmenu on {$data['date']}"], 200);
+            }
+            mealMenu::create($data);
+            return response(['message' => 'Entry was created'], 201);
+        }    
     }
 
     public function getMeal()

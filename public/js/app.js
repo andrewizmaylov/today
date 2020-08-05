@@ -3241,7 +3241,10 @@ __webpack_require__.r(__webpack_exports__);
       selectMenu: true,
       //show change menu section
       aviable: [],
-      today: [],
+      today: {
+        data: [],
+        title: 'eng'
+      },
       showUserMenu: false,
       showComments: false
     };
@@ -3268,27 +3271,62 @@ __webpack_require__.r(__webpack_exports__);
       return moment(date).locale('en');
     }),
     setMenu: function setMenu() {
-      this.selectMenu = false;
-      this.showComments = true; // post the menu for the date
+      var _this = this;
 
-      axios.post('/meal', {
-        firstName: 'Fred',
-        lastName: 'Flintstone'
+      this.selectMenu = false;
+      this.showComments = true;
+      var date = this.moment(this.date).add(1, 'days').format('YYYY-MM-DD'); // post the menu for the date
+
+      console.log(this.aviable.map(function (item) {
+        return item.id;
+      }));
+      axios.post('/menu', {
+        date: date,
+        keys: this.aviable.map(function (item) {
+          return item.id;
+        })
       }).then(function (response) {
-        console.log(response);
+        _this.setToday(date);
+
+        console.log('set menu ');
+        console.log(response.data);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    setToday: function setToday(date) {
+      var _this2 = this;
+
+      axios.get('/menu/' + date).then(function (response) {
+        var keys = response.data;
+        var index;
+        var td = [];
+
+        for (index = 0; index < keys.length; index++) {
+          console.log(_this2.menu.filter(function (item) {
+            return item.id === keys[index];
+          }).shift());
+          td.push(_this2.menu.filter(function (item) {
+            return item.id === keys[index];
+          }).shift());
+        }
+
+        console.log(td);
+        _this2.today.data = td;
       })["catch"](function (error) {
         console.log(error);
       });
     }
   },
   created: function created() {
-    var _this = this;
+    var _this3 = this;
 
     axios.get('/meal').then(function (response) {
+      //fix 'false' false issue
       response.data.filter(function (item) {
         return item.status = false;
       });
-      _this.menu = response.data;
+      _this3.menu = response.data;
     })["catch"](function (error) {
       console.log(error);
     }); // axios.get('/meal/'+this.date)
@@ -64298,7 +64336,9 @@ var render = function() {
             _vm._v("today menu")
           ]),
           _vm._v(" "),
-          _c("foodmenu", { attrs: { menu: _vm.today, title: _vm.eng } }),
+          _c("foodmenu", {
+            attrs: { menu: _vm.today.data, title: _vm.today.title }
+          }),
           _vm._v(" "),
           _c("div", { staticClass: "flex justify-center mt-4 px-2" }, [
             _c(
