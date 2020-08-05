@@ -2836,6 +2836,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utilites_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilites/helpers */ "./resources/js/utilites/helpers.js");
 /* harmony import */ var _meal_foodmenu_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./meal/foodmenu.vue */ "./resources/js/components/meal/foodmenu.vue");
 /* harmony import */ var _meal_foodbox_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./meal/foodbox.vue */ "./resources/js/components/meal/foodbox.vue");
+/* harmony import */ var _user_appeal_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./user/appeal.vue */ "./resources/js/components/user/appeal.vue");
 //
 //
 //
@@ -2945,15 +2946,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
@@ -2961,7 +2954,8 @@ __webpack_require__.r(__webpack_exports__);
   name: 'meal',
   components: {
     foodmenu: _meal_foodmenu_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    foodbox: _meal_foodbox_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    foodbox: _meal_foodbox_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    appeal: _user_appeal_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   data: function data() {
     return {
@@ -3350,10 +3344,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'foodbox',
-  props: ['item', 'language']
+  props: ['item', 'title'],
+  methods: {
+    label: function label() {
+      if (this.title) {
+        return this.item[this.title];
+      }
+
+      return null;
+    }
+  }
 });
 
 /***/ }),
@@ -3391,7 +3393,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     foodbox: _foodbox_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['menu'],
+  props: ['menu', 'title'],
   methods: {
     selectDish: function selectDish(item) {
       this.$emit('select', item);
@@ -3837,6 +3839,14 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    showMenu: function showMenu() {
+      this.showUserMenu = true;
+      this.$emit('expand');
+    },
+    hideMenu: function hideMenu() {
+      this.showUserMenu = false;
+      this.$emit('collapse');
+    },
     appeal: function appeal() {
       if (this.user.first_name) {
         return this.user.first_name;
@@ -63645,191 +63655,10 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-full h-full bg-gray-800 text-center" }, [
-    _c(
-      "section",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: !_vm.order.status,
-            expression: "!order.status"
-          }
-        ],
-        staticClass: "py-8"
-      },
-      [
-        !_vm.isLoggedIn
-          ? _c(
-              "div",
-              {
-                staticClass:
-                  "flex items-center justify-center w-2/3 max-w-md mx-auto",
-                on: {
-                  click: function($event) {
-                    return _vm.$router.push("/login")
-                  }
-                }
-              },
-              [
-                _vm.accent
-                  ? _c(
-                      "div",
-                      {
-                        staticClass:
-                          "bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
-                      },
-                      [_vm._v("Сначала войди в систему")]
-                    )
-                  : _c(
-                      "div",
-                      {
-                        staticClass:
-                          "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
-                      },
-                      [_vm._v("Войди в систему")]
-                    )
-              ]
-            )
-          : _c(
-              "div",
-              {
-                staticClass: "meal-txt text-4xl",
-                on: {
-                  click: function($event) {
-                    _vm.showUserMenu = true
-                  }
-                }
-              },
-              [_vm._v("Привет, " + _vm._s(_vm.appeal()))]
-            )
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "section",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.order.status,
-            expression: "order.status"
-          }
-        ],
-        staticClass: "py-8"
-      },
-      [
-        _c("img", {
-          staticClass:
-            "h-24 w-24 mx-auto p-4 hover:border border-gray-300 opacity-80",
-          attrs: { src: "/img/face.svg", alt: "avatar" },
-          on: {
-            click: function($event) {
-              _vm.showUserMenu = true
-            }
-          }
-        })
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "relative" }, [
-      _c("div", {
-        staticClass: "absolute z-10 inset-0",
-        class: !_vm.isLoggedIn ? "" : "hidden",
-        on: { click: _vm.scrollTop }
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "absolute z-10 inset-0 bg-gray-800",
-          class: _vm.showUserMenu ? "" : "hidden"
-        },
-        [
-          _c("div", { staticClass: "flex flex-col mt-16" }, [
-            _c(
-              "span",
-              {
-                staticClass: "py-2 mt-4 meal-txt text-4xl ",
-                on: {
-                  click: function($event) {
-                    return _vm.$router.push("/account/info")
-                  }
-                }
-              },
-              [_vm._v("ПРОФИЛЬ")]
-            ),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                staticClass: "py-2 mt-4 meal-txt text-4xl ",
-                on: {
-                  click: function($event) {
-                    return _vm.$router.push("/cooks")
-                  }
-                }
-              },
-              [_vm._v("Наши повора")]
-            ),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                staticClass: "py-2 mt-4 meal-txt text-4xl ",
-                on: {
-                  click: function($event) {
-                    return _vm.$router.push("/cook")
-                  }
-                }
-              },
-              [_vm._v("Кухня")]
-            ),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                staticClass: "py-2 mt-4 meal-txt text-4xl ",
-                on: { click: _vm.logout }
-              },
-              [_vm._v("ВЫЙТИ ИЗ СИСТЕМЫ")]
-            ),
-            _vm._v(" "),
-            _c(
-              "svg",
-              {
-                staticClass: "mx-auto mt-16",
-                attrs: {
-                  width: "48",
-                  height: "48",
-                  fill: "none",
-                  xmlns: "http://www.w3.org/2000/svg"
-                },
-                on: {
-                  click: function($event) {
-                    _vm.showUserMenu = false
-                  }
-                }
-              },
-              [
-                _c("path", {
-                  attrs: {
-                    d:
-                      "M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20zM30 18L18 30M18 18l12 12",
-                    stroke: "#C4C4C4",
-                    "stroke-width": "2",
-                    "stroke-linecap": "round",
-                    "stroke-linejoin": "round"
-                  }
-                })
-              ]
-            )
-          ])
-        ]
-      ),
-      _vm._v(" "),
+  return _c(
+    "div",
+    { staticClass: "w-full h-full bg-gray-800 text-center relative" },
+    [
       _c(
         "section",
         {
@@ -63840,46 +63669,94 @@ var render = function() {
               value: !_vm.order.status,
               expression: "!order.status"
             }
-          ],
-          staticClass: "pt-16 pb-4"
+          ]
         },
         [
-          _c("span", { staticClass: "meal-txt text-4xl" }, [
-            _vm._v("Отметь, где ты будешь сегодня?")
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
+          !_vm.isLoggedIn
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "py-8 flex items-center justify-center w-2/3 max-w-md mx-auto",
+                  on: {
+                    click: function($event) {
+                      return _vm.$router.push("/login")
+                    }
+                  }
+                },
+                [
+                  _vm.accent
+                    ? _c(
+                        "div",
+                        {
+                          staticClass:
+                            "bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
+                        },
+                        [_vm._v("Сначала войди в систему")]
+                      )
+                    : _c(
+                        "div",
+                        {
+                          staticClass:
+                            "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
+                        },
+                        [_vm._v("Войди в систему")]
+                      )
+                ]
+              )
+            : _c("appeal", {
+                class: _vm.showUserMenu
+                  ? "absolute z-10 inset-0 bg-gray-800"
+                  : "",
+                on: {
+                  expand: function($event) {
+                    _vm.showUserMenu = true
+                  },
+                  collapse: function($event) {
+                    _vm.showUserMenu = false
+                  }
+                }
+              })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "section",
+        {
+          directives: [
             {
-              staticClass:
-                "container mx-auto max-w-2xl flex justify-around pt-8"
-            },
-            [
-              _c("div", { staticClass: "w-2/5 " }, [
-                _c("img", {
-                  staticClass: "rounded-full border border-4 border-gray-300",
-                  class: _vm.hotel ? "active" : "bw",
-                  attrs: { src: "/img/bungalo.jpg", alt: "" },
-                  on: { click: _vm.markHotel }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "w-2/5 " }, [
-                _c("img", {
-                  staticClass: "rounded-full border border-4 border-gray-300",
-                  class: _vm.island ? "active" : "bw",
-                  attrs: { src: "/img/island.jpg", alt: "" },
-                  on: { click: _vm.markIsland }
-                })
-              ])
-            ]
-          )
+              name: "show",
+              rawName: "v-show",
+              value: _vm.order.status,
+              expression: "order.status"
+            }
+          ],
+          staticClass: "py-8"
+        },
+        [
+          _c("img", {
+            staticClass:
+              "h-24 w-24 mx-auto p-4 hover:border border-gray-300 opacity-80",
+            attrs: { src: "/img/face.svg", alt: "avatar" },
+            on: {
+              click: function($event) {
+                _vm.showUserMenu = true
+              }
+            }
+          })
         ]
       ),
       _vm._v(" "),
-      _c("section", { staticClass: "mt-6" }, [
+      _c("div", { staticClass: "relative" }, [
+        _c("div", {
+          staticClass: "absolute z-10 inset-0",
+          class: !_vm.isLoggedIn ? "" : "hidden",
+          on: { click: _vm.scrollTop }
+        }),
+        _vm._v(" "),
         _c(
-          "span",
+          "section",
           {
             directives: [
               {
@@ -63889,346 +63766,393 @@ var render = function() {
                 expression: "!order.status"
               }
             ],
-            staticClass: "block meal-txt text-4xl pt-4 pb-4"
-          },
-          [_vm._v("Выбери себе еду:")]
-        ),
-        _vm._v(" "),
-        !_vm.selected.status
-          ? _c(
-              "div",
-              {
-                staticClass:
-                  "container mx-auto md:max-w-2xl pt-8 flex justify-center flex-wrap "
-              },
-              [
-                _c("foodmenu", {
-                  attrs: { menu: _vm.menu },
-                  on: { select: _vm.selectDish }
-                })
-              ],
-              1
-            )
-          : _c(
-              "div",
-              { staticClass: "container mx-auto" },
-              [
-                _c("foodbox", {
-                  staticClass: "w-2/5 h-full mx-auto",
-                  attrs: { img: _vm.selected.img, alt: "" }
-                }),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    staticClass:
-                      "block meal-txt text-3xl leading-none mt-2 px-2"
-                  },
-                  [
-                    _vm._v(_vm._s(_vm.appeal()) + ", "),
-                    _c("br"),
-                    _vm._v(
-                      "сегодня, " +
-                        _vm._s(this.moment()) +
-                        ", твоя " +
-                        _vm._s(_vm.selected.rus) +
-                        " будет ждать тебя "
-                    ),
-                    _c("br"),
-                    _vm._v(_vm._s(_vm.msg) + " ")
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: !_vm.showWarning,
-                        expression: "!showWarning"
-                      }
-                    ],
-                    staticClass: "flex justify-center mt-4 px-2"
-                  },
-                  [
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: !_vm.orderCompleted,
-                            expression: "!orderCompleted"
-                          }
-                        ],
-                        staticClass:
-                          "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
-                        on: { click: _vm.placeOrder }
-                      },
-                      [_vm._v("Сохранить заказ")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: !_vm.orderCompleted,
-                            expression: "!orderCompleted"
-                          }
-                        ],
-                        staticClass:
-                          "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
-                        on: {
-                          click: function($event) {
-                            _vm.selected = {}
-                          }
-                        }
-                      },
-                      [_vm._v("Изменить заказ")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.orderCompleted,
-                            expression: "orderCompleted"
-                          }
-                        ],
-                        staticClass:
-                          "border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6"
-                      },
-                      [_vm._v("Заказ оформлен")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.showWarning,
-                        expression: "showWarning"
-                      }
-                    ],
-                    staticClass: "flex justify-center mt-4 px-2"
-                  },
-                  [
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: !_vm.orderCompleted,
-                            expression: "!orderCompleted"
-                          }
-                        ],
-                        staticClass:
-                          "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mx-2",
-                        on: {
-                          click: function($event) {
-                            _vm.selected = {}
-                          }
-                        }
-                      },
-                      [_vm._v("Сначала отметь, где ты будешь сегодня")]
-                    )
-                  ]
-                )
-              ],
-              1
-            )
-      ]),
-      _vm._v(" "),
-      _c("section", { staticClass: "mt-8" }, [
-        _c("span", { staticClass: "block meal-txt text-4xl pt-8 pb-4" }, [
-          _vm._v("Оцени, как поел вчера:")
-        ]),
-        _vm._v(" "),
-        _c(
-          "span",
-          { staticClass: "flex justify-center align-middle" },
-          _vm._l(5, function(i) {
-            return _c(
-              "svg",
-              {
-                key: i,
-                staticClass: "m-3 fill-current",
-                class: i > _vm.raiting ? "text-gray-500" : "rate",
-                attrs: {
-                  width: "18",
-                  height: "18",
-                  fill: "none",
-                  xmlns: "http://www.w3.org/2000/svg"
-                },
-                on: {
-                  click: function($event) {
-                    return _vm.rate(i)
-                  }
-                }
-              },
-              [
-                _c("path", {
-                  attrs: {
-                    d:
-                      "M17 8.39a1.11 1.11 0 00-.645-2l-4.5-.17a.115.115 0 01-.1-.075l-1.555-4.2a1.11 1.11 0 00-2.085 0L6.565 6.16a.115.115 0 01-.1.075l-4.5.17a1.11 1.11 0 00-.645 2l3.53 2.775a.115.115 0 01.04.12l-1.215 4.305a1.11 1.11 0 001.69 1.225l3.73-2.5a.11.11 0 01.125 0l3.73 2.5a1.1 1.1 0 001.275 0 1.1 1.1 0 00.415-1.2l-1.225-4.32a.11.11 0 01.04-.12L17 8.39z"
-                  }
-                })
-              ]
-            )
-          }),
-          0
-        ),
-        _vm._v(" "),
-        _c(
-          "span",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.totalScore,
-                expression: "totalScore"
-              }
-            ],
-            staticClass: "text-xxs rate"
+            staticClass: "pt-16 pb-8"
           },
           [
-            _vm._v(
-              "Всего голосов" +
-                _vm._s(this.overallRating.length) +
-                ". Средний балл " +
-                _vm._s(_vm.totalScore) +
-                " "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "section",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.comments.length >= 1,
-                expression: "comments.length>=1"
-              }
-            ],
-            staticClass: "flex flex-col w-2/3 max-w-md mx-auto"
-          },
-          [
-            _c("span", { staticClass: "meal-txt text-2xl rate mt-6" }, [
-              _vm._v("Последние комментарии:")
+            _c("span", { staticClass: "meal-txt text-4xl" }, [
+              _vm._v("Отметь, где ты будешь сегодня?")
             ]),
-            _vm._v(" "),
-            _vm._l(_vm.comments, function(item) {
-              return _c(
-                "div",
-                {
-                  staticClass:
-                    "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
-                },
-                [
-                  _vm._v("\n\t\t\t\t\t" + _vm._s(item.msg)),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "text-xxs font-mono rate" }, [
-                    _vm._v(_vm._s(item.user.email))
-                  ])
-                ]
-              )
-            })
-          ],
-          2
-        ),
-        _vm._v(" "),
-        _c(
-          "span",
-          {
-            staticClass: "block meal-txt text-2xl pt-8 pb-4",
-            on: {
-              click: function($event) {
-                _vm.showComment = true
-              }
-            }
-          },
-          [_vm._v("Хочешь оставить комментарий?")]
-        ),
-        _vm._v(" "),
-        _c(
-          "section",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.showComment,
-                expression: "showComment"
-              }
-            ],
-            staticClass: "flex flex-col w-2/3 max-w-md mx-auto"
-          },
-          [
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.comment,
-                  expression: "comment"
-                }
-              ],
-              staticClass: "outline-none rounded p-1",
-              attrs: { name: "", id: "", cols: "30", rows: "9" },
-              domProps: { value: _vm.comment },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.comment = $event.target.value
-                }
-              }
-            }),
             _vm._v(" "),
             _c(
               "div",
               {
                 staticClass:
-                  "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2",
-                on: { click: _vm.addComment }
+                  "container mx-auto max-w-2xl flex justify-around pt-8"
               },
-              [_vm._v("Оставить комментарий")]
+              [
+                _c("div", { staticClass: "w-2/5 " }, [
+                  _c("img", {
+                    staticClass: "rounded-full border border-4 border-gray-300",
+                    class: _vm.hotel ? "active" : "bw",
+                    attrs: { src: "/img/bungalo.jpg", alt: "" },
+                    on: { click: _vm.markHotel }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "w-2/5 " }, [
+                  _c("img", {
+                    staticClass: "rounded-full border border-4 border-gray-300",
+                    class: _vm.island ? "active" : "bw",
+                    attrs: { src: "/img/island.jpg", alt: "" },
+                    on: { click: _vm.markIsland }
+                  })
+                ])
+              ]
             )
           ]
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "span",
-      {
-        staticClass: "block pt-16 pb-16 text-xxs text-gray-500",
-        on: { click: _vm.countPlus }
-      },
-      [_vm._v("QuadrantBubbles 2020")]
-    )
-  ])
+        ),
+        _vm._v(" "),
+        _c("section", { staticClass: "mt-6" }, [
+          _c(
+            "span",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.order.status,
+                  expression: "!order.status"
+                }
+              ],
+              staticClass: "block meal-txt text-4xl pt-4 pb-4"
+            },
+            [_vm._v("Выбери себе еду:")]
+          ),
+          _vm._v(" "),
+          !_vm.selected.status
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "container mx-auto md:max-w-2xl pt-8 flex justify-center flex-wrap "
+                },
+                [
+                  _c("foodmenu", {
+                    attrs: { menu: _vm.menu, title: "rus" },
+                    on: { select: _vm.selectDish }
+                  })
+                ],
+                1
+              )
+            : _c(
+                "div",
+                { staticClass: "container mx-auto" },
+                [
+                  _c("foodbox", {
+                    staticClass: "w-2/5 h-full mx-auto",
+                    attrs: { item: _vm.selected, alt: "" }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass:
+                        "block meal-txt text-3xl leading-none mt-2 px-4"
+                    },
+                    [
+                      _vm._v(
+                        "Сегодня, " +
+                          _vm._s(this.moment()) +
+                          ", твоя " +
+                          _vm._s(_vm.selected.rus) +
+                          " будет ждать тебя "
+                      ),
+                      _c("br"),
+                      _vm._v(_vm._s(_vm.msg) + " ")
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !_vm.showWarning,
+                          expression: "!showWarning"
+                        }
+                      ],
+                      staticClass: "flex justify-center mt-4 px-2"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.orderCompleted,
+                              expression: "!orderCompleted"
+                            }
+                          ],
+                          staticClass:
+                            "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
+                          on: { click: _vm.placeOrder }
+                        },
+                        [_vm._v("Сохранить заказ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.orderCompleted,
+                              expression: "!orderCompleted"
+                            }
+                          ],
+                          staticClass:
+                            "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
+                          on: {
+                            click: function($event) {
+                              _vm.selected = {}
+                            }
+                          }
+                        },
+                        [_vm._v("Изменить заказ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.orderCompleted,
+                              expression: "orderCompleted"
+                            }
+                          ],
+                          staticClass:
+                            "border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6"
+                        },
+                        [_vm._v("Заказ оформлен")]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.showWarning,
+                          expression: "showWarning"
+                        }
+                      ],
+                      staticClass: "flex justify-center mt-4 px-2"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.orderCompleted,
+                              expression: "!orderCompleted"
+                            }
+                          ],
+                          staticClass:
+                            "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mx-2",
+                          on: {
+                            click: function($event) {
+                              _vm.selected = {}
+                            }
+                          }
+                        },
+                        [_vm._v("Сначала отметь, где ты будешь сегодня")]
+                      )
+                    ]
+                  )
+                ],
+                1
+              )
+        ]),
+        _vm._v(" "),
+        _c("section", { staticClass: "mt-8" }, [
+          _c("span", { staticClass: "block meal-txt text-4xl pt-8 pb-4" }, [
+            _vm._v("Оцени, как поел вчера:")
+          ]),
+          _vm._v(" "),
+          _c(
+            "span",
+            { staticClass: "flex justify-center align-middle" },
+            _vm._l(5, function(i) {
+              return _c(
+                "svg",
+                {
+                  key: i,
+                  staticClass: "m-3 fill-current",
+                  class: i > _vm.raiting ? "text-gray-500" : "rate",
+                  attrs: {
+                    width: "18",
+                    height: "18",
+                    fill: "none",
+                    xmlns: "http://www.w3.org/2000/svg"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.rate(i)
+                    }
+                  }
+                },
+                [
+                  _c("path", {
+                    attrs: {
+                      d:
+                        "M17 8.39a1.11 1.11 0 00-.645-2l-4.5-.17a.115.115 0 01-.1-.075l-1.555-4.2a1.11 1.11 0 00-2.085 0L6.565 6.16a.115.115 0 01-.1.075l-4.5.17a1.11 1.11 0 00-.645 2l3.53 2.775a.115.115 0 01.04.12l-1.215 4.305a1.11 1.11 0 001.69 1.225l3.73-2.5a.11.11 0 01.125 0l3.73 2.5a1.1 1.1 0 001.275 0 1.1 1.1 0 00.415-1.2l-1.225-4.32a.11.11 0 01.04-.12L17 8.39z"
+                    }
+                  })
+                ]
+              )
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.totalScore,
+                  expression: "totalScore"
+                }
+              ],
+              staticClass: "text-xxs rate"
+            },
+            [
+              _vm._v(
+                "Всего голосов" +
+                  _vm._s(this.overallRating.length) +
+                  ". Средний балл " +
+                  _vm._s(_vm.totalScore) +
+                  " "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "section",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.comments.length >= 1,
+                  expression: "comments.length>=1"
+                }
+              ],
+              staticClass: "flex flex-col w-2/3 max-w-md mx-auto"
+            },
+            [
+              _c("span", { staticClass: "meal-txt text-2xl rate mt-6" }, [
+                _vm._v("Последние комментарии:")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.comments, function(item) {
+                return _c(
+                  "div",
+                  {
+                    staticClass:
+                      "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
+                  },
+                  [
+                    _vm._v("\n\t\t\t\t\t" + _vm._s(item.msg)),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "text-xxs font-mono rate" }, [
+                      _vm._v(_vm._s(item.user.email))
+                    ])
+                  ]
+                )
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              staticClass: "block meal-txt text-2xl pt-8 pb-4",
+              on: {
+                click: function($event) {
+                  _vm.showComment = true
+                }
+              }
+            },
+            [_vm._v("Хочешь оставить комментарий?")]
+          ),
+          _vm._v(" "),
+          _c(
+            "section",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.showComment,
+                  expression: "showComment"
+                }
+              ],
+              staticClass: "flex flex-col w-2/3 max-w-md mx-auto"
+            },
+            [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.comment,
+                    expression: "comment"
+                  }
+                ],
+                staticClass: "outline-none rounded p-1",
+                attrs: { name: "", id: "", cols: "30", rows: "9" },
+                domProps: { value: _vm.comment },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.comment = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2",
+                  on: { click: _vm.addComment }
+                },
+                [_vm._v("Оставить комментарий")]
+              )
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "span",
+        {
+          staticClass: "block pt-16 pb-16 text-xxs text-gray-500",
+          on: { click: _vm.countPlus }
+        },
+        [_vm._v("QuadrantBubbles 2020")]
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -64280,7 +64204,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "w-full flex flex-no-wrap overflow-auto " },
+              { staticClass: "w-full flex flex-no-wrap overflow-auto" },
               _vm._l(_vm.menu, function(item) {
                 return _c("foodbox", {
                   key: item.id,
@@ -64426,37 +64350,9 @@ var render = function() {
   return _c("section", {}, [
     _c("img", { attrs: { src: "/img/meal/" + _vm.item.img, alt: "" } }),
     _vm._v(" "),
-    _c(
-      "span",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.language,
-            expression: "language"
-          }
-        ],
-        staticClass: "meal-txt text-2xl leading-none "
-      },
-      [_vm._v(_vm._s(_vm.item.rus))]
-    ),
-    _vm._v(" "),
-    _c(
-      "span",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: !_vm.language,
-            expression: "!language"
-          }
-        ],
-        staticClass: "meal-txt text-2xl leading-none "
-      },
-      [_vm._v(_vm._s(_vm.item.eng))]
-    )
+    _c("span", { staticClass: "meal-txt text-2xl leading-none " }, [
+      _vm._v(_vm._s(_vm.label()))
+    ])
   ])
 }
 var staticRenderFns = []
@@ -64499,7 +64395,7 @@ var render = function() {
               }
             }
           },
-          [_c("foodbox", { attrs: { item: item, language: true } })],
+          [_c("foodbox", { attrs: { item: item, title: _vm.title } })],
           1
         )
       }),
@@ -64515,7 +64411,7 @@ var render = function() {
               }
             }
           },
-          [_c("foodbox", { attrs: { item: item, language: true } })],
+          [_c("foodbox", { attrs: { item: item, title: _vm.title } })],
           1
         )
       }),
@@ -64531,7 +64427,7 @@ var render = function() {
               }
             }
           },
-          [_c("foodbox", { attrs: { item: item, language: true } })],
+          [_c("foodbox", { attrs: { item: item, title: _vm.title } })],
           1
         )
       })
@@ -65319,17 +65215,10 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticClass: "py-8" }, [
     _c(
       "div",
-      {
-        staticClass: "meal-txt text-4xl",
-        on: {
-          click: function($event) {
-            _vm.showUserMenu = true
-          }
-        }
-      },
+      { staticClass: "meal-txt text-4xl", on: { click: _vm.showMenu } },
       [_vm._v("Привет, " + _vm._s(_vm.appeal()))]
     ),
     _vm._v(" "),
@@ -65344,8 +65233,7 @@ var render = function() {
             expression: "showUserMenu"
           }
         ],
-        staticClass:
-          "flex flex-col mt-16 absolute z-30 inset-0 bg-gray-800 h-full w-full"
+        staticClass: "flex flex-col mt-16"
       },
       [
         _c(
@@ -65406,11 +65294,7 @@ var render = function() {
               fill: "none",
               xmlns: "http://www.w3.org/2000/svg"
             },
-            on: {
-              click: function($event) {
-                _vm.showUserMenu = false
-              }
-            }
+            on: { click: _vm.hideMenu }
           },
           [
             _c("path", {

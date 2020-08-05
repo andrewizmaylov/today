@@ -20,15 +20,16 @@
 	}
 </style>
 <template>
-	<div class="w-full h-full bg-gray-800 text-center">
+	<div class="w-full h-full bg-gray-800 text-center relative">
 
 		<!-- login block -->
-		<section class="py-8" v-show="!order.status">
-			<div  @click="$router.push('/login')" v-if="!isLoggedIn" class="flex items-center justify-center w-2/3 max-w-md mx-auto">
+		<section class="" v-show="!order.status">
+			<div  @click="$router.push('/login')" v-if="!isLoggedIn" class="py-8 flex items-center justify-center w-2/3 max-w-md mx-auto">
 				<div v-if="accent" class="bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Сначала войди в систему</div>
 				<div v-else class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Войди в систему</div>
 			</div>
-			<div v-else class="meal-txt text-4xl" @click="showUserMenu=true">Привет, {{appeal()}}</div>
+			<appeal v-else v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800' : ''"></appeal>
+			<!-- <div v-else class="meal-txt text-4xl" @click="showUserMenu=true">Привет, {{appeal()}}</div> -->
 		</section>
 
 		<section class="py-8"  v-show="order.status">
@@ -38,19 +39,9 @@
 		<!-- interactive section inactive if not logged in -->
 		<div class="relative">
 			<div class="absolute z-10 inset-0" :class="!isLoggedIn ? '':'hidden'" @click="scrollTop"></div>
-			<div class="absolute z-10 inset-0 bg-gray-800" :class="showUserMenu ? '':'hidden'">
-				<div class="flex flex-col mt-16">
-					<span class="py-2 mt-4 meal-txt text-4xl " @click="$router.push('/account/info')">ПРОФИЛЬ</span>
-					<span class="py-2 mt-4 meal-txt text-4xl " @click="$router.push('/cooks')">Наши повора</span>
-					<span class="py-2 mt-4 meal-txt text-4xl " @click="$router.push('/cook')">Кухня</span>
-					<span class="py-2 mt-4 meal-txt text-4xl " @click="logout">ВЫЙТИ ИЗ СИСТЕМЫ</span>
-					<svg width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto mt-16" @click="showUserMenu=false">
-						<path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20zM30 18L18 30M18 18l12 12" stroke="#C4C4C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-				</div>
-			</div>
+
 			<!-- place block -->
-			<section class="pt-16 pb-4" v-show="!order.status">
+			<section class="pt-16 pb-8" v-show="!order.status">
 				<span class="meal-txt text-4xl">Отметь, где ты будешь сегодня?</span>
 				<div class="container mx-auto max-w-2xl flex justify-around pt-8">
 					<div class="w-2/5 ">
@@ -66,12 +57,12 @@
 				<span class="block meal-txt text-4xl pt-4 pb-4" v-show="!order.status">Выбери себе еду:</span>
 				<!-- full menu for choose from -->
 				<div class="container mx-auto md:max-w-2xl pt-8 flex justify-center flex-wrap " v-if="!selected.status">
-					<foodmenu :menu="menu" @select="selectDish"></foodmenu>
+					<foodmenu :menu="menu" :title="'rus'" @select="selectDish"></foodmenu>
 				</div>
 				<!-- one item has been choosen -->
 				<div v-else class="container mx-auto">
-					<foodbox :img="selected.img" alt="" class="w-2/5 h-full mx-auto"/>
-					<span class="block meal-txt text-3xl leading-none mt-2 px-2">{{appeal()}}, </br>сегодня, {{this.moment()}}, твоя {{selected.rus}} будет ждать тебя </br>{{msg}} </span>
+					<foodbox :item="selected" alt="" class="w-2/5 h-full mx-auto"/>
+					<span class="block meal-txt text-3xl leading-none mt-2 px-4">Сегодня, {{this.moment()}}, твоя {{selected.rus}} будет ждать тебя </br>{{msg}} </span>
 					<!-- buttons for compete or change order -->
 					<div class="flex justify-center mt-4 px-2" v-show="!showWarning">
 						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="placeOrder" v-show="!orderCompleted">Сохранить заказ</div>
@@ -120,10 +111,11 @@
 	import {logout} from '../utilites/helpers';
 	import foodmenu from './meal/foodmenu.vue';
 	import foodbox from './meal/foodbox.vue';
+	import appeal from './user/appeal.vue';
 
 	export default {
 		name: 'meal',
-		components: {foodmenu, foodbox},
+		components: {foodmenu, foodbox, appeal},
 		data() {
 			return {
 				date: new Date(),

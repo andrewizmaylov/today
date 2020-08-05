@@ -1,0 +1,10 @@
+1. order controller учитывать время по созданию и изменению заказа
+	если заказ на сегодня уже сделан, то после логина в систему это должно быть видно
+	тоже самое с блоком оценок. если оценка дана, то сразу она должна быть видна и поле комментов открыто к чтеню
+2. menu component refactoring into common way
+3. cook side
+4. like for comments
+5. comment is nessesary if mark is less then 4
+
+6. наши повора сделать красиво с навигацией назад как минимум
+7. user card implement copy to clipboard on ckick text block

@@ -7,7 +7,7 @@
 		<section class="" v-show="changeMenu">
 			<div class="mx-auto  pt-8 flex flex-col" >
 				<span class="text-4xl meal-txt my-4">select what you will prepare tomorrow {{tomorrow}}</span>
-				<div class="w-full flex flex-no-wrap overflow-auto ">
+				<div class="w-full flex flex-no-wrap overflow-auto">
 					<foodbox  @click.native="setAviable(item)" v-for="item in menu" :key="item.id" :item="item" :language="false" class="flex-none sm:w-1/6 w-1/5"></foodbox>
 				</div>
 			</div>	
