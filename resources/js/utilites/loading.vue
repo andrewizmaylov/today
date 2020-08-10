@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="h-screen absolute inset-0" :class="formProceeded ? '' : 'hide'">
 	<img width='250' height=auto src='img/isLoading.gif' alt="">
 </div>
 </template>
@@ -19,9 +19,11 @@
 
 			formProceeded() {
 				if(!this.isLoading) {
-					$('#loader').modal('show');
+					return true;
+					// $('#loader').modal('show');
 				}
-				this.showModal('hide');
+				return false;
+				// this.showModal('hide');
 			},
 		}
 	}

@@ -42,11 +42,13 @@
 			<section class="pt-16 pb-8" v-show="!order.status">
 				<span class="meal-txt text-4xl">Отметь, где ты будешь сегодня?</span>
 				<div class="container mx-auto max-w-2xl flex justify-around pt-8">
-					<div class="w-2/5 ">
-						<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300" @click="markHotel">
+					<div class="w-2/5 flex flex-col" @click="markHotel">
+						<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
+						<span class="meal-txt text-5xl mt-2">Отель</span>
 					</div>
-					<div class="w-2/5 ">
-						<img src="/img/island.jpg" alt="":class="island ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300" @click="markIsland">
+					<div class="w-2/5 flex flex-col" @click="markIsland">
+						<img src="/img/island.jpg" alt="":class="island ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300" >
+						<span class="meal-txt text-5xl mt-2">Остров</span>
 					</div>
 				</div>
 			</section>

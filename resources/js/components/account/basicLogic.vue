@@ -18,7 +18,7 @@
 				this.form.submit(this.formMethod, this.formPath)
 					.then(response => {
 						console.log(response.data);
-						this.$router.push('/meal');
+						this.$router.back();
 					})
 					.catch(error => {
 						console.log('error.response.data');

@@ -28,7 +28,11 @@ class OrderController extends Controller
     }
     public function getforUserByDate($date)
     {
-        return Order::where('user_id', auth()->user()->id)->where('date', $date)->first();
+        if(auth()->user()) {
+            return Order::where('user_id', auth()->user()->id)->where('date', $date)->first();
+        }
+
+        return null;
         // if(!$row) {
         //     return null;
         // }

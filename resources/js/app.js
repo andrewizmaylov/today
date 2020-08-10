@@ -35,22 +35,8 @@ const router = new VueRouter({
 	mode: ''
 });
 
+window.Router = router;
 let count = 0;
-
-router.beforeEach((to, from, next) => {
-    axios.get('/check')
-        .then(response => {
-            count++;
-            console.log('this is the chekin number '+count);
-            console.log('router before each ');
-            console.log(response);
-            if(!response.data) {
-                store.commit('logout');             
-            }
-            next();
-        }) 
-
-})
 
 /**
  * The following block of code may be used to automatically register your
@@ -92,3 +78,22 @@ const app = new Vue({
       }
     }
 });
+
+router.beforeEach((to, from, next) => { 
+    // if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+
+    axios.get('/check')
+        .then(response => {
+            count++;
+            console.log('this is the chekin number '+count);
+            console.log('router before each ');
+            console.log(response);
+            if(!response.data) {
+                store.commit('logout');             
+            }
+            if  (to.name !== 'Login' && !isLoggedIn) next({ name: 'Login' });
+
+            next();
+        }) 
+
+})

@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full h-screen bg-gray-800 text-center">
+	<div class="w-full h-full bg-gray-800 text-center">
 		<div class="flex flex-col" :class="!chooseOccupation ? '':'hidden'">
 
 
@@ -20,28 +20,28 @@
 				<form @submit.prevent="submitForm" @input="form.errors.clear($event.target.name)" class="text-left">
 					<div class="flex flex-col">
 						<div class="flex flex-col px-4 mt-2">
-							<label for="last_name" class="-mx-2 text-xs">Фамилия</label>
+							<label for="last_name" class=" text-xs">Фамилия</label>
 							<input type="text" class="text-base text-gray-800 px-2 outline-none border border-gray-300 rounded" :class="{ isInvalid: check('last_name') }" id="last_name" name="last_name" placeholder="" v-model="form.last_name" >
 							<!-- <span class="text-danger small" v-if="errorMessage('last_name')" v-text="form.errors.get('last_name')"></span> -->
 						</div>
 						<div class="flex flex-col px-4 mt-2">
-							<label for="first_name" class="-mx-2 text-xs">Имя</label>
+							<label for="first_name" class=" text-xs">Имя</label>
 							<input type="text" class="text-base text-gray-800 px-2 outline-none border border-gray-300 rounded" :class="{ isInvalid: check('first_name') }" id="first_name" name="first_name" placeholder="" v-model="form.first_name" >
 							<!-- <span class="text-danger small" v-if="errorMessage('second_name')" v-text="form.errors.get('second_name')"></span> -->
 						</div>
 						<div class="flex flex-col px-4 mt-2">
-							<label for="second_name" class="-mx-2 text-xs">Отчество</label>
+							<label for="second_name" class=" text-xs">Отчество</label>
 							<input type="text"  class="text-base text-gray-800 px-2 outline-none border border-gray-300 rounded" :class="{ isInvalid: check('second_name') }" id="second_name" name="second_name" placeholder="" v-model="form.second_name" >
 							<!-- <span class="text-danger small" v-if="errorMessage('second_name')" v-text="form.errors.get('second_name')"></span>				 -->
 						</div>
 					</div>
 					<div class="flex flex-col px-4 mt-2">
 						<div class="">
-							<label for="birthday" class="-mx-2 text-xs">Дата рождения</label>
+							<label for="birthday" class=" text-xs">Дата рождения</label>
 							<input class="w-full text-base text-gray-800 px-2 outline-none border border-gray-300 rounded" :class="{ isInvalid: check('birthday') }" type="date" id="birthday" name="birthday" v-model="form.birthday">
 						</div>
 						<div class="flex flex-col mt-1">
-							<label for="gender" class="-mx-2 text-xs">Пол</label>
+							<label for="gender" class=" text-xs">Пол</label>
 						    <select class="w-full text-base text-gray-800 px-2 py-1 outline-none border border-gray-300 rounded" :class="{ isInvalid: check('gender') }" id="gender" name="gender" v-model="form.gender">
 						      <option selected>Вы...</option>
 						      <option value="male">Я мужчина</option>
@@ -60,7 +60,7 @@
 	  				{{occupationBtn}}
 				</button>
 			</div>
-			<img src="/img/x-circle-white.svg" alt="close window" @click="$router.push('/meal')" class="mx-auto mt-16 w-16 h-16">
+			<img src="/img/x-circle-white.svg" alt="close window" @click="$router.back()" class="mx-auto mt-16 w-16 h-16 mb-8">
 		</div>
 
 
@@ -167,7 +167,8 @@
 			        }
 				})
 					.then(response => {
-						window.location.reload();
+						this.$router.back();
+						// window.location.reload();
 						// console.log('response');
 						// window.location.replace('/#/account/info');
 					})

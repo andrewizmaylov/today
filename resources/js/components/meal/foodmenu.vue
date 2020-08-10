@@ -26,7 +26,6 @@
 				this.$emit('select', item);
 			},
 		},
-
 		
 	}
 </script>

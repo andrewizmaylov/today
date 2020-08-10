@@ -1928,7 +1928,7 @@ __webpack_require__.r(__webpack_exports__);
       this.form.submit(this.formMethod, this.formPath).then(function (response) {
         console.log(response.data);
 
-        _this.$router.push('/meal');
+        _this.$router.back();
       })["catch"](function (error) {
         console.log('error.response.data');
       });
@@ -2164,6 +2164,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     changeAvatar: function changeAvatar() {
+      var _this5 = this;
+
       var formData = new FormData();
       formData.append('file', this.$refs.myFiles.files[0]);
       axios.post('/user/avatar', formData, {
@@ -2171,19 +2173,21 @@ __webpack_require__.r(__webpack_exports__);
           'Content-Type': 'multipart/form-data'
         }
       }).then(function (response) {
-        window.location.reload(); // console.log('response');
+        _this5.$router.back(); // window.location.reload();
+        // console.log('response');
         // window.location.replace('/#/account/info');
+
       });
     },
     getAvatar: function getAvatar() {
-      var _this5 = this;
+      var _this6 = this;
 
       axios.get('/user/avatar').then(function (response) {
         // console.log(response.data);
         if (!response.data) {
-          _this5.avatar = "/img/face.svg";
+          _this6.avatar = "/img/face.svg";
         } else {
-          _this5.avatar = "/uploads/avatars/".concat(response.data);
+          _this6.avatar = "/uploads/avatars/".concat(response.data);
         }
       })["catch"](function (error) {
         console.log(error);
@@ -2948,6 +2952,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -3210,6 +3216,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _foodbox_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./foodbox.vue */ "./resources/js/components/meal/foodbox.vue");
 /* harmony import */ var _foodmenu_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./foodmenu.vue */ "./resources/js/components/meal/foodmenu.vue");
 /* harmony import */ var _user_appeal_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../user/appeal.vue */ "./resources/js/components/user/appeal.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4247,10 +4259,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     formProceeded: function formProceeded() {
       if (!this.isLoading) {
-        $('#loader').modal('show');
+        return true; // $('#loader').modal('show');
       }
 
-      this.showModal('hide');
+      return false; // this.showModal('hide');
     }
   }
 });
@@ -62082,7 +62094,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-full h-screen bg-gray-800 text-center" }, [
+  return _c("div", { staticClass: "w-full h-full bg-gray-800 text-center" }, [
     _c(
       "div",
       {
@@ -62144,10 +62156,7 @@ var render = function() {
                   _c("div", { staticClass: "flex flex-col px-4 mt-2" }, [
                     _c(
                       "label",
-                      {
-                        staticClass: "-mx-2 text-xs",
-                        attrs: { for: "last_name" }
-                      },
+                      { staticClass: " text-xs", attrs: { for: "last_name" } },
                       [_vm._v("Фамилия")]
                     ),
                     _vm._v(" "),
@@ -62184,10 +62193,7 @@ var render = function() {
                   _c("div", { staticClass: "flex flex-col px-4 mt-2" }, [
                     _c(
                       "label",
-                      {
-                        staticClass: "-mx-2 text-xs",
-                        attrs: { for: "first_name" }
-                      },
+                      { staticClass: " text-xs", attrs: { for: "first_name" } },
                       [_vm._v("Имя")]
                     ),
                     _vm._v(" "),
@@ -62225,7 +62231,7 @@ var render = function() {
                     _c(
                       "label",
                       {
-                        staticClass: "-mx-2 text-xs",
+                        staticClass: " text-xs",
                         attrs: { for: "second_name" }
                       },
                       [_vm._v("Отчество")]
@@ -62266,10 +62272,7 @@ var render = function() {
                   _c("div", {}, [
                     _c(
                       "label",
-                      {
-                        staticClass: "-mx-2 text-xs",
-                        attrs: { for: "birthday" }
-                      },
+                      { staticClass: " text-xs", attrs: { for: "birthday" } },
                       [_vm._v("Дата рождения")]
                     ),
                     _vm._v(" "),
@@ -62301,10 +62304,7 @@ var render = function() {
                   _c("div", { staticClass: "flex flex-col mt-1" }, [
                     _c(
                       "label",
-                      {
-                        staticClass: "-mx-2 text-xs",
-                        attrs: { for: "gender" }
-                      },
+                      { staticClass: " text-xs", attrs: { for: "gender" } },
                       [_vm._v("Пол")]
                     ),
                     _vm._v(" "),
@@ -62398,11 +62398,11 @@ var render = function() {
         ),
         _vm._v(" "),
         _c("img", {
-          staticClass: "mx-auto mt-16 w-16 h-16",
+          staticClass: "mx-auto mt-16 w-16 h-16 mb-8",
           attrs: { src: "/img/x-circle-white.svg", alt: "close window" },
           on: {
             click: function($event) {
-              return _vm.$router.push("/meal")
+              return _vm.$router.back()
             }
           }
         })
@@ -63871,23 +63871,45 @@ var render = function() {
                   "container mx-auto max-w-2xl flex justify-around pt-8"
               },
               [
-                _c("div", { staticClass: "w-2/5 " }, [
-                  _c("img", {
-                    staticClass: "rounded-full border border-4 border-gray-300",
-                    class: _vm.hotel ? "active" : "bw",
-                    attrs: { src: "/img/bungalo.jpg", alt: "" },
+                _c(
+                  "div",
+                  {
+                    staticClass: "w-2/5 flex flex-col",
                     on: { click: _vm.markHotel }
-                  })
-                ]),
+                  },
+                  [
+                    _c("img", {
+                      staticClass:
+                        "rounded-full border border-4 border-gray-300",
+                      class: _vm.hotel ? "active" : "bw",
+                      attrs: { src: "/img/bungalo.jpg", alt: "" }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "meal-txt text-5xl mt-2" }, [
+                      _vm._v("Отель")
+                    ])
+                  ]
+                ),
                 _vm._v(" "),
-                _c("div", { staticClass: "w-2/5 " }, [
-                  _c("img", {
-                    staticClass: "rounded-full border border-4 border-gray-300",
-                    class: _vm.island ? "active" : "bw",
-                    attrs: { src: "/img/island.jpg", alt: "" },
+                _c(
+                  "div",
+                  {
+                    staticClass: "w-2/5 flex flex-col",
                     on: { click: _vm.markIsland }
-                  })
-                ])
+                  },
+                  [
+                    _c("img", {
+                      staticClass:
+                        "rounded-full border border-4 border-gray-300",
+                      class: _vm.island ? "active" : "bw",
+                      attrs: { src: "/img/island.jpg", alt: "" }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "meal-txt text-5xl mt-2" }, [
+                      _vm._v("Остров")
+                    ])
+                  ]
+                )
               ]
             )
           ]
@@ -64312,24 +64334,42 @@ var render = function() {
           ]
         },
         [
-          _c(
-            "div",
-            { staticClass: "mx-auto  pt-8 flex flex-col" },
-            [
-              _c("span", { staticClass: "text-4xl meal-txt my-4" }, [
-                _vm._v(
-                  "select what you're gonna cook tomorrow " +
-                    _vm._s(_vm.tomorrow)
+          _c("div", { staticClass: "mx-auto  pt-8 flex flex-col" }, [
+            _c("span", { staticClass: "text-4xl meal-txt my-4" }, [
+              _vm._v(
+                "select what you're gonna cook tomorrow " + _vm._s(_vm.tomorrow)
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "container mx-auto flex justify-center flex-wrap pt-8 border border-gray-300"
+              },
+              _vm._l(_vm.menu, function(item) {
+                return _c(
+                  "div",
+                  {
+                    staticClass: "w-1/5",
+                    on: {
+                      click: function($event) {
+                        return _vm.selectDish(item)
+                      }
+                    }
+                  },
+                  [
+                    _c("foodbox", {
+                      staticClass: "pb-2",
+                      attrs: { item: item, title: _vm.title }
+                    })
+                  ],
+                  1
                 )
-              ]),
-              _vm._v(" "),
-              _c("foodmenu", {
-                attrs: { menu: _vm.menu, title: "eng" },
-                on: { select: _vm.selectDish }
-              })
-            ],
-            1
-          ),
+              }),
+              0
+            )
+          ]),
           _vm._v(" "),
           _vm.aviable.length > 0
             ? _c("section", [
@@ -64342,24 +64382,28 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("foodmenu", {
-                      attrs: { menu: _vm.aviable, title: "eng" },
+                      attrs: { menu: _vm.aviable, title: "eng", wide: "w-3/5" },
                       on: { select: _vm.selectDish }
                     })
                   ],
                   1
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "flex justify-center mt-4 px-2" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2",
-                      on: { click: _vm.setMenu }
-                    },
-                    [_vm._v("Set menu for " + _vm._s(_vm.tomorrow))]
-                  )
-                ])
+                _c(
+                  "div",
+                  { staticClass: "flex justify-center mt-4 px-2 pb-8" },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2",
+                        on: { click: _vm.setMenu }
+                      },
+                      [_vm._v("Set menu for " + _vm._s(_vm.tomorrow))]
+                    )
+                  ]
+                )
               ])
             : _vm._e()
         ]
@@ -64387,7 +64431,7 @@ var render = function() {
             attrs: {
               menu: _vm.today.data,
               title: _vm.today.title,
-              wide: "w-1/5"
+              wide: "w-2/3"
             }
           }),
           _vm._v(" "),
@@ -65453,7 +65497,7 @@ var render = function() {
         _c(
           "span",
           {
-            staticClass: "py-2 mt-4 meal-txt text-4xl hidden",
+            staticClass: "py-2 mt-4 meal-txt text-4xl ",
             on: {
               click: function($event) {
                 return _vm.$router.push("/cook")
@@ -65823,14 +65867,13 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
+  return _c(
+    "div",
+    {
+      staticClass: "h-screen absolute inset-0",
+      class: _vm.formProceeded ? "" : "hide"
+    },
+    [
       _c("img", {
         attrs: {
           width: "250",
@@ -65839,9 +65882,10 @@ var staticRenderFns = [
           alt: ""
         }
       })
-    ])
-  }
-]
+    ]
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -82366,21 +82410,8 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: _routes__WEBPACK_IMPORTED_MODULE_8__["routes"],
   mode: ''
 });
+window.Router = router;
 var count = 0;
-router.beforeEach(function (to, from, next) {
-  axios.get('/check').then(function (response) {
-    count++;
-    console.log('this is the chekin number ' + count);
-    console.log('router before each ');
-    console.log(response);
-
-    if (!response.data) {
-      store.commit('logout');
-    }
-
-    next();
-  });
-});
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -82421,6 +82452,24 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       return this.$store.getters.isLoading;
     }
   }
+});
+router.beforeEach(function (to, from, next) {
+  // if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  axios.get('/check').then(function (response) {
+    count++;
+    console.log('this is the chekin number ' + count);
+    console.log('router before each ');
+    console.log(response);
+
+    if (!response.data) {
+      store.commit('logout');
+    }
+
+    if (to.name !== 'Login' && !isLoggedIn) next({
+      name: 'Login'
+    });
+    next();
+  });
 });
 
 /***/ }),
@@ -84751,8 +84800,13 @@ var routes = [{
   component: _components_news_vue__WEBPACK_IMPORTED_MODULE_9__["default"]
 }, {
   path: '/news/item',
-  component: _components_newstopic_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
-  name: 'newsitem'
+  name: 'newsitem',
+  component: function component() {
+    return Promise.resolve(/*! import() */).then(__webpack_require__.bind(null, /*! ./components/newstopic.vue */ "./resources/js/components/newstopic.vue"));
+  },
+  meta: {
+    requiresAuth: false
+  }
 }, {
   path: '/air',
   component: _components_air_vue__WEBPACK_IMPORTED_MODULE_11__["default"]
@@ -84782,10 +84836,12 @@ var routes = [{
   component: _components_auth_vue__WEBPACK_IMPORTED_MODULE_19__["default"]
 }, {
   path: '/login',
-  component: _components_auth_login_vue__WEBPACK_IMPORTED_MODULE_20__["default"]
+  component: _components_auth_login_vue__WEBPACK_IMPORTED_MODULE_20__["default"],
+  name: 'Login'
 }, {
   path: '/registration',
-  component: _components_auth_registration_vue__WEBPACK_IMPORTED_MODULE_21__["default"]
+  component: _components_auth_registration_vue__WEBPACK_IMPORTED_MODULE_21__["default"],
+  name: 'Registration'
 }];
 
 /***/ }),
@@ -84877,7 +84933,7 @@ var user = getLocalUser();
       state.authError = null;
       localStorage.removeItem('user');
       localStorage.removeItem('model');
-      state.model = {};
+      state.model = {}; // Router.push('/login');
     },
     clearModel: function clearModel(state) {
       localStorage.removeItem('model');

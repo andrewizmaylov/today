@@ -7,17 +7,23 @@
 		<section class="" v-show="selectMenu">
 			<div class="mx-auto  pt-8 flex flex-col" >
 				<span class="text-4xl meal-txt my-4">select what you're gonna cook tomorrow {{tomorrow}}</span>
-				<foodmenu :menu="menu" :title="'eng'" @select="selectDish"></foodmenu>
+				<div class="container mx-auto flex justify-center flex-wrap pt-8 border border-gray-300">
+					<div v-for="item in menu" class="w-1/5" @click="selectDish(item)">
+						<foodbox :item="item" :title="title" class="pb-2"></foodbox>
+					</div>
+					
+				</div>
+				<!-- <foodmenu :menu="menu" :title="'eng'" :wide="'w-1/5'" @select="selectDish"></foodmenu> -->
 			</div>	
 			
 			<!-- menu for the next day appear then more then one item is in list -->
 			<section v-if="aviable.length >0">
 				<div class="mx-auto md:max-w-2xl pt-8 flex flex-col">
 					<span class="text-4xl meal-txt my-4">menu for {{tomorrow}}</span>
-					<foodmenu :menu="aviable" :title="'eng'" @select="selectDish"></foodmenu>
+					<foodmenu :menu="aviable" :title="'eng'" :wide="'w-3/5'" @select="selectDish"></foodmenu>
 				</div>
 
-				<div class="flex justify-center mt-4 px-2">
+				<div class="flex justify-center mt-4 px-2 pb-8">
 					<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2" @click="setMenu">Set menu for {{tomorrow}}</div>
 				</div>
 			</section>
@@ -26,7 +32,7 @@
 		<!-- cooking today and order list -->
 		<section v-show="!selectMenu" class="h-full">
 			<span class="text-4xl meal-txt my-4">today menu</span>
-			<foodmenu :menu="today.data" :title="today.title" :wide="'w-1/5'"></foodmenu>
+			<foodmenu :menu="today.data" :title="today.title" :wide="'w-2/3'"></foodmenu>
 			<div class="flex justify-center mt-4 px-2">
 				<div class="border border-2 border-gray-300 px-8 py-2 meal-txt text-2xl rounded-lg mx-2 mb-16" @click="selectMenu=true">Change menu for {{tomorrow}} ?</div>
 			</div>

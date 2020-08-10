@@ -36,7 +36,7 @@ export const routes = [
 	{path: '/user/docs', component: UserDocs},
 	{path: '/user/tasks', component: UserTasks},
 	{path: '/news', component: News},
-	{path: '/news/item', component: NewsTopic, name: 'newsitem'},
+	{path: '/news/item', name: 'newsitem', component: () => import(/* webpackChunkName: "NewsTopic"*/ "./components/newstopic.vue"), meta: {requiresAuth: false}},
 	{path: '/air', component: Air},
 	{path: '/places', component: Places},
 	{path: '/departments', component: Departments},
@@ -46,7 +46,7 @@ export const routes = [
 	{path: '/videos', component: Videos},
 	{path: '/info', component: Info},
 	{path: '/auth', component: Auth},
-	{path: '/login', component: Login},
-	{path: '/registration', component: Registration},
+	{path: '/login', component: Login, name: 'Login'},
+	{path: '/registration', component: Registration, name: 'Registration'},
 ]
 

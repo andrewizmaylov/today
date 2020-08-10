@@ -72,6 +72,7 @@ export default {
 			localStorage.removeItem('user');
 			localStorage.removeItem('model');
 			state.model = {};
+			// Router.push('/login');
 		},
 		clearModel(state) {
 			localStorage.removeItem('model');

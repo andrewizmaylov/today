@@ -10,3 +10,10 @@
 7. user card implement copy to clipboard on ckick text block
 
 8. wide is here fore future class refactorin foodmenu
+
+9. loading gif on each process
+10. csrf and redirection to login iff session is done
+11. redirect.back from info page
+12. today tomoroow in cook side
+13. active menu link in cook side and redirect after menu close to cook side also
+
