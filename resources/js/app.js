@@ -80,20 +80,43 @@ const app = new Vue({
 });
 
 router.beforeEach((to, from, next) => { 
-    // if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+    if(to.name == 'login' || to.name == 'registration') {
+        Event.$emit('hideTopMenu');
+        next();
+    }
+    if(to.name == 'meal') {
+         axios.get('/check')
+           .then(response => {
+             if(!response.data) {
+                 store.commit('logout');             
+                 next({name: 'meal'});
+             } else {
+                 next();
+             }
+           })
+           .catch(error => {
+             console.log(error);
+           });       
+    }
 
-    axios.get('/check')
-        .then(response => {
-            count++;
-            console.log('this is the chekin number '+count);
-            console.log('router before each ');
-            console.log(response);
+    if(to.meta.requiresAuth) {
+        // need auth
+        // check is user authenticated
+        axios.get('/check')
+          .then(response => {
             if(!response.data) {
                 store.commit('logout');             
+                next({name: 'login'});
+            } else {
+                next();
             }
-            if  (to.name !== 'Login' && !isLoggedIn) next({ name: 'Login' });
+          })
+          .catch(error => {
+            console.log(error);
+          });
 
-            next();
-        }) 
-
+    } else {
+        // free
+        next();
+    }
 })

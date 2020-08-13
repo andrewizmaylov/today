@@ -1,4 +1,19 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/main.css": "/css/main.css"
+    "/css/main.css": "/css/main.css",
+    "/NewsTopic.js": "/NewsTopic.js",
+    "/accountinfo.js": "/accountinfo.js",
+    "/air.js": "/air.js",
+    "/cook.js": "/cook.js",
+    "/cooks.js": "/cooks.js",
+    "/departments.js": "/departments.js",
+    "/docs.js": "/docs.js",
+    "/information.js": "/information.js",
+    "/notfound.js": "/notfound.js",
+    "/places.js": "/places.js",
+    "/schedule.js": "/schedule.js",
+    "/staff.js": "/staff.js",
+    "/user.js": "/user.js",
+    "/userdocs.js": "/userdocs.js",
+    "/videos.js": "/videos.js"
 }

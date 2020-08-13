@@ -106,5 +106,9 @@ export default {
 		clearModel(context) {
 			context.commit('clearModel');
 		},
+	},
+
+	menu: {
+		
 	}
 }

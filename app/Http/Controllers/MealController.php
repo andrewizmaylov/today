@@ -47,12 +47,12 @@ class MealController extends Controller
     {
         // dd($request);
         $data = $request->validate([
-            'user_id' => 'required|unique:meal_raitings,date',
             'date' => 'required|unique:meal_raitings,user_id',
             'rate' => 'required',
         ]);
 
         if($data) { 
+            $data['user_id'] = auth()->user()->id;
             // check record exists
             // $row = DB::table('meal_raitings')->where([['user_id', $data['user_id']], ['date', $data['date']]] )->first();
             $row = mealRaiting::where('user_id', $data['user_id'])->where('date', $data['date'])->first();

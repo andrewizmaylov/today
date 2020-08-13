@@ -70,8 +70,21 @@
 					data: [],
 					title: 'eng'
 				},
+
+
+
+				countIsland: 0,
+				countHotel: 0,
+				chicken: 0,
+				fish: 0,
+				standart: 0,
+				vegan: 0,
+				noLactoze: 0,
+
+
 				showUserMenu: false,
 				showComments: false,
+
 
 				overallRating: '',
 				totalScore: '',
