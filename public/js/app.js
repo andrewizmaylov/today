@@ -2591,12 +2591,13 @@ __webpack_require__.r(__webpack_exports__);
       user: {},
       island: false,
       hotel: false,
-      msg: '',
       selected: {
-        status: false,
-        box: {}
+        box: {},
+        msg: '',
+        status: false
       },
       order: {
+        selected: {},
         complete: false
       },
       showWarning: false,
@@ -2618,7 +2619,7 @@ __webpack_require__.r(__webpack_exports__);
 
     //full list of meal aviable for cooking ever
     axios.get('/meal').then(function (response) {
-      console.log(response);
+      // console.log(response);
       _this.menu = response.data;
 
       _this.setToday(_this.menuDate());
@@ -2638,12 +2639,12 @@ __webpack_require__.r(__webpack_exports__);
     }); //check if order exists for user for today
 
     axios.get('/orderUserDate/' + moment(this.date).format('YYYY-MM-DD')).then(function (response) {
-      console.log('/orderUserDate/{date}');
-
+      // console.log('/orderUserDate/{date}');
       if (response.data.meal_id) {
-        var index = response.data.meal_id - 1;
-        console.log(response.data);
+        var index = response.data.meal_id - 1; // console.log(response.data);
+
         _this.selected.box = _this.menu[index];
+        _this.selected.msg = response.data.msg;
         _this.selected.status = true;
         _this.order.complete = true;
       } else {
@@ -2676,6 +2677,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.get('/menu/' + date).then(function (response) {
+        if (response.data === []) {
+          _this2.today.data = _this2.menu.filter(function (item) {
+            return item.status == true;
+          });
+          return;
+        }
+
         var keys = response.data;
         var index;
         var td = [];
@@ -2700,6 +2708,7 @@ __webpack_require__.r(__webpack_exports__);
         this.$router.push('/home');
       }
     },
+    //if user is not logged in and try to interact with sistem
     scrollTop: function scrollTop() {
       $('html, body').animate({
         scrollTop: 0
@@ -2710,13 +2719,13 @@ __webpack_require__.r(__webpack_exports__);
       this.showWarning = false;
       this.island = true;
       this.hotel = false;
-      this.msg = 'на острове Любви.';
+      this.selected.msg = 'на острове Любви.';
     },
     markHotel: function markHotel() {
       this.showWarning = false;
       this.hotel = true;
       this.island = false;
-      this.msg = 'в отеле.';
+      this.selected.msg = 'в отеле.';
     },
     //all crud about order
     makeOrder: function makeOrder(item) {
@@ -2739,16 +2748,16 @@ __webpack_require__.r(__webpack_exports__);
     placeOrder: function placeOrder() {
       var _this3 = this;
 
-      if (!this.msg) {
+      if (!this.selected.msg) {
         this.showWarning = true;
         return;
       }
 
-      this.order.complete = true;
       axios.post('/order', {
         user_id: this.currentUser.id,
         meal_id: this.selected.box.id,
-        date: moment(this.date).format('YYYY-MM-DD')
+        date: moment(this.date).format('YYYY-MM-DD'),
+        msg: this.selected.msg
       }).then(function (response) {
         _this3.order.complete = true;
       })["catch"](function (error) {
@@ -62161,7 +62170,7 @@ var render = function() {
                             " будет ждать тебя "
                         ),
                         _c("br"),
-                        _vm._v(_vm._s(_vm.msg) + " ")
+                        _vm._v(_vm._s(_vm.selected.msg) + " ")
                       ]
                     ),
                     _vm._v(" "),

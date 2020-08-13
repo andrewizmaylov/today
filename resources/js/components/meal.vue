@@ -59,7 +59,7 @@
 				<!-- one item has been choosen -->
 				<div v-else class="container mx-auto">
 					<foodbox :item="selected.box" alt="" class="w-2/5 h-full mx-auto"/>
-					<span class="block meal-txt text-3xl leading-none mt-2 px-4">Сегодня, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя </br>{{msg}} </span>
+					<span class="block meal-txt text-3xl leading-none mt-2 px-4">Сегодня, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя </br>{{selected.msg}} </span>
 					<!-- buttons for compete or change order -->
 					<div class="flex justify-center mt-4 px-2" v-show="!showWarning">
 						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="placeOrder" v-show="!order.complete">Сохранить заказ</div>
@@ -105,12 +105,14 @@
 				user: {},
 				island: false,
 				hotel: false,
-				msg: '',
 				selected: {
-					status: false,
 					box: {},
+					msg: '',
+					status: false,
 				},
 				order: {
+					selected: {
+					},
 					complete: false,
 				},
 				showWarning: false,
@@ -133,7 +135,7 @@
 			//full list of meal aviable for cooking ever
 			axios.get('/meal')
 			  .then(response => {
-			    console.log(response);
+// console.log(response);
 			    this.menu = response.data;
 			    this.setToday(this.menuDate());
 			  })
@@ -145,7 +147,7 @@
 			axios.get('/app/web/sort/of/how/i/will/mess/you/up/account/info')
 			  .then(response => {
 			    if(response.data === "") {
-				    // console.log(response.data.first_name);
+// console.log(response.data.first_name);
 				    this.user = {};
 			    } 
 		    	this.user = response.data;
@@ -157,11 +159,12 @@
 			//check if order exists for user for today
 			axios.get('/orderUserDate/'+moment(this.date).format('YYYY-MM-DD'))
 			  .then(response => {
-			  	console.log('/orderUserDate/{date}');
+// console.log('/orderUserDate/{date}');
 			    if(response.data.meal_id) {
 				    var index = response.data.meal_id - 1;
-				    console.log(response.data);
+// console.log(response.data);
 				    this.selected.box = this.menu[index];
+				    this.selected.msg = response.data.msg;
 				    this.selected.status = true;
 				    this.order.complete = true;
 			    } else {
@@ -185,6 +188,10 @@
 			setToday(date) {
 				axios.get('/menu/'+date)
 				  .then(response => {
+				  		if(response.data === []) {
+				  			this.today.data = this.menu.filter(item => item.status==true);
+				  			return;
+				  		}
 					    let keys = response.data;
 					    var index;
 					    var td = [];
@@ -205,21 +212,23 @@
 					this.$router.push('/home');
 				}
 			},
+			//if user is not logged in and try to interact with sistem
 			scrollTop() {
 				$('html, body').animate({ scrollTop: 0 }, 'fast');
 				this.accent = true;
 			},
+
 			markIsland() {
 				this.showWarning = false;
 				this.island = true;
 				this.hotel = false;
-				this.msg = 'на острове Любви.';
+				this.selected.msg = 'на острове Любви.';
 			},
 			markHotel() {
 				this.showWarning = false;
 				this.hotel = true;
 				this.island = false;
-				this.msg = 'в отеле.';
+				this.selected.msg = 'в отеле.';
 			},
 
 			//all crud about order
@@ -240,16 +249,16 @@
 				}
 			},
 			placeOrder() {
-				if(!this.msg) {
+				if(!this.selected.msg) {
 					this.showWarning=true;
 					return;
 				}
-				this.order.complete = true;
 				axios.post('/order', 
 					{
 						user_id: this.currentUser.id,
 						meal_id: this.selected.box.id,
 						date: moment(this.date).format('YYYY-MM-DD'),
+						msg: this.selected.msg,
 					})
 					.then(response => {
 						this.order.complete=true;

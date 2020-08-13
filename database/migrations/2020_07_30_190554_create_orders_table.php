@@ -18,6 +18,7 @@ class CreateOrdersTable extends Migration
             $table->date('date');
             $table->smallInteger('user_id');
             $table->tinyInteger('meal_id');
+            $table->string('msg');
             $table->timestamps();
         });
     }
