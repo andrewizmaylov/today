@@ -20,6 +20,11 @@
 	export default {
 		name: 'foodmenu',
 		components: {foodbox},
+		data() {
+			return {
+				//
+			}
+		},
 		props: ['menu', 'title', 'wide'], // wide is here fore future class refactoring
 		methods: {
 			selectDish(item) {

@@ -108,7 +108,17 @@ export default {
 		},
 	},
 
-	menu: {
-		
-	}
+	menu: [
+		{id: 1, rus: 'стандартная еда', eng: 'ordinary meal', img: 'boxEmpty.png', status: true, msg: 'твоя стандартная еда будет ' },
+		{id: 2, rus: 'говядина', eng: 'beef', img: 'boxCow.png', status: false, msg: 'твоя говядина будет ' },
+		{id: 3, rus: 'вегетарианская кухня', eng: 'veg', img: 'boxEco.png', status: true, msg: 'твоя вегетаринская кухня будет ' },
+		{id: 4, rus: 'курица', eng: 'chicken', img: 'boxChicken.png', status: false, msg: 'твоя курица будет ' },
+		{id: 5, rus: 'рыба', eng: 'fish', img: 'boxFish.png', status: true, msg: 'твоя рыба будет ' },
+		{id: 6, rus: 'безлактозная диета', eng: 'dairy free', img: 'boxNoMilk.png', status: true, msg: 'твоя безлактозная диета будет ' },
+		{id: 7, rus: 'морепродукты', eng: 'seafood', img: 'boxSeaFood.png', status: false, msg: 'твои морепродукты будут ' },
+		{id: 8, rus: 'креветки', eng: 'prawns', img: 'boxPrawns.png', status: false, msg: 'твои креветки будут ' },
+		{id: 9, rus: 'правильное питание', eng: 'proper nutrition', img: 'boxPP.png', status: true, msg: 'твое правильное питание будет ' },
+		{id: 10, rus: 'свинина', eng: 'pork', img: 'boxPork.png', status: false, msg: 'твоя свинина будет ' },
+	],
+	
 }

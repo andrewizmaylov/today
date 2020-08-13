@@ -122,7 +122,7 @@
         }
     }
 </script>
-<style>
+<style scoped>
     .cardTitle {
         margin-bottom: 1.4em;
         padding-left: .8em;
