@@ -85,6 +85,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -115,13 +124,7 @@ __webpack_require__.r(__webpack_exports__);
         selected: false,
         showChecker: true
       },
-      countIsland: 0,
-      countHotel: 0,
-      chicken: 0,
-      fish: 0,
-      standart: 0,
-      vegan: 0,
-      noLactoze: 0,
+      orders: [],
       showUserMenu: false,
       showComments: true,
       overallRating: '',
@@ -168,7 +171,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       return aviable;
     },
-    // check again later and rewrite to ine method above
+    // check again later and rewrite to one method above
     getTodayAviable: function getTodayAviable() {
       var _this3 = this;
 
@@ -279,6 +282,33 @@ __webpack_require__.r(__webpack_exports__);
     }(function (date) {
       return moment(date).locale('en');
     }),
+    //counter for orders for the given date 
+    countOrders: function countOrders() {
+      var _this7 = this;
+
+      var index;
+      var menu = [];
+      axios.get('/orderDate/' + moment(this.date).format('YYYY-MM-DD')).then(function (response) {
+        console.log(response.data);
+        var onIsland = response.data.filter(function (item) {
+          return item.place === 'hotel';
+        });
+
+        for (index = 0; index < _this7.today.aviable.length; index++) {
+          var order = {};
+          order.dish = _this7.today.aviable[index];
+          order.count = onIsland.filter(function (item) {
+            return item.meal_id === _this7.today.aviable[index].id;
+          }).length;
+          menu.push(order);
+        }
+
+        _this7.orders = menu;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    // not used for this impementation
     selectDish: function selectDish(item) {
       var index = item.id - 1;
       this.menu[index].status = !this.menu[index].status;
@@ -752,6 +782,30 @@ var render = function() {
             )
           ])
         ])
+      ]),
+      _vm._v(" "),
+      _c("section", { staticClass: "mt-4" }, [
+        _c("span", { on: { click: _vm.countOrders } }, [
+          _vm._v("today on island 56 employe")
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "flex justify-center" },
+          _vm._l(_vm.orders, function(item) {
+            return _c(
+              "div",
+              { staticClass: "flex flex-col w-1/5 p-2" },
+              [
+                _c("foodbox", { attrs: { item: item.dish } }),
+                _vm._v(" "),
+                _c("span", [_vm._v(_vm._s(item.count))])
+              ],
+              1
+            )
+          }),
+          0
+        )
       ])
     ],
     1

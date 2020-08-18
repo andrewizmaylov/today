@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -41,7 +46,7 @@ class OrderController extends Controller
 
     public function getByDate($date)
     {
-        Order::where('date', $date)->get();
+        return Order::where('date', $date)->get() ?? null;
     }
     /**
      * Store a newly created resource in storage.
@@ -55,17 +60,19 @@ class OrderController extends Controller
             'user_id' => 'required',
             'meal_id' => 'required',
             'date' => 'required',
-            'msg' => 'required'
+            'msg' => 'required',
+            'place' => 'required',
         ]);
         if($data) {
 
             $row = Order::where('user_id', $data['user_id'])->where('date', $data['date'])->first();
             // dd($row);
             if($row) {
-                $row->update(['meal_id' => $data['meal_id'], 'msg' => $data['msg']]);
-                return response(['message' => "Entry was updated. New meal_id {$data['meal_id']} or place selected as {$data['msg']} was assigned for the user for {$data['date']}"], 200);
+                $row->update(['meal_id' => $data['meal_id'], 'msg' => $data['msg'], 'place' => $data['place']]);
+                return response(['message' => "Entry was updated. New meal_id {$data['meal_id']} or place selected as {$data['place']} was assigned for the user for {$data['date']}"], 200);
             }
             Order::create($data);
+            return response(['message' => "Entry was created. New meal_id {$data['meal_id']} and place selected as {$data['place']} was assigned for the user for {$data['date']}"], 201);
         }
     }
 

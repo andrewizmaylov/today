@@ -17,3 +17,41 @@
 12. today tomoroow in cook side
 13. active menu link in cook side and redirect after menu close to cook side also
 
+14. todo: collaps expand section and adopt meal order block
+
+
+INSERT INTO `meals` (`id`, `rus`, `eng`, `img`, `status`, `created_at`, `updated_at`)
+VALUES
+	(1, 'стандартная еда', 'ordinary meal', 'boxEmpty.png', 'true', NULL, NULL),
+	(2, 'говядина', 'beef', 'boxCow.png', 'false', NULL, NULL),
+	(3, 'вегетарианская кухня', 'veg', 'boxEco.png', 'true', NULL, NULL),
+	(4, 'курица', 'chicken', 'boxChicken.png', 'false', NULL, NULL),
+	(5, 'рыба', 'fish', 'boxFish.png', 'true', NULL, NULL),
+	(6, 'безлактозная диета', 'dairy free', 'boxNoMilk.png', 'true', NULL, NULL),
+	(7, 'морепродукты', 'seafood', 'boxSeaFood.png', 'false', NULL, NULL),
+	(8, 'креветки', 'prawns', 'boxPrawns.png', 'true', NULL, NULL),
+	(9, 'правильное питание', 'proper nutrition', 'boxPP.png', 'true', NULL, NULL),
+	(10, 'свинина', 'pork', 'boxPork.png', 'true', NULL, NULL);
+
+	INSERT INTO `occupations` (`id`, `russian`, `english`, `created_at`, `updated_at`)
+	VALUES
+		(1, 'режиссер', 'director', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(2, 'оператор', 'cameraman', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(3, 'логер', 'loger', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(4, 'звукорежиссер', 'sound', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(5, 'режиссер монтажа', 'videoeditor', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(6, 'администратор', 'admin', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(7, 'повар', 'coock', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(8, 'инженер', 'engineer', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(9, 'ведущий', 'anker', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(10, 'участник', 'actor', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(11, 'гриммер', 'makeup', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(12, 'креативный редактор', 'creative', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(13, 'выпускающий редактор', 'output', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(14, 'линейный редактор', 'linear', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(15, 'шеф-редактор', 'chief', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(16, 'осветитель', 'light', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(17, 'бухгалтер', 'money', '2019-03-07 09:34:40', '2019-03-07 09:34:40'),
+		(18, 'водитель', 'driver', '2019-03-07 09:34:40', '2019-03-07 09:34:40');
+
+	

@@ -2,72 +2,81 @@
 	<div class="w-full h-screen bg-gray-800 text-center relative">
 		<!-- top appeal for user with user menu from appeal component -->
 		<appeal v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800' : ''"></appeal>
-
+<!-- set menu page -->
 		<section>
-		<div>
-			<!-- pillow navigation -->
-			<ul class="flex border-b justify-center px-6">
-			    <li class="mr-1" :class="{activeLink: today.selected}"  @click="switchSelected">
-			        <a class="tab bg-gray-700 "  :class="{activeTab: today.selected}"  href="#">
-			        	<span class="text-gray-300">Meal for</br>{{this.moment(this.date).format('DD-MM-YYYY')}}</span>
-			    	</a>
-			    </li>
-			    <li class="mr-1" :class="{activeLink: tomorrow.selected}" @click="switchSelected">
-			        <a class="tab bg-gray-700 " :class="{activeTab: tomorrow.selected}" href="#">
-				        <span class="text-gray-300">Set meal for</br>{{this.moment(this.date).add(1, 'days').format('DD-MM-YYYY')}}</span>
-			    	</a>
-			    </li>
-			</ul>
-			<!-- navigation content -->
-			<section class="text-gray-400" >
-			    <div class="" v-show='today.selected'>
-					<section class="bg-gray-700 borderBottom relative" >
-						<div class="flex flex-col max-w-md mx-auto" >
-							<span class="my-4">Today is {{forToday}}.</br>Check what you're gonna cook.</span>
-							<!-- menu or cheker -->
-							<div class="mb-10">
-								<section v-if="!today.showChecker">
-									<foodmenu :menu="today.aviable" :title="'eng'"></foodmenu>
-									<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10" @click="today.showChecker = true">Change menu for today</div>
-								</section>
-								<section class="mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800" v-else>
-									<div class="flex items-center mb-2" v-for="item in menu">
-										<input class="" type="checkbox" :id="item.id" :value="item.id" v-model="today.index" >
-									    <label class="ml-2 text-sm" :for="item.id">{{item.eng}}</label>
-									</div>
-								    <div class="mt-4 border border-2 border-gray-800 px-3 py-2 rounded-lg mx-2 text-gray-700 uppercase text-xs font-bold " @click="setTodayAviable">Save menu</div>
-								</section>
+			<div>
+				<!-- pillow navigation -->
+				<ul class="flex border-b justify-center px-6">
+				    <li class="mr-1" :class="{activeLink: today.selected}"  @click="switchSelected">
+				        <a class="tab bg-gray-700 "  :class="{activeTab: today.selected}"  href="#">
+				        	<span class="text-gray-300">Meal for</br>{{this.moment(this.date).format('DD-MM-YYYY')}}</span>
+				    	</a>
+				    </li>
+				    <li class="mr-1" :class="{activeLink: tomorrow.selected}" @click="switchSelected">
+				        <a class="tab bg-gray-700 " :class="{activeTab: tomorrow.selected}" href="#">
+					        <span class="text-gray-300">Set meal for</br>{{this.moment(this.date).add(1, 'days').format('DD-MM-YYYY')}}</span>
+				    	</a>
+				    </li>
+				</ul>
+				<!-- navigation content -->
+				<section class="text-gray-400" >
+				    <div class="" v-show='today.selected'>
+						<section class="bg-gray-700 borderBottom relative" >
+							<div class="flex flex-col max-w-md mx-auto" >
+								<span class="my-4">Today is {{forToday}}.</br>Check what you're gonna cook.</span>
+								<!-- menu or cheker -->
+								<div class="mb-10">
+									<section v-if="!today.showChecker">
+										<foodmenu :menu="today.aviable" :title="'eng'"></foodmenu>
+										<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10" @click="today.showChecker = true">Change menu for today</div>
+									</section>
+									<section class="mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800" v-else>
+										<div class="flex items-center mb-2" v-for="item in menu">
+											<input class="" type="checkbox" :id="item.id" :value="item.id" v-model="today.index" >
+										    <label class="ml-2 text-sm" :for="item.id">{{item.eng}}</label>
+										</div>
+									    <div class="mt-4 border border-2 border-gray-800 px-3 py-2 rounded-lg mx-2 text-gray-700 uppercase text-xs font-bold " @click="setTodayAviable">Save menu</div>
+									</section>
+								</div>
 							</div>
-						</div>
-					</section>	
-			       
-			    </div>
-			    <div class="" v-show="tomorrow.selected">
-			    	<section class="bg-gray-700 borderBottom" >
-			    		<div class="flex flex-col max-w-md mx-auto" >
-			    			<span class="my-4">Tomorrow is {{forTomorrow}}.</br>Select what you're gonna cook.</span>
-			    			<!-- menu or cheker -->
-			    			<div class="mb-10">
-				    			<section v-if="!tomorrow.showChecker">
-					    			<foodmenu :menu="tomorrow.aviable" :title="'eng'"></foodmenu>
-				    				<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10" @click="tomorrow.showChecker = true">Change menu for tomorrow</div>
-				    			</section>
-				    			<section class="mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800" v-else>
-				    				<div class="flex items-center mb-2" v-for="item in menu">
-				    					<input class="" type="checkbox" :id="item.id" :value="item.id" v-model="tomorrow.index" >
-				    				    <label class="ml-2 text-sm" :for="item.id">{{item.eng}}</label>
-				    				</div>
-			    				    <div class="mt-4 border border-2 border-gray-800 px-3 py-2 rounded-lg mx-2 text-gray-700 uppercase text-xs font-bold " @click="setTomorrowAviable">Save menu</div>
-				    			</section>
-			    			</div>
-			    		</div>
-			    	</section>	
-			    </div>
+						</section>	
+				       
+				    </div>
+				    <div class="" v-show="tomorrow.selected">
+				    	<section class="bg-gray-700 borderBottom" >
+				    		<div class="flex flex-col max-w-md mx-auto" >
+				    			<span class="my-4">Tomorrow is {{forTomorrow}}.</br>Select what you're gonna cook.</span>
+				    			<!-- menu or cheker -->
+				    			<div class="mb-10">
+					    			<section v-if="!tomorrow.showChecker">
+						    			<foodmenu :menu="tomorrow.aviable" :title="'eng'"></foodmenu>
+					    				<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10" @click="tomorrow.showChecker = true">Change menu for tomorrow</div>
+					    			</section>
+					    			<section class="mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800" v-else>
+					    				<div class="flex items-center mb-2" v-for="item in menu">
+					    					<input class="" type="checkbox" :id="item.id" :value="item.id" v-model="tomorrow.index" >
+					    				    <label class="ml-2 text-sm" :for="item.id">{{item.eng}}</label>
+					    				</div>
+				    				    <div class="mt-4 border border-2 border-gray-800 px-3 py-2 rounded-lg mx-2 text-gray-700 uppercase text-xs font-bold " @click="setTomorrowAviable">Save menu</div>
+					    			</section>
+				    			</div>
+				    		</div>
+				    	</section>	
+				    </div>
 
-			</section>
-		</div>
+				</section>
+			</div>
 		</section>
-
+<!-- order for today -->
+		<section class="mt-4">
+			<span @click="countOrders">today on island 56 employe</span>
+			<div class="flex justify-center">
+				<div v-for="item in orders" class="flex flex-col w-1/5 p-2">
+					<foodbox class="" :item="item.dish"></foodbox>
+					<span>{{item.count}}</span>
+				</div>
+			</div>
+		</section>
 	</div>
 	
 </template>
@@ -98,20 +107,10 @@
 					selected: false,
 					showChecker: true,
 				},
-
-
-				countIsland: 0,
-				countHotel: 0,
-				chicken: 0,
-				fish: 0,
-				standart: 0,
-				vegan: 0,
-				noLactoze: 0,
-
+				orders: [],
 
 				showUserMenu: false,
 				showComments: true,
-
 
 				overallRating: '',
 				totalScore: '',
@@ -133,6 +132,7 @@
 			    console.log(error);
 			  });
 
+
 		},
 		methods: {
 			// get aviable for given date
@@ -152,7 +152,7 @@
 					});
 				return aviable;
 			},
-			// check again later and rewrite to ine method above
+			// check again later and rewrite to one method above
 			getTodayAviable() {
 				var date = moment(this.date).format('YYYY-MM-DD');
 				console.log(date);
@@ -238,10 +238,32 @@
 			moment(date) {
 				return moment(date).locale('en');
 			},
+			//counter for orders for the given date 
+			countOrders() {
+				var index;
+			    var menu = [];
+
+			    axios.get('/orderDate/'+moment(this.date).format('YYYY-MM-DD'))
+			        .then(response => {
+			        	console.log(response.data);
+			        	let onIsland = response.data.filter(item => item.place === 'hotel');
+			        	for(index=0; index<this.today.aviable.length; index++) {
+			        		let order = {};
+			        		order.dish = this.today.aviable[index];
+			        		order.count = onIsland.filter(item => item.meal_id === this.today.aviable[index].id).length;
+			        		menu.push(order);
+			        	}	
+			        	this.orders = menu;
+			        })
+			        .catch(error => {
+			            console.log(error);
+			        });
+			},
 
 
 
 
+// not used for this impementation
 
 			selectDish(item) {
 				let index = item.id-1;

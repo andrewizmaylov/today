@@ -108,6 +108,7 @@
 				selected: {
 					box: {},
 					msg: '',
+					place: '',
 					status: false,
 				},
 				order: {
@@ -223,12 +224,14 @@
 				this.island = true;
 				this.hotel = false;
 				this.selected.msg = 'на острове Любви.';
+				this.selected.place = 'island';
 			},
 			markHotel() {
 				this.showWarning = false;
 				this.hotel = true;
 				this.island = false;
 				this.selected.msg = 'в отеле.';
+				this.selected.place = 'hotel';
 			},
 
 			//all crud about order
@@ -259,6 +262,7 @@
 						meal_id: this.selected.box.id,
 						date: moment(this.date).format('YYYY-MM-DD'),
 						msg: this.selected.msg,
+						place: this.selected.place,
 					})
 					.then(response => {
 						this.order.complete=true;

@@ -2594,6 +2594,7 @@ __webpack_require__.r(__webpack_exports__);
       selected: {
         box: {},
         msg: '',
+        place: '',
         status: false
       },
       order: {
@@ -2720,12 +2721,14 @@ __webpack_require__.r(__webpack_exports__);
       this.island = true;
       this.hotel = false;
       this.selected.msg = 'на острове Любви.';
+      this.selected.place = 'island';
     },
     markHotel: function markHotel() {
       this.showWarning = false;
       this.hotel = true;
       this.island = false;
       this.selected.msg = 'в отеле.';
+      this.selected.place = 'hotel';
     },
     //all crud about order
     makeOrder: function makeOrder(item) {
@@ -2757,7 +2760,8 @@ __webpack_require__.r(__webpack_exports__);
         user_id: this.currentUser.id,
         meal_id: this.selected.box.id,
         date: moment(this.date).format('YYYY-MM-DD'),
-        msg: this.selected.msg
+        msg: this.selected.msg,
+        place: this.selected.place
       }).then(function (response) {
         _this3.order.complete = true;
       })["catch"](function (error) {
