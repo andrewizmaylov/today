@@ -22,7 +22,7 @@
 <template>
 	<div class="w-full h-full bg-gray-800 text-center relative">
 
-		<!-- login block -->
+		<!-- login block ??????? -->
 		<section class="">
 			<div  @click="$router.push({name: 'login'})" v-if="!isLoggedIn" class="py-8 flex items-center justify-center w-2/3 max-w-md mx-auto">
 				<div v-if="accent" class="bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Сначала войди в систему</div>

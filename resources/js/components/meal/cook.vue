@@ -1,11 +1,10 @@
 <template>
-	<div class="w-full h-screen bg-gray-800 text-center relative">
+	<div class="w-full h-full bg-gray-800 text-center relative">
 		<!-- top appeal for user with user menu from appeal component -->
 		<appeal v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800' : ''"></appeal>
 <!-- set menu page -->
-		<section>
-			<div>
-				<!-- pillow navigation -->
+		<div class="relative">
+			<section> <!-- pillow navigation -->
 				<ul class="flex border-b justify-center px-6">
 				    <li class="mr-1" :class="{activeLink: today.selected}"  @click="switchSelected">
 				        <a class="tab bg-gray-700 "  :class="{activeTab: today.selected}"  href="#">
@@ -18,16 +17,21 @@
 				    	</a>
 				    </li>
 				</ul>
-				<!-- navigation content -->
-				<section class="text-gray-400" >
+				
+				<section class="text-gray-400" > <!-- navigation content -->
 				    <div class="" v-show='today.selected'>
 						<section class="bg-gray-700 borderBottom relative" >
 							<div class="flex flex-col max-w-md mx-auto" >
-								<span class="my-4">Today is {{forToday}}.</br>Check what you're gonna cook.</span>
 								<!-- menu or cheker -->
+								<span class="mt-6">Today is {{forToday}}.</span></br>
+								<span class="text-xxs -mt-5 mb-4">Check what you're gonna cook.</span>
 								<div class="mb-10">
 									<section v-if="!today.showChecker">
-										<foodmenu :menu="today.aviable" :title="'eng'"></foodmenu>
+										<div class="flex justify-center flex-wrap px-2" v-show="true">
+											<div v-for="item in today.aviable" class="p-1" :class="today.aviable.length<=3 ? 'w-1/3':'w-1/5' ">
+												<foodbox :item="item" :title="'eng'"></foodbox>
+											</div>
+										</div>
 										<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10" @click="today.showChecker = true">Change menu for today</div>
 									</section>
 									<section class="mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800" v-else>
@@ -38,6 +42,8 @@
 									    <div class="mt-4 border border-2 border-gray-800 px-3 py-2 rounded-lg mx-2 text-gray-700 uppercase text-xs font-bold " @click="setTodayAviable">Save menu</div>
 									</section>
 								</div>
+
+
 							</div>
 						</section>	
 				       
@@ -45,11 +51,16 @@
 				    <div class="" v-show="tomorrow.selected">
 				    	<section class="bg-gray-700 borderBottom" >
 				    		<div class="flex flex-col max-w-md mx-auto" >
-				    			<span class="my-4">Tomorrow is {{forTomorrow}}.</br>Select what you're gonna cook.</span>
+				    			<span class="mt-6">Tomorrow is {{forTomorrow}}.</span>
+				    			<span class="text-xxs -mt-5 mb-4"></br>Select what you're gonna cook.</span>
 				    			<!-- menu or cheker -->
 				    			<div class="mb-10">
 					    			<section v-if="!tomorrow.showChecker">
-						    			<foodmenu :menu="tomorrow.aviable" :title="'eng'"></foodmenu>
+						    			<div class="flex justify-center flex-wrap px-2" v-show="true">
+						    				<div v-for="item in tomorrow.aviable" class="p-1" :class="tomorrow.aviable.length<=3 ? 'w-1/3':'w-1/5' ">
+						    					<foodbox :item="item" :title="'eng'"></foodbox>
+						    				</div>
+						    			</div>
 					    				<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10" @click="tomorrow.showChecker = true">Change menu for tomorrow</div>
 					    			</section>
 					    			<section class="mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800" v-else>
@@ -62,21 +73,51 @@
 				    			</div>
 				    		</div>
 				    	</section>	
-				    </div>
+				    </div> 
+				</section> <!-- navigation content -->
+			</section> <!-- pillow navigation -->
 
-				</section>
-			</div>
-		</section>
-<!-- order for today -->
-		<section class="mt-4">
-			<span @click="countOrders">today on island 56 employe</span>
-			<div class="flex justify-center">
-				<div v-for="item in orders" class="flex flex-col w-1/5 p-2">
-					<foodbox class="" :item="item.dish"></foodbox>
-					<span>{{item.count}}</span>
+			<!-- place block -->
+			<section class="pt-8 pb-8" >
+				<span class="meal-txt text-2xl">Today on island 56 employee</span>
+				<div class="container mx-auto max-w-2xl flex justify-around pt-8">
+					<div class="w-2/5 flex flex-col" @click="countOrders('hotel')">
+						<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
+						<span class="meal-txt text-2xl mt-2">Today for hotel</span>
+					</div>
+					<div class="w-2/5 flex flex-col" @click="countOrders('island')">
+						<img src="/img/island.jpg" alt="":class="island ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300" >
+						<span class="meal-txt text-2xl mt-2">Today for Island</span>
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+			<!-- results -->
+			<section class="my-4 px-4">
+				<div class="flex justify-center">
+					<div v-for="item in orders" class="flex flex-col w-1/5 p-2">
+						<foodbox class="" :item="item.dish"></foodbox>
+						<span class="meal-txt text-gray-500 font-bold text-4xl">{{item.count}}</span>
+					</div>
+				</div>
+			</section>
+			<!-- comments and raitng block -->
+			<section class="flex flex-col items-center mt-6">
+				<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="m-3 fill-current rate h-24 w-24">
+					<path d="M17 8.39a1.11 1.11 0 00-.645-2l-4.5-.17a.115.115 0 01-.1-.075l-1.555-4.2a1.11 1.11 0 00-2.085 0L6.565 6.16a.115.115 0 01-.1.075l-4.5.17a1.11 1.11 0 00-.645 2l3.53 2.775a.115.115 0 01.04.12l-1.215 4.305a1.11 1.11 0 001.69 1.225l3.73-2.5a.11.11 0 01.125 0l3.73 2.5a1.1 1.1 0 001.275 0 1.1 1.1 0 00.415-1.2l-1.225-4.32a.11.11 0 01.04-.12L17 8.39z" />
+				</svg>
+				<span class="text-2xl text-gray-800 font-bold -mt-24 pt-5 mb-12" >{{totalScore}}</span>
+
+				<span v-show="totalScore" class="block text-xxs rate">Yesterday average score: {{totalScore}}. Total voices: {{this.overallRating.length}}.</span>
+			</section>
+			<section v-show="comments.length>=1" class="flex flex-col w-2/3 max-w-md mx-auto">
+				<span  class="meal-txt text-2xl rate mt-6">Last comments:</span>
+				<div  v-for="item in comments" class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">
+					{{item.msg}}<br>
+					<span class="text-xxs font-mono rate">{{item.user.email}}</span>
+				</div>
+			</section>
+		</div>
+		<span class="block pt-16 pb-16 text-xxs text-gray-500">QuadrantBubbles 2020</span> 
 	</div>
 	
 </template>
@@ -84,10 +125,11 @@
 	import foodbox from './foodbox.vue';
 	import foodmenu from './foodmenu.vue';
 	import appeal from '../user/appeal.vue';
+	import raitingmeal from './raitingmeal.vue';
 
 	export default {
 		name: 'cook',
-		components: {foodbox, foodmenu, appeal},
+		components: {foodbox, foodmenu, appeal, raitingmeal},
 		data() {
 			return {
 				date: new Date(),
@@ -108,7 +150,8 @@
 					showChecker: true,
 				},
 				orders: [],
-
+				hotel: false,
+				island: false,
 				showUserMenu: false,
 				showComments: true,
 
@@ -127,6 +170,7 @@
 					// this.today.aviable = this.getAviable(moment(this.date).format('YYYY-MM-DD')) ?? [];					
 					this.getTomorrowAviable();
 					this.getTodayAviable();
+					this.feedback();
 			  })
 			  .catch(error => {
 			    console.log(error);
@@ -202,7 +246,6 @@
 				        keys: this.today.index,
 				    })
 				    .then(response => {
-				        console.log(response);
 				        var index;
 				        var avb = [];
 				    	for(index=0; index<this.today.index.length; index++) {
@@ -213,6 +256,7 @@
 				    })
 				    .catch(error => {
 				        console.log(error);
+				        this.$router.push({name: 'login'});
 				    });
 			},			
 			setTomorrowAviable() {
@@ -222,7 +266,6 @@
 				        keys: this.tomorrow.index,
 				    })
 				    .then(response => {
-				        console.log(response);
 				        var index;
 				        var menu = [];
 				    	for(index=0; index<this.tomorrow.index.length; index++) {
@@ -233,35 +276,67 @@
 				    })
 				    .catch(error => {
 				        console.log(error);
+						this.$router.push({name: 'login'});			        
 				    });
 			},
 			moment(date) {
 				return moment(date).locale('en');
 			},
 			//counter for orders for the given date 
-			countOrders() {
+			countOrders(place) {
 				var index;
 			    var menu = [];
-
+			    if(place === "hotel") {
+			    	this.hotel = true;
+			    	this.island = false;
+			    } 
+			    if(place === "island") {
+			    	this.hotel = false;
+			    	this.island = true;			    	
+			    }
+			    //check new raitings and comments
+			    this.feedback();
 			    axios.get('/orderDate/'+moment(this.date).format('YYYY-MM-DD'))
 			        .then(response => {
-			        	console.log(response.data);
-			        	let onIsland = response.data.filter(item => item.place === 'hotel');
+			        	let ordersSelected = response.data.filter(item => item.place === place);
 			        	for(index=0; index<this.today.aviable.length; index++) {
 			        		let order = {};
 			        		order.dish = this.today.aviable[index];
-			        		order.count = onIsland.filter(item => item.meal_id === this.today.aviable[index].id).length;
+			        		order.count = ordersSelected.filter(item => item.meal_id === this.today.aviable[index].id).length;
 			        		menu.push(order);
 			        	}	
 			        	this.orders = menu;
 			        })
 			        .catch(error => {
 			            console.log(error);
+				        this.$router.push({name: 'login'});
 			        });
 			},
 
+			feedback() {
+				axios.get('/mealRaitng/'+moment(this.date).format('YYYY-MM-DD'))
+					.then(response => {
+						this.overallRating = response.data;
+						this.total();
+					})
+					.catch(error => {
+						console.log(error);
+					});
+				axios.get('/comment')
+				    .then(response => {
+				    	this.comments = response.data;
+				    })
+				    .catch(error => {
+				        console.log(error);
+				    });
+			},
 
-
+			total() {
+				let sum = this.overallRating.reduce(function(a, b){
+				        return a + b;
+				    }, 0);
+				return this.totalScore = Math.floor(sum/this.overallRating.length*100)/100;
+			},
 
 // not used for this impementation
 

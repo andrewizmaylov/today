@@ -21,7 +21,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return Comment::with('user')->get();
+        return Comment::with('user')->orderBy('created_at', 'desc')->get();
     }
 
     /**
