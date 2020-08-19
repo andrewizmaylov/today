@@ -15,7 +15,7 @@
 				<span class="text-xxs font-mono rate">{{item.user.email}}</span>
 			</div>
 		</section>
-		<span class="block meal-txt text-2xl pt-8 pb-4" @click="showComment=true">Хочешь оставить комментарий?</span>
+		<span class="block meal-txt text-2xl pt-8 pb-4" @click="showComment=true">{{commentAppeal}}</span>
 		<section v-show="showComment" class="flex flex-col w-2/3 max-w-md mx-auto">
 			<textarea name="" id="" cols="30" rows="9" v-model='comment' class="outline-none rounded p-1" />
 			<div class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2" @click="addComment">Оставить комментарий</div>
@@ -35,6 +35,7 @@
 				comment: '',
 				comments: [],
 				showComment: false,
+				commentAppeal: 'Хочешь оставить комментарий?',
 			}
 		},
 		methods: {
@@ -51,6 +52,13 @@
 				  	  	this.overallRating = response.data;
 				  	  	this.total();
 				  	    console.log(response);
+				  	    if(this.raiting<4) {
+				  	    	this.showComment = true;
+				  	    	this.commentAppeal = 'Расскажи, что тебе не понравилось?';
+				  	    } else {
+				  	    	this.showComment = false;
+				  	    	this.commentAppeal = 'Хочешь оставить комментарий?';
+				  	    }
 				  	  })
 				  	  .catch(error => {
 				  	    console.log(error);
