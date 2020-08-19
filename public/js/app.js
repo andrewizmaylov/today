@@ -43,7 +43,7 @@
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "" + ({"NewsTopic":"NewsTopic","accountinfo":"accountinfo","air":"air","cook":"cook","cooks":"cooks","departments":"departments","docs":"docs","information":"information","notfound":"notfound","places":"places","schedule":"schedule","staff":"staff","user":"user","userdocs":"userdocs","videos":"videos"}[chunkId]||chunkId) + ".js"
+/******/ 		return __webpack_require__.p + "" + ({"NewsTopic":"NewsTopic","accountinfo":"accountinfo","air":"air","cook":"cook","cooks":"cooks","departments":"departments","docs":"docs","information":"information","meal":"meal","notfound":"notfound","places":"places","schedule":"schedule","staff":"staff","user":"user","userdocs":"userdocs","videos":"videos"}[chunkId]||chunkId) + ".js"
 /******/ 	}
 /******/
 /******/ 	// The require function
@@ -2461,7 +2461,17 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     Event.$emit('hideTopMenu');
-    this.$router.push('/meal');
+    var newDate = moment(this.date).format("YYYY-MM-DD 18:00");
+
+    if (moment(this.date).isAfter(newDate)) {
+      this.$router.push({
+        name: 'meal19'
+      }); // alert('You can change the order');
+    } else {
+      this.$router.push({
+        name: 'meal'
+      });
+    }
   }
 });
 
@@ -2481,6 +2491,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _meal_foodbox_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./meal/foodbox.vue */ "./resources/js/components/meal/foodbox.vue");
 /* harmony import */ var _meal_raitingmeal_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./meal/raitingmeal.vue */ "./resources/js/components/meal/raitingmeal.vue");
 /* harmony import */ var _user_appeal_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./user/appeal.vue */ "./resources/js/components/user/appeal.vue");
+//
+//
 //
 //
 //
@@ -2603,6 +2615,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       showWarning: false,
       orderCanBeChanged: false,
+      endTime: moment(this.date).format("YYYY-MM-DD 10:00"),
       // full set of meal and for today choose
       menu: [],
       today: {
@@ -2740,10 +2753,8 @@ __webpack_require__.r(__webpack_exports__);
       this.selected.status = false;
     },
     orderCanChange: function orderCanChange() {
-      var endTime = moment(this.date).format("YYYY-MM-DD 10:00");
-
-      if (moment(this.date).isBefore(endTime)) {
-        alert('You can change the order');
+      if (moment(this.date).isBefore(this.endTime)) {
+        this.changeOrder();
       } else {
         alert('You can not change the order. Too late');
       }
@@ -2789,6 +2800,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     currentUser: function currentUser() {
       return Store.getters.currentUser;
+    },
+    timeBefore: function timeBefore() {
+      if (moment(this.date).isBefore(this.endTime)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 });
@@ -61990,58 +62008,69 @@ var render = function() {
     "div",
     { staticClass: "w-full h-full bg-gray-800 text-center relative" },
     [
-      _c(
-        "section",
-        {},
-        [
-          !_vm.isLoggedIn
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "py-8 flex items-center justify-center w-2/3 max-w-md mx-auto",
-                  on: {
-                    click: function($event) {
-                      return _vm.$router.push({ name: "login" })
-                    }
-                  }
-                },
-                [
-                  _vm.accent
-                    ? _c(
-                        "div",
-                        {
-                          staticClass:
-                            "bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
-                        },
-                        [_vm._v("Сначала войди в систему")]
-                      )
-                    : _c(
-                        "div",
-                        {
-                          staticClass:
-                            "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
-                        },
-                        [_vm._v("Войди в систему")]
-                      )
-                ]
-              )
-            : _c("appeal", {
-                class: _vm.showUserMenu
-                  ? "absolute z-10 inset-0 bg-gray-800"
-                  : "",
-                on: {
-                  expand: function($event) {
-                    _vm.showUserMenu = true
+      _c("section", {}, [
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.isLoggedIn,
+                expression: "!isLoggedIn"
+              }
+            ],
+            staticClass:
+              "py-8 flex items-center justify-center w-2/3 max-w-md mx-auto",
+            on: {
+              click: function($event) {
+                return _vm.$router.push({ name: "login" })
+              }
+            }
+          },
+          [
+            _vm.accent
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
                   },
-                  collapse: function($event) {
-                    _vm.showUserMenu = false
-                  }
-                }
-              })
+                  [_vm._v("Сначала войди в систему")]
+                )
+              : _c(
+                  "div",
+                  {
+                    staticClass:
+                      "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2"
+                  },
+                  [_vm._v("Войди в систему")]
+                )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("appeal", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.isLoggedIn,
+            expression: "isLoggedIn"
+          }
         ],
-        1
-      ),
+        class: _vm.showUserMenu
+          ? "absolute z-10 inset-0 bg-gray-800 -mt-8"
+          : "",
+        on: {
+          expand: function($event) {
+            _vm.showUserMenu = true
+          },
+          collapse: function($event) {
+            _vm.showUserMenu = false
+          }
+        }
+      }),
       _vm._v(" "),
       _c(
         "div",
@@ -62064,7 +62093,7 @@ var render = function() {
                   expression: "!order.complete"
                 }
               ],
-              staticClass: "pt-16 pb-8"
+              staticClass: "pt-16 pb-8 max-w-md mx-auto"
             },
             [
               _c("span", { staticClass: "meal-txt text-4xl" }, [
@@ -62075,7 +62104,7 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "container mx-auto max-w-2xl flex justify-around pt-8"
+                    "container mx-auto max-w-full flex justify-around pt-8"
                 },
                 [
                   _c(
@@ -62122,7 +62151,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c("section", { staticClass: "mt-6" }, [
+          _c("section", { staticClass: "mt-6 px-6" }, [
             _c(
               "span",
               {
@@ -62156,18 +62185,17 @@ var render = function() {
                 )
               : _c(
                   "div",
-                  { staticClass: "container mx-auto" },
+                  {
+                    staticClass:
+                      "container mx-auto border border-gray-300 bg-gray-300 rounded px-4 py-6 max-w-md ",
+                    staticStyle: { "background-color": "#353F50" }
+                  },
                   [
-                    _c("foodbox", {
-                      staticClass: "w-2/5 h-full mx-auto",
-                      attrs: { item: _vm.selected.box, alt: "" }
-                    }),
-                    _vm._v(" "),
                     _c(
                       "span",
                       {
                         staticClass:
-                          "block meal-txt text-3xl leading-none mt-2 px-4"
+                          "block meal-txt text-3xl text-gray-800 leading-none mt-2 px-4"
                       },
                       [
                         _vm._v(
@@ -62175,12 +62203,17 @@ var render = function() {
                             _vm._s(this.moment()) +
                             ", твоя " +
                             _vm._s(_vm.selected.box.rus) +
-                            " будет ждать тебя "
-                        ),
-                        _c("br"),
-                        _vm._v(_vm._s(_vm.selected.msg) + " ")
+                            " будет ждать тебя " +
+                            _vm._s(_vm.selected.msg) +
+                            " "
+                        )
                       ]
                     ),
+                    _vm._v(" "),
+                    _c("foodbox", {
+                      staticClass: "w-2/5 max-w-sm h-full mx-auto mt-4",
+                      attrs: { item: _vm.selected.box, alt: "" }
+                    }),
                     _vm._v(" "),
                     _c(
                       "div",
@@ -62208,10 +62241,14 @@ var render = function() {
                               }
                             ],
                             staticClass:
-                              "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
+                              "bg-gray-200 px-3 py-2 meal-txt text-2xl rounded-lg mx-2 border border-gray-600 border-2 shadow",
                             on: { click: _vm.placeOrder }
                           },
-                          [_vm._v("Сохранить заказ")]
+                          [
+                            _c("span", { staticClass: "text-gray-700" }, [
+                              _vm._v("Сохранить заказ")
+                            ])
+                          ]
                         ),
                         _vm._v(" "),
                         _c(
@@ -62226,56 +62263,13 @@ var render = function() {
                               }
                             ],
                             staticClass:
-                              "border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2",
+                              "bg-gray-200 px-3 py-2 meal-txt text-2xl rounded-lg mx-2 border border-gray-600 border-2 shadow",
                             on: { click: _vm.changeOrder }
                           },
-                          [_vm._v("Изменить заказ")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "section",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: _vm.order.complete,
-                                expression: "order.complete"
-                              }
-                            ],
-                            staticClass: "py-8 flex flex-col items-center"
-                          },
                           [
-                            _c(
-                              "div",
-                              {
-                                directives: [
-                                  {
-                                    name: "show",
-                                    rawName: "v-show",
-                                    value: _vm.order.complete,
-                                    expression: "order.complete"
-                                  }
-                                ],
-                                staticClass:
-                                  "border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6",
-                                on: { click: function($event) {} }
-                              },
-                              [_vm._v("Заказ оформлен")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "span",
-                              {
-                                staticClass: "meal-txt text-gray-300 mt-4 px-8",
-                                on: { click: _vm.orderCanChange }
-                              },
-                              [
-                                _vm._v(
-                                  "Внести изменения в заказ на сегодня можно до 10 часов утра. Спасибо за понимание."
-                                )
-                              ]
-                            )
+                            _c("span", { staticClass: "text-gray-700" }, [
+                              _vm._v("Изменить заказ")
+                            ])
                           ]
                         )
                       ]
@@ -62307,15 +62301,52 @@ var render = function() {
                               }
                             ],
                             staticClass:
-                              "border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mx-2",
+                              "bg-gray-200 px-3 py-2 meal-txt text-2xl rounded-lg mx-2 border border-gray-600 border-2 shadow",
                             on: {
                               click: function($event) {
                                 _vm.selected = {}
                               }
                             }
                           },
-                          [_vm._v("Сначала отметь, где ты будешь сегодня")]
+                          [
+                            _c("span", { staticClass: "text-gray-700" }, [
+                              _vm._v("Сначала отметь, где ты будешь сегодня")
+                            ])
+                          ]
                         )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "section",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.order.complete,
+                            expression: "order.complete"
+                          }
+                        ],
+                        staticClass:
+                          "flex flex-col items-center mt-4 meal-txt text-gray-300 text-2xl"
+                      },
+                      [
+                        _vm.timeBefore
+                          ? _c(
+                              "span",
+                              {
+                                staticClass:
+                                  "bg-gray-200 px-3 py-2 meal-txt text-gray-700 text-xl rounded-lg mx-2 mb-2 border border-gray-600 border-2 shadow",
+                                on: { click: _vm.orderCanChange }
+                              },
+                              [_vm._v("Внести изменения в заказ")]
+                            )
+                          : _c("span", {}, [
+                              _vm._v("Внести изменения в заказ")
+                            ]),
+                        _vm._v(" "),
+                        _vm._m(0)
                       ]
                     )
                   ],
@@ -62336,10 +62367,22 @@ var render = function() {
         },
         [_vm._v("QuadrantBubbles 2020")]
       )
-    ]
+    ],
+    1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", {}, [
+      _vm._v(" можно до 10 часов утра текущего дня. "),
+      _c("br"),
+      _vm._v("Спасибо за понимание.")
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -81101,7 +81144,16 @@ var routes = [{
   path: '/meal',
   name: 'meal',
   component: function component() {
-    return Promise.resolve(/*! import() */).then(__webpack_require__.bind(null, /*! ./components/meal.vue */ "./resources/js/components/meal.vue"));
+    return __webpack_require__.e(/*! import() | meal */ "meal").then(__webpack_require__.bind(null, /*! ./components/meal.vue */ "./resources/js/components/meal.vue"));
+  },
+  meta: {
+    requiresAuth: true
+  }
+}, {
+  path: '/meal19',
+  name: 'meal19',
+  component: function component() {
+    return __webpack_require__.e(/*! import() | meal */ "meal").then(__webpack_require__.bind(null, /*! ./components/meal19.vue */ "./resources/js/components/meal19.vue"));
   },
   meta: {
     requiresAuth: true
@@ -81135,6 +81187,15 @@ var routes = [{
   }
 }, {
   path: '/account/info',
+  name: 'accountinfo',
+  component: function component() {
+    return __webpack_require__.e(/*! import() | accountinfo */ "accountinfo").then(__webpack_require__.bind(null, /*! ./components/account/info.vue */ "./resources/js/components/account/info.vue"));
+  },
+  meta: {
+    requiresAuth: true
+  }
+}, {
+  path: '/account/info/{id}',
   name: 'accountinfo',
   component: function component() {
     return __webpack_require__.e(/*! import() | accountinfo */ "accountinfo").then(__webpack_require__.bind(null, /*! ./components/account/info.vue */ "./resources/js/components/account/info.vue"));

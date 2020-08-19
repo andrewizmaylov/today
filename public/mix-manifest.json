@@ -9,11 +9,13 @@
     "/departments.js": "/departments.js",
     "/docs.js": "/docs.js",
     "/information.js": "/information.js",
+    "/meal.js": "/meal.js",
     "/notfound.js": "/notfound.js",
     "/places.js": "/places.js",
     "/schedule.js": "/schedule.js",
     "/staff.js": "/staff.js",
     "/user.js": "/user.js",
     "/userdocs.js": "/userdocs.js",
-    "/videos.js": "/videos.js"
+    "/videos.js": "/videos.js",
+    "/cook~meal.js": "/cook~meal.js"
 }

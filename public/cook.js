@@ -136,6 +136,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -381,7 +384,7 @@ __webpack_require__.r(__webpack_exports__);
     feedback: function feedback() {
       var _this8 = this;
 
-      axios.get('/mealRaitng/' + moment(this.date).format('YYYY-MM-DD')).then(function (response) {
+      axios.get('/mealRaitng/' + moment(this.date).subtract(1, 'days').format('YYYY-MM-DD')).then(function (response) {
         _this8.overallRating = response.data;
 
         _this8.total();
@@ -395,10 +398,14 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     total: function total() {
+      if (this.overallRating.length == 0) {
+        return 0;
+      }
+
       var sum = this.overallRating.reduce(function (a, b) {
         return a + b;
       }, 0);
-      return this.totalScore = Math.floor(sum / this.overallRating.length * 100) / 100;
+      return this.totalScore = Math.floor(sum / this.overallRating.length * 10) / 10;
     },
     // not used for this impementation
     selectDish: function selectDish(item) {
@@ -501,7 +508,7 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _c("div", { staticClass: "relative" }, [
+      _c("div", {}, [
         _c("section", [
           _c("ul", { staticClass: "flex border-b justify-center px-6" }, [
             _c(
@@ -515,7 +522,7 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    staticClass: "tab bg-gray-700 ",
+                    staticClass: "tab bg-gray-800 ",
                     class: { activeTab: _vm.today.selected },
                     attrs: { href: "#" }
                   },
@@ -543,7 +550,7 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    staticClass: "tab bg-gray-700 ",
+                    staticClass: "tab bg-gray-800 ",
                     class: { activeTab: _vm.tomorrow.selected },
                     attrs: { href: "#" }
                   },
@@ -579,180 +586,157 @@ var render = function() {
                 ]
               },
               [
-                _c(
-                  "section",
-                  { staticClass: "bg-gray-700 borderBottom relative" },
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "flex flex-col max-w-md mx-auto" },
-                      [
-                        _c("span", { staticClass: "mt-6" }, [
-                          _vm._v("Today is " + _vm._s(_vm.forToday) + ".")
-                        ]),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "text-xxs -mt-5 mb-4" }, [
-                          _vm._v("Check what you're gonna cook.")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "mb-10" }, [
-                          !_vm.today.showChecker
-                            ? _c("section", [
-                                _c(
+                _c("section", { staticClass: "bg-gray-800 relative" }, [
+                  _c("div", { staticClass: "flex flex-col max-w-md mx-auto" }, [
+                    _c("span", { staticClass: "mt-6" }, [
+                      _vm._v("Today is " + _vm._s(_vm.forToday) + ".")
+                    ]),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "text-xxs -mt-5 mb-4" }, [
+                      _vm._v("Check what you're gonna cook.")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "mb-10" }, [
+                      !_vm.today.showChecker
+                        ? _c("section", [
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: true,
+                                    expression: "true"
+                                  }
+                                ],
+                                staticClass:
+                                  "flex justify-center flex-wrap px-2"
+                              },
+                              _vm._l(_vm.today.aviable, function(item) {
+                                return _c(
                                   "div",
                                   {
-                                    directives: [
-                                      {
-                                        name: "show",
-                                        rawName: "v-show",
-                                        value: true,
-                                        expression: "true"
-                                      }
-                                    ],
-                                    staticClass:
-                                      "flex justify-center flex-wrap px-2"
+                                    staticClass: "p-1",
+                                    class:
+                                      _vm.today.aviable.length <= 3
+                                        ? "w-1/3"
+                                        : "w-1/5"
                                   },
-                                  _vm._l(_vm.today.aviable, function(item) {
-                                    return _c(
-                                      "div",
-                                      {
-                                        staticClass: "p-1",
-                                        class:
-                                          _vm.today.aviable.length <= 3
-                                            ? "w-1/3"
-                                            : "w-1/5"
-                                      },
-                                      [
-                                        _c("foodbox", {
-                                          attrs: { item: item, title: "eng" }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  }),
-                                  0
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10",
-                                    on: {
-                                      click: function($event) {
-                                        _vm.today.showChecker = true
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("Change menu for today")]
+                                  [
+                                    _c("foodbox", {
+                                      attrs: { item: item, title: "eng" }
+                                    })
+                                  ],
+                                  1
                                 )
-                              ])
-                            : _c(
-                                "section",
-                                {
-                                  staticClass:
-                                    "mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800"
-                                },
-                                [
-                                  _vm._l(_vm.menu, function(item) {
-                                    return _c(
-                                      "div",
-                                      { staticClass: "flex items-center mb-2" },
-                                      [
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value: _vm.today.index,
-                                              expression: "today.index"
-                                            }
-                                          ],
-                                          attrs: {
-                                            type: "checkbox",
-                                            id: item.id
-                                          },
-                                          domProps: {
-                                            value: item.id,
-                                            checked: Array.isArray(
-                                              _vm.today.index
-                                            )
-                                              ? _vm._i(
-                                                  _vm.today.index,
-                                                  item.id
-                                                ) > -1
-                                              : _vm.today.index
-                                          },
-                                          on: {
-                                            change: function($event) {
-                                              var $$a = _vm.today.index,
-                                                $$el = $event.target,
-                                                $$c = $$el.checked
-                                                  ? true
-                                                  : false
-                                              if (Array.isArray($$a)) {
-                                                var $$v = item.id,
-                                                  $$i = _vm._i($$a, $$v)
-                                                if ($$el.checked) {
-                                                  $$i < 0 &&
-                                                    _vm.$set(
-                                                      _vm.today,
-                                                      "index",
-                                                      $$a.concat([$$v])
-                                                    )
-                                                } else {
-                                                  $$i > -1 &&
-                                                    _vm.$set(
-                                                      _vm.today,
-                                                      "index",
-                                                      $$a
-                                                        .slice(0, $$i)
-                                                        .concat(
-                                                          $$a.slice($$i + 1)
-                                                        )
-                                                    )
-                                                }
-                                              } else {
+                              }),
+                              0
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10",
+                                on: {
+                                  click: function($event) {
+                                    _vm.today.showChecker = true
+                                  }
+                                }
+                              },
+                              [_vm._v("Change menu for today")]
+                            )
+                          ])
+                        : _c(
+                            "section",
+                            {
+                              staticClass:
+                                "mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800"
+                            },
+                            [
+                              _vm._l(_vm.menu, function(item) {
+                                return _c(
+                                  "div",
+                                  { staticClass: "flex items-center mb-2" },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.today.index,
+                                          expression: "today.index"
+                                        }
+                                      ],
+                                      attrs: { type: "checkbox", id: item.id },
+                                      domProps: {
+                                        value: item.id,
+                                        checked: Array.isArray(_vm.today.index)
+                                          ? _vm._i(_vm.today.index, item.id) >
+                                            -1
+                                          : _vm.today.index
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          var $$a = _vm.today.index,
+                                            $$el = $event.target,
+                                            $$c = $$el.checked ? true : false
+                                          if (Array.isArray($$a)) {
+                                            var $$v = item.id,
+                                              $$i = _vm._i($$a, $$v)
+                                            if ($$el.checked) {
+                                              $$i < 0 &&
                                                 _vm.$set(
                                                   _vm.today,
                                                   "index",
-                                                  $$c
+                                                  $$a.concat([$$v])
                                                 )
-                                              }
+                                            } else {
+                                              $$i > -1 &&
+                                                _vm.$set(
+                                                  _vm.today,
+                                                  "index",
+                                                  $$a
+                                                    .slice(0, $$i)
+                                                    .concat($$a.slice($$i + 1))
+                                                )
                                             }
+                                          } else {
+                                            _vm.$set(_vm.today, "index", $$c)
                                           }
-                                        }),
-                                        _vm._v(" "),
-                                        _c(
-                                          "label",
-                                          {
-                                            staticClass: "ml-2 text-sm",
-                                            attrs: { for: item.id }
-                                          },
-                                          [_vm._v(_vm._s(item.eng))]
-                                        )
-                                      ]
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
+                                      {
+                                        staticClass: "ml-2 text-sm",
+                                        attrs: { for: item.id }
+                                      },
+                                      [_vm._v(_vm._s(item.eng))]
                                     )
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        "mt-4 border border-2 border-gray-800 px-3 py-2 rounded-lg mx-2 text-gray-700 uppercase text-xs font-bold ",
-                                      on: { click: _vm.setTodayAviable }
-                                    },
-                                    [_vm._v("Save menu")]
-                                  )
-                                ],
-                                2
+                                  ]
+                                )
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "mt-4 border border-2 border-gray-800 px-3 py-2 rounded-lg mx-2 text-gray-700 uppercase text-xs font-bold ",
+                                  on: { click: _vm.setTodayAviable }
+                                },
+                                [_vm._v("Save menu")]
                               )
-                        ])
-                      ]
-                    )
-                  ]
-                )
+                            ],
+                            2
+                          )
+                    ])
+                  ])
+                ])
               ]
             ),
             _vm._v(" "),
@@ -769,13 +753,16 @@ var render = function() {
                 ]
               },
               [
-                _c("section", { staticClass: "bg-gray-700 borderBottom" }, [
+                _c("section", { staticClass: "bg-gray-800 " }, [
                   _c("div", { staticClass: "flex flex-col max-w-md mx-auto" }, [
                     _c("span", { staticClass: "mt-6" }, [
-                      _vm._v("Tomorrow is " + _vm._s(_vm.forTomorrow) + ".")
+                      _vm._v("Today is " + _vm._s(_vm.forTomorrow) + ".")
                     ]),
+                    _c("br"),
                     _vm._v(" "),
-                    _vm._m(0),
+                    _c("span", { staticClass: "text-xxs -mt-5 mb-4" }, [
+                      _vm._v("Select what you're gonna cook.")
+                    ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "mb-10" }, [
                       !_vm.tomorrow.showChecker
@@ -926,94 +913,111 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("section", { staticClass: "pt-8 pb-8" }, [
-          _c("span", { staticClass: "meal-txt text-2xl" }, [
-            _vm._v("Today on island 56 employee")
+        _c("div", { staticClass: "mx-auto max-w-md" }, [
+          _c("section", { staticClass: "pt-8 pb-8 px-6" }, [
+            _c("span", { staticClass: "meal-txt text-2xl" }, [
+              _vm._v("Today on island 56 employee")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "container mx-auto max-w-2xl flex justify-around pt-8"
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass: "w-2/5 flex flex-col",
+                    on: {
+                      click: function($event) {
+                        return _vm.countOrders("hotel")
+                      }
+                    }
+                  },
+                  [
+                    _c("img", {
+                      staticClass:
+                        "rounded-full border border-4 border-gray-300",
+                      class: _vm.hotel ? "active" : "bw",
+                      attrs: { src: "/img/bungalo.jpg", alt: "" }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "meal-txt text-2xl mt-2",
+                        class: _vm.hotel ? "rate" : ""
+                      },
+                      [_vm._v("Today for hotel")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "w-2/5 flex flex-col",
+                    on: {
+                      click: function($event) {
+                        return _vm.countOrders("island")
+                      }
+                    }
+                  },
+                  [
+                    _c("img", {
+                      staticClass:
+                        "rounded-full border border-4 border-gray-300",
+                      class: _vm.island ? "active" : "bw",
+                      attrs: { src: "/img/island.jpg", alt: "" }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "meal-txt text-2xl mt-2",
+                        class: _vm.island ? "rate" : ""
+                      },
+                      [_vm._v("Today for Island")]
+                    )
+                  ]
+                )
+              ]
+            )
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass:
-                "container mx-auto max-w-2xl flex justify-around pt-8"
-            },
-            [
-              _c(
-                "div",
-                {
-                  staticClass: "w-2/5 flex flex-col",
-                  on: {
-                    click: function($event) {
-                      return _vm.countOrders("hotel")
-                    }
-                  }
-                },
-                [
-                  _c("img", {
-                    staticClass: "rounded-full border border-4 border-gray-300",
-                    class: _vm.hotel ? "active" : "bw",
-                    attrs: { src: "/img/bungalo.jpg", alt: "" }
+          this.orders.length > 0
+            ? _c("section", { staticClass: "my-4 px-4" }, [
+                _c(
+                  "div",
+                  { staticClass: "flex justify-center" },
+                  _vm._l(_vm.orders, function(item) {
+                    return _c(
+                      "div",
+                      { staticClass: "flex flex-col w-1/5 p-2" },
+                      [
+                        _c("foodbox", { attrs: { item: item.dish } }),
+                        _vm._v(" "),
+                        _c(
+                          "span",
+                          {
+                            staticClass:
+                              "meal-txt text-gray-500 font-bold text-4xl rate"
+                          },
+                          [_vm._v(_vm._s(item.count))]
+                        )
+                      ],
+                      1
+                    )
                   }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "meal-txt text-2xl mt-2" }, [
-                    _vm._v("Today for hotel")
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "w-2/5 flex flex-col",
-                  on: {
-                    click: function($event) {
-                      return _vm.countOrders("island")
-                    }
-                  }
-                },
-                [
-                  _c("img", {
-                    staticClass: "rounded-full border border-4 border-gray-300",
-                    class: _vm.island ? "active" : "bw",
-                    attrs: { src: "/img/island.jpg", alt: "" }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "meal-txt text-2xl mt-2" }, [
-                    _vm._v("Today for Island")
-                  ])
-                ]
-              )
-            ]
-          )
+                  0
+                )
+              ])
+            : _vm._e()
         ]),
         _vm._v(" "),
-        _c("section", { staticClass: "my-4 px-4" }, [
-          _c(
-            "div",
-            { staticClass: "flex justify-center" },
-            _vm._l(_vm.orders, function(item) {
-              return _c(
-                "div",
-                { staticClass: "flex flex-col w-1/5 p-2" },
-                [
-                  _c("foodbox", { attrs: { item: item.dish } }),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    {
-                      staticClass: "meal-txt text-gray-500 font-bold text-4xl"
-                    },
-                    [_vm._v(_vm._s(item.count))]
-                  )
-                ],
-                1
-              )
-            }),
-            0
-          )
-        ]),
-        _vm._v(" "),
-        _c("section", { staticClass: "flex flex-col items-center mt-6" }, [
+        _c("section", { staticClass: "flex flex-col items-center mt-8" }, [
           _c(
             "svg",
             {
@@ -1114,17 +1118,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "text-xxs -mt-5 mb-4" }, [
-      _c("br"),
-      _vm._v("Select what you're gonna cook.")
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

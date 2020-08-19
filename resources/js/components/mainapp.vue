@@ -27,7 +27,13 @@
 		},
 		mounted() {
 			Event.$emit('hideTopMenu');
-			this.$router.push('/meal');
+			let newDate = moment(this.date).format("YYYY-MM-DD 18:00");
+			if(moment(this.date).isAfter(newDate)) {
+				this.$router.push({name: 'meal19'});
+				// alert('You can change the order');
+			} else {
+				this.$router.push({name: 'meal'});
+			}
 		}
 	}
 </script>

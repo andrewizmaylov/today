@@ -1,44 +1,23 @@
-<style>
-	.meal-txt {
-		color: rgba(113, 128, 150, 1);
-		font-family: 'Amatic SC';
-	}
-	.bw {
-		padding: 14px;
-		opacity: 70%;
-		filter: grayscale(90%);
-
-	}
-	.active {
-		box-shadow: 0 25px 50px -12px rgba(0,0,0, .25);
-	}
-	.rate {
-		color: #E2C644;
-	}
-	.opacity-80 {
-		opacity: 70%;
-	}
-</style>
 <template>
 	<div class="w-full h-full bg-gray-800 text-center relative">
 
-		<!-- login block -->
+		<!-- login block ??????? -->
 		<section class="">
-			<div  @click="$router.push({name: 'login'})" v-show="!isLoggedIn" class="py-8 flex items-center justify-center w-2/3 max-w-md mx-auto">
+			<div  @click="$router.push({name: 'login'})" v-if="!isLoggedIn" class="py-8 flex items-center justify-center w-2/3 max-w-md mx-auto">
 				<div v-if="accent" class="bg-gray-100 border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Сначала войди в систему</div>
 				<div v-else class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Войди в систему</div>
 			</div>
+			<appeal v-else v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800' : ''"></appeal>
 		</section>
-		<appeal v-show="isLoggedIn" v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800 -mt-8' : ''"></appeal>
 
 		<!-- interactive section inactive if not logged in -->
 		<div class="relative">
 			<div class="absolute z-10 inset-0" :class="!isLoggedIn ? '':'hidden'" @click="scrollTop"></div>
 
 			<!-- place block -->
-			<section class="pt-16 pb-8 max-w-md mx-auto" v-show="!order.complete">
-				<span class="meal-txt text-4xl">Отметь, где ты будешь сегодня?</span>
-				<div class="container mx-auto max-w-full flex justify-around pt-8">
+			<section class="pt-16 pb-8" v-show="!order.complete">
+				<span class="meal-txt text-4xl">Отметь, где ты будешь завтра?</span>
+				<div class="container mx-auto max-w-2xl flex justify-around pt-8">
 					<div class="w-2/5 flex flex-col" @click="markHotel">
 						<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
 						<span class="meal-txt text-5xl mt-2">Отель</span>
@@ -50,34 +29,30 @@
 				</div>
 			</section>
 			<!-- choose meal block -->
-			<section class="mt-6 px-6">
+			<section class="mt-6">
 				<span class="block meal-txt text-4xl pt-4 pb-4" v-show="!order.complete">Выбери себе еду:</span>
 				<!-- full menu for choose from -->
 				<div class="container mx-auto md:max-w-2xl pt-8 flex justify-center flex-wrap " v-if="!selected.status">
 					<foodmenu :menu="today.data" :title="today.title" @select="makeOrder"></foodmenu>
 				</div>
 				<!-- one item has been choosen -->
-				<div v-else class="container mx-auto border border-gray-300 bg-gray-300 rounded px-4 py-6 max-w-md " style="background-color: #353F50;">
-					<span class="block meal-txt text-3xl text-gray-800 leading-none mt-2 px-4">Сегодня, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя {{selected.msg}} </span>
-					<foodbox :item="selected.box" alt="" class="w-2/5 max-w-sm h-full mx-auto mt-4"/>
+				<div v-else class="container mx-auto">
+					<foodbox :item="selected.box" alt="" class="w-2/5 h-full mx-auto"/>
+					<span class="block meal-txt text-3xl leading-none mt-2 px-4">завтра, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя </br>{{selected.msg}} </span>
 					<!-- buttons for compete or change order -->
 					<div class="flex justify-center mt-4 px-2" v-show="!showWarning">
-						<div class="bg-gray-200 px-3 py-2 meal-txt text-2xl rounded-lg mx-2 border border-gray-600 border-2 shadow" @click="placeOrder" v-show="!order.complete"><span class="text-gray-700">Сохранить заказ</span></div>
-						<div class="bg-gray-200 px-3 py-2 meal-txt text-2xl rounded-lg mx-2 border border-gray-600 border-2 shadow" @click="changeOrder" v-show="!order.complete"><span class="text-gray-700">Изменить заказ</span></div>
+						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="placeOrder" v-show="!order.complete">Сохранить заказ</div>
+						<div class="border border-2 border-gray-300 px-3 py-2 meal-txt text-2xl rounded-lg mx-2" @click="changeOrder" v-show="!order.complete">Изменить заказ</div>
 						<!-- order completed stamp -->
+						<section class="py-8 flex flex-col items-center"  v-show="order.complete">
+							<div class="border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6" v-show="order.complete" @click="">Заказ оформлен</div>
+							<span class="meal-txt text-gray-300 mt-4 px-8" v-if="" @click="orderCanChange">Внести изменения в заказ на заватра можно до 10 часов утра. Спасибо за понимание.</span>
+						</section>
 					</div>
-
 					<!-- worning about no place selected -->
 					<div class="flex justify-center mt-4 px-2" v-show="showWarning">
-						<div class="bg-gray-200 px-3 py-2 meal-txt text-2xl rounded-lg mx-2 border border-gray-600 border-2 shadow" @click="selected={}" v-show="!order.complete"><span class="text-gray-700">Сначала отметь, где ты будешь сегодня</span></div>
+						<div class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mx-2" @click="selected={}" v-show="!order.complete">Сначала отметь, где ты будешь завтра</div>
 					</div>
-					<!-- change order btn -->
-					<section class="flex flex-col items-center mt-4 meal-txt text-gray-300 text-2xl"  v-show="order.complete">
-						<!-- <div class="border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6" v-show="order.complete" @click="">Заказ оформлен</div> -->
-						<span class="bg-gray-200 px-3 py-2 meal-txt text-gray-700 text-xl rounded-lg mx-2 mb-2 border border-gray-600 border-2 shadow" @click="orderCanChange" v-if="timeBefore">Внести изменения в заказ</span>
-						<span class="" v-else>Внести изменения в заказ</span>
-						<span class=""> можно до 10 часов утра текущего дня. </br>Спасибо за понимание.</span>
-					</section>
 				</div>
 			</section>
 
@@ -120,7 +95,7 @@
 				},
 				showWarning: false,
 				orderCanBeChanged: false,
-				endTime: moment(this.date).format("YYYY-MM-DD 10:00"),
+
 				// full set of meal and for today choose
 				menu: [],
 				today: {
@@ -160,7 +135,7 @@
 			  });
 
 			//check if order exists for user for today
-			axios.get('/orderUserDate/'+moment(this.date).format('YYYY-MM-DD'))
+			axios.get('/orderUserDate/'+moment(this.date).add(1, 'days').format('YYYY-MM-DD'))
 			  .then(response => {
 // console.log('/orderUserDate/{date}');
 			    if(response.data.meal_id) {
@@ -181,10 +156,10 @@
 		},
 		methods: {
 			moment() {
-				return moment(this.date).format("DD MMMM");
+				return moment(this.date).add(1, 'days').format("DD MMMM");
 			},
 			menuDate() {
-				return moment(this.date).format("YYYY-MM-DD");
+				return moment(this.date).add(1, 'days').format("YYYY-MM-DD");
 			},
 
 			// 
@@ -246,8 +221,9 @@
 				this.selected.status=false;				
 			},
 			orderCanChange() {
-				if(moment(this.date).isBefore(this.endTime)) {
-					this.changeOrder();
+				let endTime = moment(this.date).format("YYYY-MM-DD 10:00");
+				if(moment(this.date).isBefore(endTime)) {
+					alert('You can change the order');
 				} else {
 					alert('You can not change the order. Too late');
 				}
@@ -261,7 +237,7 @@
 					{
 						user_id: this.currentUser.id,
 						meal_id: this.selected.box.id,
-						date: moment(this.date).format('YYYY-MM-DD'),
+						date: moment(this.date).add(1, 'days').format('YYYY-MM-DD'),
 						msg: this.selected.msg,
 						place: this.selected.place,
 					})
@@ -294,13 +270,6 @@
 			currentUser() {
 				return Store.getters.currentUser;
 			},
-			timeBefore() {
-				if(moment(this.date).isBefore(this.endTime)) {
-					return true;
-				} else {
-					return false;
-				}
-			}
 		},
 
 	}

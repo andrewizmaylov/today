@@ -1,6 +1,6 @@
 <template>
 	<section class="">
-		<img :src="'/img/meal/'+item.img" alt="">
+		<img :src="'/img/meal/'+item.img" alt="" class="">
 		<span class="meal-txt text-2xl leading-none ">{{label()}}</span>
 	</section>
 </template>

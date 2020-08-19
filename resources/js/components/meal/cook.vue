@@ -3,16 +3,16 @@
 		<!-- top appeal for user with user menu from appeal component -->
 		<appeal v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800' : ''"></appeal>
 <!-- set menu page -->
-		<div class="relative">
+		<div class="">
 			<section> <!-- pillow navigation -->
 				<ul class="flex border-b justify-center px-6">
 				    <li class="mr-1" :class="{activeLink: today.selected}"  @click="switchSelected">
-				        <a class="tab bg-gray-700 "  :class="{activeTab: today.selected}"  href="#">
+				        <a class="tab bg-gray-800 "  :class="{activeTab: today.selected}"  href="#">
 				        	<span class="text-gray-300">Meal for</br>{{this.moment(this.date).format('DD-MM-YYYY')}}</span>
 				    	</a>
 				    </li>
 				    <li class="mr-1" :class="{activeLink: tomorrow.selected}" @click="switchSelected">
-				        <a class="tab bg-gray-700 " :class="{activeTab: tomorrow.selected}" href="#">
+				        <a class="tab bg-gray-800 " :class="{activeTab: tomorrow.selected}" href="#">
 					        <span class="text-gray-300">Set meal for</br>{{this.moment(this.date).add(1, 'days').format('DD-MM-YYYY')}}</span>
 				    	</a>
 				    </li>
@@ -20,7 +20,7 @@
 				
 				<section class="text-gray-400" > <!-- navigation content -->
 				    <div class="" v-show='today.selected'>
-						<section class="bg-gray-700 borderBottom relative" >
+						<section class="bg-gray-800 relative" >
 							<div class="flex flex-col max-w-md mx-auto" >
 								<!-- menu or cheker -->
 								<span class="mt-6">Today is {{forToday}}.</span></br>
@@ -49,10 +49,11 @@
 				       
 				    </div>
 				    <div class="" v-show="tomorrow.selected">
-				    	<section class="bg-gray-700 borderBottom" >
+				    	<section class="bg-gray-800 " >
 				    		<div class="flex flex-col max-w-md mx-auto" >
-				    			<span class="mt-6">Tomorrow is {{forTomorrow}}.</span>
-				    			<span class="text-xxs -mt-5 mb-4"></br>Select what you're gonna cook.</span>
+				    			<span class="mt-6">Today is {{forTomorrow}}.</span></br>
+				    			<span class="text-xxs -mt-5 mb-4">Select what you're gonna cook.</span>
+
 				    			<!-- menu or cheker -->
 				    			<div class="mb-10">
 					    			<section v-if="!tomorrow.showChecker">
@@ -78,30 +79,32 @@
 			</section> <!-- pillow navigation -->
 
 			<!-- place block -->
-			<section class="pt-8 pb-8" >
-				<span class="meal-txt text-2xl">Today on island 56 employee</span>
-				<div class="container mx-auto max-w-2xl flex justify-around pt-8">
-					<div class="w-2/5 flex flex-col" @click="countOrders('hotel')">
-						<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
-						<span class="meal-txt text-2xl mt-2">Today for hotel</span>
+			<div class="mx-auto max-w-md">
+				<section class="pt-8 pb-8 px-6" >
+					<span class="meal-txt text-2xl">Today on island 56 employee</span>
+					<div class="container mx-auto max-w-2xl flex justify-around pt-8">
+						<div class="w-2/5 flex flex-col" @click="countOrders('hotel')">
+							<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
+							<span class="meal-txt text-2xl mt-2" :class="hotel ? 'rate' : '' ">Today for hotel</span>
+						</div>
+						<div class="w-2/5 flex flex-col" @click="countOrders('island')">
+							<img src="/img/island.jpg" alt="":class="island ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300" >
+							<span class="meal-txt text-2xl mt-2" :class="island ? 'rate' : '' ">Today for Island</span>
+						</div>
 					</div>
-					<div class="w-2/5 flex flex-col" @click="countOrders('island')">
-						<img src="/img/island.jpg" alt="":class="island ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300" >
-						<span class="meal-txt text-2xl mt-2">Today for Island</span>
+				</section>
+				<!-- results -->
+				<section class="my-4 px-4" v-if="this.orders.length>0">
+					<div class="flex justify-center">
+						<div v-for="item in orders" class="flex flex-col w-1/5 p-2">
+							<foodbox class="" :item="item.dish"></foodbox>
+							<span class="meal-txt text-gray-500 font-bold text-4xl rate">{{item.count}}</span>
+						</div>
 					</div>
-				</div>
-			</section>
-			<!-- results -->
-			<section class="my-4 px-4">
-				<div class="flex justify-center">
-					<div v-for="item in orders" class="flex flex-col w-1/5 p-2">
-						<foodbox class="" :item="item.dish"></foodbox>
-						<span class="meal-txt text-gray-500 font-bold text-4xl">{{item.count}}</span>
-					</div>
-				</div>
-			</section>
+				</section>
+			</div>
 			<!-- comments and raitng block -->
-			<section class="flex flex-col items-center mt-6">
+			<section class="flex flex-col items-center mt-8">
 				<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="m-3 fill-current rate h-24 w-24">
 					<path d="M17 8.39a1.11 1.11 0 00-.645-2l-4.5-.17a.115.115 0 01-.1-.075l-1.555-4.2a1.11 1.11 0 00-2.085 0L6.565 6.16a.115.115 0 01-.1.075l-4.5.17a1.11 1.11 0 00-.645 2l3.53 2.775a.115.115 0 01.04.12l-1.215 4.305a1.11 1.11 0 001.69 1.225l3.73-2.5a.11.11 0 01.125 0l3.73 2.5a1.1 1.1 0 001.275 0 1.1 1.1 0 00.415-1.2l-1.225-4.32a.11.11 0 01.04-.12L17 8.39z" />
 				</svg>
@@ -314,7 +317,7 @@
 			},
 
 			feedback() {
-				axios.get('/mealRaitng/'+moment(this.date).format('YYYY-MM-DD'))
+				axios.get('/mealRaitng/'+moment(this.date).subtract(1, 'days').format('YYYY-MM-DD'))
 					.then(response => {
 						this.overallRating = response.data;
 						this.total();
@@ -332,10 +335,13 @@
 			},
 
 			total() {
+				if(this.overallRating.length == 0) {
+					return 0;
+				}
 				let sum = this.overallRating.reduce(function(a, b){
 				        return a + b;
 				    }, 0);
-				return this.totalScore = Math.floor(sum/this.overallRating.length*100)/100;
+				return this.totalScore = Math.floor(sum/this.overallRating.length*10)/10;
 			},
 
 // not used for this impementation
