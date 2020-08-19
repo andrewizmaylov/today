@@ -11,6 +11,7 @@
     "/home.js": "/home.js",
     "/information.js": "/information.js",
     "/meal.js": "/meal.js",
+    "/menufullscreen.js": "/menufullscreen.js",
     "/news.js": "/news.js",
     "/notfound.js": "/notfound.js",
     "/places.js": "/places.js",
@@ -19,6 +20,5 @@
     "/user.js": "/user.js",
     "/userdocs.js": "/userdocs.js",
     "/usertasks.js": "/usertasks.js",
-    "/videos.js": "/videos.js",
-    "/menufullscreen.js": "/menufullscreen.js"
+    "/videos.js": "/videos.js"
 }
