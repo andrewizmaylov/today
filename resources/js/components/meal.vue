@@ -36,7 +36,7 @@
 			<div class="absolute z-10 inset-0" :class="!isLoggedIn ? '':'hidden'" @click="scrollTop"></div>
 
 			<!-- place block -->
-			<section class="pt-16 pb-8 max-w-md mx-auto" v-show="!order.complete">
+			<section class="pt-16 pb-8 mx-auto max-w-md" v-show="!order.complete">
 				<span class="meal-txt text-4xl">Отметь, где ты будешь сегодня?</span>
 				<div class="container mx-auto max-w-full flex justify-around pt-8">
 					<div class="w-2/5 flex flex-col" @click="markHotel">

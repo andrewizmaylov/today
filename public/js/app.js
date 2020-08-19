@@ -62093,7 +62093,7 @@ var render = function() {
                   expression: "!order.complete"
                 }
               ],
-              staticClass: "pt-16 pb-8 max-w-md mx-auto"
+              staticClass: "pt-16 pb-8 mx-auto max-w-md"
             },
             [
               _c("span", { staticClass: "meal-txt text-4xl" }, [
