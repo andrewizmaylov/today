@@ -16,7 +16,7 @@
 
 			<!-- place block -->
 			<section class="pt-16 pb-8 mx-auto" v-show="!order.complete">
-				<span class="meal-txt text-4xl">Отметь, где ты будешь сегодня?</span>
+				<span class="meal-txt text-4xl">Отметь, где ты будешь завтра?</span>
 				<div class="container mx-auto max-w-lg flex justify-around pt-8">
 					<div class="w-2/5 flex flex-col" @click="markHotel">
 						<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
