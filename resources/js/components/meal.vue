@@ -41,9 +41,11 @@
 				<div class="container mx-auto max-w-lg flex justify-around pt-8">
 					<div class="w-2/5 flex flex-col" @click="markHotel">
 						<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
+						<span class="meal-txt text-5xl mt-2">Отель</span>
 					</div>
 					<div class="w-2/5 flex flex-col" @click="markIsland">
 						<img src="/img/island.jpg" alt="":class="island ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300" >
+						<span class="meal-txt text-5xl mt-2">Остров</span>
 					</div>
 				</div>
 			</section>

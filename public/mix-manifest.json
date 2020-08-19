@@ -8,13 +8,17 @@
     "/cooks.js": "/cooks.js",
     "/departments.js": "/departments.js",
     "/docs.js": "/docs.js",
+    "/home.js": "/home.js",
     "/information.js": "/information.js",
     "/meal.js": "/meal.js",
+    "/news.js": "/news.js",
     "/notfound.js": "/notfound.js",
     "/places.js": "/places.js",
     "/schedule.js": "/schedule.js",
     "/staff.js": "/staff.js",
     "/user.js": "/user.js",
     "/userdocs.js": "/userdocs.js",
-    "/videos.js": "/videos.js"
+    "/usertasks.js": "/usertasks.js",
+    "/videos.js": "/videos.js",
+    "/menufullscreen.js": "/menufullscreen.js"
 }

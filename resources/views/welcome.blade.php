@@ -14,10 +14,12 @@
 
     </head>
     <body class="antialiased text-gray-900 font-sans bg-gray-100"> 
-        <div id="app" class="">
-            <mainapp></mainapp>
+        <div id="app" class="" >
+            <mainapp v-if="!isLoading"></mainapp>
             
+            <loading v-else></loading>
         </div>
+
         <script src="{{ asset('js/app.js') }}"></script>
 
     </body>

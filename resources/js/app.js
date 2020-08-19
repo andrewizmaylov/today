@@ -51,8 +51,8 @@ let count = 0;
 
 import mainapp from './components/mainapp.vue';
 import auth from './components/auth';
-import loading from './utilites/Loading';
-import bigMenu from './components/menufullscreen.vue';
+import loading from './utilites/loading';
+// import bigMenu from './components/menufullscreen.vue';
 import meal from './components/meal.vue';
 
 /**
@@ -67,15 +67,15 @@ const app = new Vue({
     router,
     store,
     components: {
-    	mainapp, auth, loading, bigMenu, meal
+    	mainapp, auth, loading, meal,  //bigMenu,
     },
     computed: {
     	isLoggedIn() {
-    		return store.getters.isLoggedIn;
+    		return this.$store.getters.isLoggedIn;
     	},
-      isLoading() {
-        return this.$store.getters.isLoading;
-      }
+        isLoading() {
+            return this.$store.getters.isLoading;
+        }
     }
 });
 
@@ -97,6 +97,26 @@ router.beforeEach((to, from, next) => {
            .catch(error => {
              console.log(error);
            });       
+    }
+    if(to.name == 'cook') {
+        axios.get('/cookdetector')
+            .then(response => {
+                console.log('before each chek for cook or nit');
+                console.log(response.data);
+                if(!response.data) {
+                    // store.commit('logout');
+                    next({name: 'meal'});
+                } else {
+                    if(response.data == true) {
+                        next({name: 'cook'});
+                        return;
+                    }
+                    next({name: 'meal'});
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     if(to.meta.requiresAuth) {

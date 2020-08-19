@@ -110,7 +110,7 @@ class MealController extends Controller
         if(count(auth()->user()->occupation) >0) {
             return auth()->user()->occupation[0]->id === 7;
         }
-        return false;
+        return 0;
 
         // return (\App\OccupationUser::where('user_id', auth()->user()->id)->firstOrFail())->occupation_id === 7;
     }

@@ -85,6 +85,7 @@
 				  })
 				  .then(response => {
 				  	this.comment = '';
+				  	this.commentAppeal = 'Хочешь сказать еще?';
 				  	axios.get('/comment/'+date)
 				  	  .then(response => {
 				  	  	this.comments = response.data;

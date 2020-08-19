@@ -5,10 +5,8 @@
 	</div>
 </template>
 <script>
-	import home from './home.vue';
 	import menutop from './menutop.vue';
-	import menufullscreen from './menufullscreen.vue';
-	import meal from './meal.vue';
+
 
 	export default {
 		name: 'mainapp',
@@ -23,7 +21,7 @@
 
 		},   
 		components: {
-			home, menutop, menufullscreen, meal
+			menutop,
 		},
 		mounted() {
 			Event.$emit('hideTopMenu');

@@ -60,7 +60,7 @@
 	  				{{occupationBtn}}
 				</button>
 			</div>
-			<img src="/img/x-circle-white.svg" alt="close window" @click="$router.back()" class="mx-auto mt-16 w-16 h-16 mb-8">
+			<img src="/img/x-circle-white.svg" alt="close window" @click="$router.push({name: 'meal'})" class="mx-auto mt-16 w-16 h-16 mb-8">
 		</div>
 
 
