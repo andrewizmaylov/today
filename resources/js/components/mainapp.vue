@@ -12,26 +12,19 @@
 		name: 'mainapp',
 		data() {
 			return {
-				menuTop: true
+				menuTop: false,
 			}
 		},
 		created() {
 			Event.$on('showTopMenu', () => this.menuTop = true);
 			Event.$on('hideTopMenu', () => this.menuTop = false);
-
 		},   
 		components: {
 			menutop,
 		},
 		mounted() {
 			Event.$emit('hideTopMenu');
-			let newDate = moment(this.date).format("YYYY-MM-DD 18:00");
-			if(moment(this.date).isAfter(newDate)) {
-				this.$router.push({name: 'meal19'});
-				// alert('You can change the order');
-			} else {
-				this.$router.push({name: 'meal'});
-			}
+			this.$router.push({name: 'meal'});
 		}
 	}
 </script>

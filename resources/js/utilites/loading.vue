@@ -1,6 +1,6 @@
 <template>
     <div class="w-screen h-screen flex items-center" style="background-color: #1C273A">
-        <img src="/img/isLoadingNew.gif" alt="" class="">
+        <img src="/img/isLoadingNew.gif" alt="" class="mx-auto">
     </div>
 </template>
 

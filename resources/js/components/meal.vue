@@ -1,24 +1,3 @@
-<style>
-	.meal-txt {
-		color: rgba(113, 128, 150, 1);
-		font-family: 'Amatic SC';
-	}
-	.bw {
-		padding: 14px;
-		opacity: 70%;
-		filter: grayscale(90%);
-
-	}
-	.active {
-		box-shadow: 0 25px 50px -12px rgba(0,0,0, .25);
-	}
-	.rate {
-		color: #E2C644;
-	}
-	.opacity-80 {
-		opacity: 70%;
-	}
-</style>
 <template>
 	<div class="w-full h-full bg-gray-800 text-center relative">
 
@@ -37,7 +16,7 @@
 
 			<!-- place block -->
 			<section class="pt-16 pb-8 mx-auto" v-show="!order.complete">
-				<span class="meal-txt text-4xl">Отметь, где ты будешь сегодня?</span>
+				<span class="meal-txt text-4xl">Отметь, где ты будешь {{orderFor}}?</span>
 				<div class="container mx-auto max-w-lg flex justify-around pt-8">
 					<div class="w-2/5 flex flex-col" @click="markHotel">
 						<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
@@ -58,7 +37,7 @@
 				</div>
 				<!-- one item has been choosen -->
 				<div v-else class="container mx-auto border border-gray-300 bg-gray-300 rounded px-4 py-6 max-w-md " style="background-color: #353F50;">
-					<span class="block meal-txt text-3xl text-gray-800 leading-none mt-2 px-4">Сегодня, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя {{selected.msg}} </span>
+					<span class="block meal-txt text-3xl text-gray-800 leading-none mt-2 px-4">{{orderFor}}, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя {{selected.msg}} </span>
 					<foodbox :item="selected.box" alt="" class="w-2/5 max-w-sm h-full mx-auto mt-4"/>
 					<!-- buttons for compete or change order -->
 					<div class="flex justify-center mt-4 px-2" v-show="!showWarning">
@@ -69,14 +48,14 @@
 
 					<!-- worning about no place selected -->
 					<div class="flex justify-center mt-4 px-2" v-show="showWarning">
-						<div class="bg-gray-200 px-3 py-2 meal-txt text-2xl rounded-lg mx-2 border border-gray-600 border-2 shadow" @click="selected={}" v-show="!order.complete"><span class="text-gray-700">Сначала отметь, где ты будешь сегодня</span></div>
+						<div class="bg-gray-200 px-3 py-2 meal-txt text-2xl rounded-lg mx-2 border border-gray-600 border-2 shadow" @click="selected={}" v-show="!order.complete"><span class="text-gray-700">Сначала отметь, где ты будешь {{orderFor}}</span></div>
 					</div>
 					<!-- change order btn -->
 					<section class="flex flex-col items-center mt-4 meal-txt text-gray-300 text-2xl"  v-show="order.complete">
 						<!-- <div class="border border-2 border-gray-300 h-32 w-32 px-3 py-6 meal-txt text-2xl rounded-full mt-6" v-show="order.complete" @click="">Заказ оформлен</div> -->
 						<span class="bg-gray-200 px-3 py-2 meal-txt text-gray-700 text-xl rounded-lg mx-2 mb-2 border border-gray-600 border-2 shadow" @click="orderCanChange" v-if="timeBefore">Внести изменения в заказ</span>
 						<span class="" v-else>Внести изменения в заказ</span>
-						<span class=""> можно до 10 часов утра текущего дня. </br>Спасибо за понимание.</span>
+						<span class=""> можно до 10 часов утра. Спасибо за понимание.</span>
 					</section>
 				</div>
 			</section>
@@ -120,7 +99,10 @@
 				},
 				showWarning: false,
 				orderCanBeChanged: false,
-				endTime: moment(this.date).format("YYYY-MM-DD 10:00"),
+
+				// page load after 18.00 with tomorrow title
+				orderFor: '',
+				endTime: '',
 				// full set of meal and for today choose
 				menu: [],
 				today: {
@@ -140,7 +122,9 @@
 			  .then(response => {
 // console.log(response);
 			    this.menu = response.data;
-			    this.setToday(this.menuDate());
+			    this.setCalculationDate();
+			    this.setToday();
+			    this.getOrderForUser();
 			  })
 			  .catch(error => {
 			    console.log(error);
@@ -158,38 +142,28 @@
 			  .catch(error => {
 			    console.log(error);
 			  });
-
-			//check if order exists for user for today
-			axios.get('/orderUserDate/'+moment(this.date).format('YYYY-MM-DD'))
-			  .then(response => {
-// console.log('/orderUserDate/{date}');
-			    if(response.data.meal_id) {
-				    var index = response.data.meal_id - 1;
-// console.log(response.data);
-				    this.selected.box = this.menu[index];
-				    this.selected.msg = response.data.msg;
-				    this.selected.status = true;
-				    this.order.complete = true;
-			    } else {
-					this.selected.status = false;
-				    this.order.complete = false;
-			    }
-			  })
-			  .catch(error => {
-			    console.log(error);
-			  });
 		},
 		methods: {
 			moment() {
-				return moment(this.date).format("DD MMMM");
+				return moment(this.endTime).format("DD MMMM");
 			},
 			menuDate() {
 				return moment(this.date).format("YYYY-MM-DD");
 			},
 
-			// 
-			setToday(date) {
-				axios.get('/menu/'+date)
+			setCalculationDate() {
+				let after18 = moment(this.date).format('YYYY-MM-DD 18:00');
+				if(moment(this.date).isAfter(after18)) {
+					this.endTime = moment(this.date).add(1, 'days').format('YYYY-MM-DD');
+					this.orderFor = 'завтра'
+				} else {
+					this.endTime = moment(this.date).format('YYYY-MM-DD');
+					this.orderFor = 'сегодня'
+				}
+			},
+
+			setToday() {
+				axios.get('/menu/'+this.endTime)
 				  .then(response => {
 				  		if(response.data === []) {
 				  			this.today.data = this.menu.filter(item => item.status==true);
@@ -207,10 +181,32 @@
 				    console.log(error);
 				  });
 				},
+			getOrderForUser() {
+				//check if order exists for user for today    orderFor/// 
+
+				axios.get('/orderUserDate/'+this.endTime)
+				  .then(response => {
+	// console.log('/orderUserDate/{date}');      
+				    if(response.data.meal_id) {
+					    var index = response.data.meal_id - 1;
+	// console.log(response.data);
+					    this.selected.box = this.menu[index];
+					    this.selected.msg = response.data.msg;
+					    this.selected.status = true;
+					    this.order.complete = true;
+				    } else {
+						this.selected.status = false;
+					    this.order.complete = false;
+				    }
+				  })
+				  .catch(error => {
+				    console.log(error);
+				  });
+			},
 			//easter eag
 			countPlus() {
 				this.count++;
-				if(this.count == 3) {
+				if(this.count == 12) {
 					Event.$emit('showTopMenu');
 					this.$router.push('/home');
 				}
@@ -261,7 +257,7 @@
 					{
 						user_id: this.currentUser.id,
 						meal_id: this.selected.box.id,
-						date: moment(this.date).format('YYYY-MM-DD'),
+						date: moment(this.endTime).format('YYYY-MM-DD'),
 						msg: this.selected.msg,
 						place: this.selected.place,
 					})
@@ -305,3 +301,24 @@
 
 	}
 </script>
+<style>
+	.meal-txt {
+		color: rgba(113, 128, 150, 1);
+		font-family: 'Amatic SC';
+	}
+	.bw {
+		padding: 14px;
+		opacity: 70%;
+		filter: grayscale(90%);
+
+	}
+	.active {
+		box-shadow: 0 25px 50px -12px rgba(0,0,0, .25);
+	}
+	.rate {
+		color: #E2C644;
+	}
+	.opacity-80 {
+		opacity: 70%;
+	}
+</style>
