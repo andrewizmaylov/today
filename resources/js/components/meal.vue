@@ -240,9 +240,11 @@
 			changeOrder() {
 				this.selected.box = {};
 				this.selected.status=false;				
+				this.selected.msg='';				
+				this.order.complete = false;
 			},
 			orderCanChange() {
-				if(moment(this.date).isBefore(this.endTime)) {
+				if(moment(this.date).isBefore(moment(this.endTime).format('YYYY-MM-DD 10:00'))) {
 					this.changeOrder();
 				} else {
 					alert('You can not change the order. Too late');
@@ -291,7 +293,7 @@
 				return Store.getters.currentUser;
 			},
 			timeBefore() {
-				if(moment(this.date).isBefore(this.endTime)) {
+				if(moment(this.date).isBefore(moment(this.endTime).format('YYYY-MM-DD 10:00'))) {
 					return true;
 				} else {
 					return false;
