@@ -52,7 +52,7 @@
 			},
 			toCook() {
 				if(this.currentUser.isActive == 1) {
-					$router.push('/cook');
+					this.$router.push('/cook');
 				} else {
 					alert('Your account has not been verified yet, contact the Resource Administrator');
 				}
@@ -74,7 +74,6 @@
 		    	this.user = response.data;
 		    	axios.get('/cookdetector')
 		    	    .then(response => {
-		    	        console.log(response.data);
 		    	        if(response.data == 7) {
 		    	        	this.isACook = true;
 		    	        } else {

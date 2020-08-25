@@ -381,7 +381,7 @@
     border-top-right-radius: 0.25rem;
 }
 .activeLink {
-    margin-bottom: -1px;
+    margin-bottom: -23px;
 }
 .activeTab {
     border-left-width: 1px;

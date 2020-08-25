@@ -290,6 +290,7 @@
 				return Store.getters.isLoggedIn;
 			},
 			currentUser() {
+				console.log(Store.getters.currentUser);
 				return Store.getters.currentUser;
 			},
 			timeBefore() {
