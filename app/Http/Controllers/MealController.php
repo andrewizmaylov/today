@@ -107,12 +107,13 @@ class MealController extends Controller
 
     public function cookdetector()
     {
-        if(count(auth()->user()->occupation) >0) {
-            return auth()->user()->occupation[0]->id === 7;
-        }
-        return 0;
+        // if(count(auth()->user()->occupation) >0) {
+        //     return auth()->user()->occupation[0]->id === 7;
+        // }
+        // return false;
 
         // return (\App\OccupationUser::where('user_id', auth()->user()->id)->firstOrFail())->occupation_id === 7;
+        return (\App\OccupationUser::where('user_id', auth()->user()->id)->firstOrFail())->occupation_id;
     }
     public function cooks()
     {
