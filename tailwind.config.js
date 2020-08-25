@@ -40,7 +40,10 @@ module.exports = {
     },
   },
   variants: {
-    border: ['responsive', 'hover', 'focus', 'active']
+    border: ['responsive', 'hover', 'focus', 'active'],
+    backgroundColor: ['responsive', 'hover', 'focus', 'active'],
+    textColor: ['responsive', 'hover', 'focus', 'active'],
+    fontsize: ['responsive', 'hover'],
   },
   plugins: [],
 }

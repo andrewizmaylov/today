@@ -1,8 +1,8 @@
 <template>
 	<div class="py-8">
-		<div class="meal-txt text-4xl" @click="showMenu">Привет, {{appeal()}}</div>
+		<div class="meal-txt text-4xl " @click="showMenu">Привет, {{appeal()}}</div>
 		<div class="flex flex-col mt-16" v-show="showUserMenu">
-			<span class="py-2 mt-4 meal-txt text-4xl " @click="$router.push('/account/info')">ПРОФИЛЬ</span>
+			<span class="py-2 mt-4 meal-txt text-4xl" @click="$router.push('/account/info')">ПРОФИЛЬ</span>
 			<span class="py-2 mt-4 meal-txt text-4xl hidden"  @click="$router.push('/cooks')">Наши повора</span>
 			<span class="py-2 mt-4 meal-txt text-4xl " :class="isACook ? '' : 'hidden' " @click="toCook">Кухня</span>
 			<span class="py-2 mt-4 meal-txt text-4xl " @click="logout">ВЫЙТИ ИЗ СИСТЕМЫ</span>

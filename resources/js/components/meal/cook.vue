@@ -27,12 +27,12 @@
 								<span class="text-xxs -mt-5 mb-4">Check what you're gonna cook.</span>
 								<div class="mb-10">
 									<section v-if="!today.showChecker">
-										<div class="flex justify-center flex-wrap px-2" v-show="true">
+										<div class="flex justify-center flex-wrap px-2" v-show="today.aviable.length>0">
 											<div v-for="item in today.aviable" class="p-1" :class="today.aviable.length<=3 ? 'w-1/3':'w-1/5' ">
 												<foodbox :item="item" :title="'eng'"></foodbox>
 											</div>
 										</div>
-										<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10" @click="today.showChecker = true">Change menu for today</div>
+										<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10 meal-block" @click="today.showChecker = true">Change menu for today</div>
 									</section>
 									<section class="mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800" v-else>
 										<div class="flex items-center mb-2" v-for="item in menu">
@@ -57,12 +57,12 @@
 				    			<!-- menu or cheker -->
 				    			<div class="mb-10">
 					    			<section v-if="!tomorrow.showChecker">
-						    			<div class="flex justify-center flex-wrap px-2" v-show="true">
+						    			<div class="flex justify-center flex-wrap px-2" v-show="tomorrow.aviable.length>0">
 						    				<div v-for="item in tomorrow.aviable" class="p-1" :class="tomorrow.aviable.length<=3 ? 'w-1/3':'w-1/5' ">
 						    					<foodbox :item="item" :title="'eng'"></foodbox>
 						    				</div>
 						    			</div>
-					    				<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10" @click="tomorrow.showChecker = true">Change menu for tomorrow</div>
+					    				<div class="mt-4 border border-2 border-gray-300 px-2 py-2 rounded-lg mx-2 text-gray-300 uppercase text-xs font-bold mx-10 meal-block" @click="tomorrow.showChecker = true">Change menu for tomorrow</div>
 					    			</section>
 					    			<section class="mx-10 py-4 px-6 bg-gray-300 rounded border text-gray-800" v-else>
 					    				<div class="flex items-center mb-2" v-for="item in menu">
@@ -143,14 +143,14 @@
 					index: [],
 					title: 'eng',
 					selected: true,
-					showChecker: true,
+					showChecker: false,
 				},
 				tomorrow: {
 					aviable: [],
 					index: [],
 					title: 'eng',
 					selected: false,
-					showChecker: true,
+					showChecker: false,
 				},
 				orders: [],
 				hotel: false,
@@ -169,22 +169,22 @@
 			  		//fix 'false' false issue
 				    response.data.filter(item => item.status = false);
 				  	this.menu = response.data;
-					// this.tomorrow.aviable = this.getAviable(moment(this.date).add(1, 'days').format('YYYY-MM-DD')) ?? [];
-					// this.today.aviable = this.getAviable(moment(this.date).format('YYYY-MM-DD')) ?? [];					
-					this.getTomorrowAviable();
-					this.getTodayAviable();
+				  	
+					[this.tomorrow.aviable, this.tomorrow.index] = this.getAviable(moment(this.date).add(1, 'days').format('YYYY-MM-DD')) ?? [];
+					[this.today.aviable, this.today.index] = this.getAviable(moment(this.date).format('YYYY-MM-DD')) ?? [];
+
 					this.feedback();
 			  })
 			  .catch(error => {
 			    console.log(error);
 			  });
-
-
 		},
+
 		methods: {
 			// get aviable for given date
 			getAviable(date) {
 			    var aviable = [];
+			    var indexes = [];
 			    let keys = [];
 				axios.get('/menu/'+date)
 					.then(response => {
@@ -192,49 +192,15 @@
 					    var index;
 					    for(index=0; index<keys.length; index++) {
 					    	aviable.push(this.menu.filter(item => item.id === keys[index]).shift());
+					    	indexes.push(keys[index]);
 					    }
 					})
 					.catch(error => {
 						console.log(error);
 					});
-				return aviable;
+				return [aviable, indexes];
 			},
-			// check again later and rewrite to one method above
-			getTodayAviable() {
-				var date = moment(this.date).format('YYYY-MM-DD');
-				console.log(date);
-				axios.get('/menu/'+date)
-					.then(response => {
-					    this.today.index = response.data;
-					    var index;
-					    var aviable = [];
-					    for(index=0; index<this.today.index.length; index++) {
-					    	aviable.push(this.menu.filter(item => item.id === response.data[index]).shift());
-					    }
-					    this.today.aviable = aviable;
-					    this.today.showChecker = false;
-					})
-					.catch(error => {
-						console.log(error);
-					});
-			},
-			getTomorrowAviable() {
-				var date = moment(this.date).add(1, 'days').format('YYYY-MM-DD');
-				axios.get('/menu/'+date)
-					.then(response => {
-					    this.tomorrow.index = response.data;
-					    var index;
-					    var aviable = [];
-					    for(index=0; index<this.tomorrow.index.length; index++) {
-					    	aviable.push(this.menu.filter(item => item.id === response.data[index]).shift());
-					    }
-					    this.tomorrow.aviable = aviable;
-					    this.tomorrow.showChecker = false;
-					})
-					.catch(error => {
-						console.log(error);
-					});
-			},
+
 			// switch tabs
 			switchSelected() {
 				this.today.selected = !this.today.selected;

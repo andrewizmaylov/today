@@ -10,7 +10,7 @@
 
 		<section v-show="comments.length>=1" class="flex flex-col w-2/3 max-w-md mx-auto">
 			<span  class="meal-txt text-2xl rate mt-6">Последние комментарии:</span>
-			<div  v-for="item in comments" class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">
+			<div  v-for="item in comments" class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2 meal-block">
 				{{item.msg}}<br>
 				<span class="text-xxs font-mono rate">{{item.user.email}}</span>
 			</div>

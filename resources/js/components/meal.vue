@@ -8,7 +8,7 @@
 				<div v-else class="border border-2 border-gray-300 px-6 py-2 meal-txt text-2xl rounded-lg mt-2">Войди в систему</div>
 			</div>
 		</section>
-		<appeal v-show="isLoggedIn" v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800 -mt-8' : ''"></appeal>
+		<appeal v-show="isLoggedIn" v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800' : ''"></appeal>
 
 		<!-- interactive section inactive if not logged in -->
 		<div class="relative">
@@ -36,7 +36,7 @@
 					<foodmenu :menu="today.data" :title="today.title" @select="makeOrder"></foodmenu>
 				</div>
 				<!-- one item has been choosen -->
-				<div v-else class="container mx-auto border border-gray-300 bg-gray-300 rounded px-4 py-6 max-w-md " style="background-color: #353F50;">
+				<div v-else class="container mx-auto border border-gray-300 bg-gray-300 rounded px-4 py-6 max-w-md meal-block">
 					<span class="block meal-txt text-3xl text-gray-800 leading-none mt-2 px-4">{{orderFor}}, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя {{selected.msg}} </span>
 					<foodbox :item="selected.box" alt="" class="w-2/5 max-w-sm h-full mx-auto mt-4"/>
 					<!-- buttons for compete or change order -->
@@ -151,36 +151,36 @@
 				return moment(this.date).format("YYYY-MM-DD");
 			},
 
-			setCalculationDate() {
-				let after18 = moment(this.date).format('YYYY-MM-DD 18:00');
-				if(moment(this.date).isAfter(after18)) {
-					this.endTime = moment(this.date).add(1, 'days').format('YYYY-MM-DD');
-					this.orderFor = 'завтра'
-				} else {
-					this.endTime = moment(this.date).format('YYYY-MM-DD');
-					this.orderFor = 'сегодня'
-				}
-			},
+								setCalculationDate() {
+									let after18 = moment(this.date).format('YYYY-MM-DD 18:00');
+									if(moment(this.date).isAfter(after18)) {
+										this.endTime = moment(this.date).add(1, 'days').format('YYYY-MM-DD');
+										this.orderFor = 'завтра'
+									} else {
+										this.endTime = moment(this.date).format('YYYY-MM-DD');
+										this.orderFor = 'сегодня'
+									}
+								},
 
-			setToday() {
-				axios.get('/menu/'+this.endTime)
-				  .then(response => {
-				  		if(response.data === []) {
-				  			this.today.data = this.menu.filter(item => item.status==true);
-				  			return;
-				  		}
-					    let keys = response.data;
-					    var index;
-					    var td = [];
-					    for(index=0; index<keys.length; index++) {
-					    	td.push(this.menu.filter(item => item.id === keys[index]).shift());
-					    }
-					    this.today.data = td;
-				  })
-				  .catch(error => {
-				    console.log(error);
-				  });
-				},
+								setToday() {
+									axios.get('/menu/'+this.endTime)
+									  .then(response => {
+									  		if(response.data === []) {
+									  			this.today.data = this.menu.filter(item => item.status==true);
+									  			return;
+									  		}
+										    let keys = response.data;
+										    var index;
+										    var td = [];
+										    for(index=0; index<keys.length; index++) {
+										    	td.push(this.menu.filter(item => item.id === keys[index]).shift());
+										    }
+										    this.today.data = td;
+									  })
+									  .catch(error => {
+									    console.log(error);
+									  });
+									},
 			getOrderForUser() {
 				//check if order exists for user for today    orderFor/// 
 
@@ -290,7 +290,6 @@
 				return Store.getters.isLoggedIn;
 			},
 			currentUser() {
-				console.log(Store.getters.currentUser);
 				return Store.getters.currentUser;
 			},
 			timeBefore() {
@@ -324,4 +323,8 @@
 	.opacity-80 {
 		opacity: 70%;
 	}
+	.meal-block {
+		background-color: #353F50;
+	}
+
 </style>
