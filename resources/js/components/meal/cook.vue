@@ -81,7 +81,7 @@
 			<!-- place block -->
 			<div class="mx-auto max-w-md">
 				<section class="pt-8 pb-8 px-6" >
-					<span class="meal-txt text-2xl">Today on island 56 employee</span>
+					<span class="meal-txt text-2xl">Today on island 36 employee total</span>
 					<div class="container mx-auto max-w-2xl flex justify-around pt-8">
 						<div class="w-2/5 flex flex-col" @click="countOrders('hotel')">
 							<img src="/img/bungalo.jpg" alt="" :class="hotel ? 'active' : 'bw'" class="rounded-full border border-4 border-gray-300">
