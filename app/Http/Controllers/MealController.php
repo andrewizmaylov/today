@@ -78,11 +78,13 @@ class MealController extends Controller
          return Meal::all();
     }
 
-    public function 
-    getMenu($date)
+    public function getMenu($date)
     {
-         $result = Mealmenu::where('date', $date)->firstOrFail();
-         return unserialize($result['keys']);
+        //simplified for cooks
+         return [1,3,5,6,9];
+
+         // $result = Mealmenu::where('date', $date)->firstOrFail();
+         // return unserialize($result['keys']);
     }
 
     public function storeMenu(Request $request)

@@ -37,7 +37,8 @@
 				</div>
 				<!-- one item has been choosen -->
 				<div v-else class="container mx-auto border border-gray-300 bg-gray-300 rounded px-4 py-6 max-w-md meal-block">
-					<span class="block meal-txt text-3xl text-gray-800 leading-none mt-2 px-4">{{orderFor}}, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя {{selected.msg}} </span>
+					<!-- <span class="block meal-txt text-3xl text-gray-800 leading-none mt-2 px-4">{{orderFor}}, {{this.moment()}}, твоя {{selected.box.rus}} будет ждать тебя {{selected.msg}} </span> -->
+					<span class="block meal-txt text-3xl text-gray-800 leading-none mt-2 px-4">{{orderFor}}, {{this.moment()}}, {{selected.msg}} тебя будет ждать {{selected.box.rus}}</span>
 					<foodbox :item="selected.box" alt="" class="w-2/5 max-w-sm h-full mx-auto mt-4"/>
 					<!-- buttons for compete or change order -->
 					<div class="flex justify-center mt-4 px-2" v-show="!showWarning">
@@ -152,7 +153,7 @@
 			},
 
 								setCalculationDate() {
-									let after18 = moment(this.date).format('YYYY-MM-DD 18:00');
+									let after18 = moment(this.date).format('YYYY-MM-DD 13:00');
 									if(moment(this.date).isAfter(after18)) {
 										this.endTime = moment(this.date).add(1, 'days').format('YYYY-MM-DD');
 										this.orderFor = 'завтра'
@@ -195,8 +196,9 @@
 					    this.selected.status = true;
 					    this.order.complete = true;
 				    } else {
-						this.selected.status = false;
-					    this.order.complete = false;
+				    	this.selected.box = this.menu[0];
+						this.selected.status = true;
+					    this.order.complete = true;
 				    }
 				  })
 				  .catch(error => {
