@@ -76,10 +76,25 @@ const app = new Vue({
         isLoading() {
             return this.$store.getters.isLoading;
         }
+    },
+    mounted() {
+      axios.get('/check')
+           .then(response => {
+             if(!response.data) {
+                 store.commit('logout');             
+                 next({name: 'meal'});
+             } else {
+                 next();
+             }
+           })
+           .catch(error => {
+             console.log(error);
+           });   
     }
 });
 
 router.beforeEach((to, from, next) => { 
+            console.log('meal response.data');
     if(to.name == 'login' || to.name == 'registration') {
         Event.$emit('hideTopMenu');
         next();

@@ -36,7 +36,7 @@
 					return this.user.first_name;
 				}
 
-				return this.currentUser.email;
+				return this.currentUser ? this.currentUser.email : null;
 			},
 			logout() {
 				axios.post('/logout')
