@@ -4,7 +4,7 @@
 		<appeal v-on:expand="showUserMenu=true" v-on:collapse="showUserMenu=false" :class="showUserMenu ? 'absolute z-10 inset-0 bg-gray-800' : ''"></appeal>
 <!-- set menu page -->
 		<div class="">
-			<section class="hidden"> <!-- pillow navigation -->
+			<section> <!-- pillow navigation -->
 				<ul class="flex border-b justify-center px-6">
 				    <li class="mr-1" :class="{activeLink: today.selected}"  @click="switchSelected">
 				        <a class="tab bg-gray-800 "  :class="{activeTab: today.selected}"  href="#">
