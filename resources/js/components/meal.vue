@@ -153,7 +153,7 @@
 			},
 
 								setCalculationDate() {
-									let after18 = moment(this.date).format('YYYY-MM-DD 13:00');
+									let after18 = moment(this.date).format('YYYY-MM-DD 10:00');
 									if(moment(this.date).isAfter(after18)) {
 										this.endTime = moment(this.date).add(1, 'days').format('YYYY-MM-DD');
 										this.orderFor = 'завтра'
