@@ -39,7 +39,7 @@ class dailymeal extends Command
      */
     public function handle()
     {
-        $date = Carbon::now()->format('Y-m-d');
+        $date = Carbon::now()->addDay()->format('Y-m-d');
         Order::create([
              'user_id' => 1,
              'meal_id' => 5,

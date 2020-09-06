@@ -13,9 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // 'daily:insert', 
-        // 'daily'
-        'App\Console\Commands\dailymeal'
+        // 
     ];
 
     /**
@@ -26,8 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->command(dailymeal::class)->dailyAt('05:33');
+        $schedule->command('daily:insert')->dailyAt('11:00');
     }
 
     /**
