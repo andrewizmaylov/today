@@ -1,10 +1,13 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 Route::view("/", 'welcome');
 
-Route::view("/verstka", 'verstka');
+Route::view("/verstka", function() {
+	return "reee";
+});
 
 Auth::routes();
 
@@ -18,7 +21,9 @@ Route::get('/test', function () {
 	// $keys = \App\OccupationUser::where('occupation_id', 7)->get()->pluck('user_id');
 	// $users = \App\User::with('Info')->get();
 	// return $users->intersect(\App\User::whereIn('id', $keys)->get());
-	return auth()->user()->order->where('date', '2020-08-05');
+	// return auth()->user()->order->where('date', '2020-08-05');
+	$date = Carbon::now();
+	return $date;
 
 });
 

@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Order;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        // 'daily:insert', 
+        // 'daily'
+        'App\Console\Commands\dailymeal'
     ];
 
     /**
@@ -26,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('daily:insert')->dailyAt('00:01');
+        $schedule->command(dailymeal::class)->dailyAt('05:33');
     }
 
     /**
