@@ -39,6 +39,8 @@ class dailymeal extends Command
      */
     public function handle()
     {
+        \Log::info("Cron is working fine!");
+
         $date = Carbon::now()->addDay()->format('Y-m-d');
         Order::create([
              'user_id' => 1,
@@ -61,5 +63,7 @@ class dailymeal extends Command
              'msg' => 'в отеле',
              'date' => $date
         ]);
+        // add logick to delete older entrys
+        echo 'order placed';
     }
 }
